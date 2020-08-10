@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e005abfe-df90-4692-81a5-cd0d7005f0c3" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution>
+      <executable />
+    </execution>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1fdw84GWSVdJy7hWe0BoQ3kZuFf" />
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/_components/master" />
+    <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Users\Slim\Documents\web\project-fast-log\node_modules\@imagina\qlogistic\_components" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Users\Slim\Documents\web\project-fast-log\node_modules\@imagina\qlogistic\_components\master" />
+      <recent name="D:\Users\Slim\Documents\web\project-fast-log\node_modules\@imagina\qlogistic\_i18n" />
+      <recent name="D:\Users\Slim\Documents\web\project-fast-log\node_modules\@imagina\qlogistic\_components" />
+      <recent name="D:\Users\Slim\Documents\web\project-fast-log\node_modules\@imagina\qlogistic\_pages\admin\dashboard" />
+      <recent name="D:\Users\Slim\Documents\web\project-fast-log\node_modules\@imagina\qlogistic\_layouts" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e005abfe-df90-4692-81a5-cd0d7005f0c3" name="Default Changelist" comment="" />
+      <created>1596561114787</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1596561114787</updated>
+      <workItem from="1596561116223" duration="3592000" />
+      <workItem from="1596630601269" duration="9242000" />
+      <workItem from="1596719445171" duration="2734000" />
+      <workItem from="1596726718864" duration="2616000" />
+      <workItem from="1596893217600" duration="587000" />
+      <workItem from="1597059082616" duration="1174000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+</project>
