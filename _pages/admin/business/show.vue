@@ -134,7 +134,7 @@
             </q-btn>
             <q-btn no-caps rounded icon="fas fa-plus" class="q-pa-sm desktop-only" size="sm" color="primary" label="Crear Orden" :to="{name: 'qlogistic.orders.create'}" />
             <div>&nbsp;</div>
-            <q-btn no-caps rounded icon="fas fa-clipboard-list" class="q-pa-sm desktop-only" size="sm" color="positive" label="Ver Órdenes" />
+            <q-btn no-caps rounded icon="fas fa-clipboard-list" class="q-pa-sm desktop-only" size="sm" color="positive" label="Ver Órdenes" :to="{name: 'qlogistic.orders.show'}" />
         </q-page-sticky>
         <q-page-sticky position="top-right" :offset="[18, 18]" class="mobile-only">
             <q-btn rounded dense icon="fas fa-edit" class="q-pa-sm" size="sm" color="secondary" v-if="this.$attrs.edit" :to="this.$attrs.edit.to">

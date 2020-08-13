@@ -4,6 +4,7 @@ export default {
   featuredSupporters: 'Featured Supporters',
   business: 'Business',
   orderAverage: 'Order Average by Month',
+  deliveredOrders: 'Delivered Orders',
   form:{
     origin: 'Origin',
     destination: 'Destination',

@@ -4,6 +4,7 @@ export default {
   featuredSupporters: 'Colaboradores Destacados',
   business: 'Empresas',
   orderAverage: 'Promedio de Ordenes por Mes',
+  deliveredOrders: 'Ordenes Entregadas',
   form:{
     origin: 'Origen',
     destination: 'Destino',

@@ -1,9 +1,9 @@
 <template>
     <div :class="'row order-content text-white bg-'+color" v-if="$q.screen.width > 640">
-        <div class="col-5 col-md-6 q-pa-md text-right text-h4" style="background-color: rgba(0,0,0,0.3)">
+        <div class="col-3 col-md-5 q-pa-md text-right text-h4" style="background-color: rgba(0,0,0,0.3)">
             {{ orders.length }}
         </div>
-        <div class="col-7 col-md-6 q-pa-md text-caption">
+        <div class="col-9 col-md-7 q-pa-md text-caption">
             {{ label }}
         </div>
     </div>
@@ -41,7 +41,7 @@
         },
         mounted(){
             this.$nextTick(()=>{
-
+                this.init()
             })
         },
         methods:{
