@@ -3,6 +3,8 @@ export default {
   viewOrder: 'View Order',
   featuredSupporters: 'Featured Supporters',
   business: 'Business',
+  ordersCreate: 'Create Order',
+  ordersShow: 'Show Orders',
   orderAverage: 'Order Average by Month',
   deliveredOrders: 'Delivered Orders',
   form:{

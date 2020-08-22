@@ -120,12 +120,23 @@
                     {id:4, name:'Transito Ciudad Destino'},
                     {id:5, name:'Entregado'},
                     {id:6, name:'Completado'}
-                ]
+                ],
+                business:[],
+                businessOptions:[],
             }
         },
         methods:{
             initForm(){
                 this.show = this.value//Assign props value to show modal
+
+            },
+            async getBusiness(){
+                await this.$crud.index('apiRoutes.qlogistic.business').then(response =>{
+                    this.business = this.$clone(response.data)
+                    this.businessOptions = this.$clone(this.business)
+                }).catch(error => {
+                    this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                })
             }
         }
     }

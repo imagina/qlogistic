@@ -85,8 +85,8 @@
                                             <q-icon name="fas fa-map-marker-alt" color="primary" />
                                         </q-item-section>
                                         <q-item-section>
-                                            <div class="text-caption text-bold text-primary">Dirección</div>
-                                            <div class="text-caption">Calle 20 4-56</div>
+                                            <div class="text-caption text-bold text-primary">{{ $tr('ui.form.address') }}</div>
+                                            <div class="text-caption">{{ form.address || 'Calle 20 4-56' }}</div>
                                         </q-item-section>
                                     </q-item>
                                     <q-item class="q-my-md">
@@ -112,7 +112,7 @@
                                             <q-icon name="fas fa-globe" color="primary" />
                                         </q-item-section>
                                         <q-item-section>
-                                            <div class="text-caption text-bold text-primary">Sitio Web</div>
+                                            <div class="text-caption text-bold text-primary">{{ $tr('qlogistic.layout.form.webUrl') }}</div>
                                             <div class="text-caption">{{ form.webUrl || 'www.nombreempresa.com' }}</div>
                                         </q-item-section>
                                     </q-item>
@@ -132,9 +132,9 @@
                     Crear Orden
                 </q-tooltip>
             </q-btn>
-            <q-btn no-caps rounded icon="fas fa-plus" class="q-pa-sm desktop-only" size="sm" color="primary" label="Crear Orden" :to="{name: 'qlogistic.orders.create'}" />
+            <q-btn no-caps rounded icon="fas fa-plus" class="q-pa-sm desktop-only" size="sm" color="primary" :label="$tr('qlogistic.layout.ordersCreate')" :to="{name: 'qlogistic.orders.create'}" />
             <div>&nbsp;</div>
-            <q-btn no-caps rounded icon="fas fa-clipboard-list" class="q-pa-sm desktop-only" size="sm" color="positive" label="Ver Órdenes" :to="{name: 'qlogistic.orders.show'}" />
+            <q-btn no-caps rounded icon="fas fa-clipboard-list" class="q-pa-sm desktop-only" size="sm" color="positive" :label="$tr('qlogistic.layout.ordersShow')" :to="{name: 'qlogistic.orders.index'}" />
         </q-page-sticky>
         <q-page-sticky position="top-right" :offset="[18, 18]" class="mobile-only">
             <q-btn rounded dense icon="fas fa-edit" class="q-pa-sm" size="sm" color="secondary" v-if="this.$attrs.edit" :to="this.$attrs.edit.to">
@@ -143,6 +143,7 @@
                 </q-tooltip>
             </q-btn>
         </q-page-sticky>
+        <inner-loading :visible="loading" />
     </div>
 </template>
 
@@ -153,9 +154,16 @@
         components:{
             recentOrders
         },
+        computed:{
+          userData(){
+              return this.$store.state.quserAuth.userData
+          }
+        },
         data(){
             return {
-                form: {}
+                form: {},
+                loading: false,
+                itemId: null,
             }
         },
         mounted(){
@@ -166,9 +174,17 @@
         methods:{
             async init(){
                 this.$root.$emit('dataToHeader',this.$attrs)
+                this.getData()
             },
             async getData(){
-
+                if(this.userData.business) {
+                    await this.$crud.show('apiRoutes.qlogistic.business', this.userData.business.id).then(response => {
+                        this.form = this.$clone(response.data)
+                        this.itemId = this.$clone(this.form.id)
+                    }).catch(error => {
+                        this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                    })
+                }
             }
         }
     }

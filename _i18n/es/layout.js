@@ -1,6 +1,8 @@
 export default {
   activeOrders: 'Ordenes Activas',
   viewOrder: 'Ver Orden',
+  ordersCreate: 'Crear Orden',
+  ordersShow: 'Ver Órdenes',
   featuredSupporters: 'Colaboradores Destacados',
   business: 'Empresas',
   orderAverage: 'Promedio de Ordenes por Mes',
