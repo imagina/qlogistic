@@ -3,7 +3,7 @@
         <div class="row full-width q-pb-md q-px-sm">
             <div class="col-12">
                 <q-card class="q-pa-md" style="border-radius: 10px">
-                    <q-card-section>
+                    <q-card-section v-if="success">
                         <div class="row">
                             <div class="col-12">
                                 <q-list>
@@ -35,7 +35,7 @@
                 </q-card>
             </div>
         </div>
-        <div class="row full-width q-pa-sm">
+        <div class="row full-width q-pa-sm" v-if="success">
             <div class="col-12 col-md-6">
                 <q-card class="q-pa-md" style="border-radius: 10px">
                     <q-card-section>
@@ -64,7 +64,7 @@
                                         <div class="text-caption text-primary text-bold q-pl-sm">Embalaje</div>
                                     </div>
                                     <div class="col-12 q-my-md">
-                                        <div class="text-subtitle2 text-bold text-primary">Observaciones</div>
+                                        <div class="text-subtitle2 text-bold text-primary">{{ $tr('qlogistic.layout.form.observations2') }}</div>
                                         <div class="text-caption text-justify">
                                             {{ order.observations }}
                                         </div>
@@ -86,8 +86,8 @@
             <div class="col-12 col-md-6">
                 <div class="row q-px-lg">
                     <div class="col-12">
-                        <div class="text-h6 text-primary text-bold q-mt-xl q-mx-md">Historial</div>
-                        <orderHistory :id="itemId" />
+                        <div class="text-h6 text-primary text-bold q-mt-xl q-mx-md">{{ $tr('qlogistic.layout.historial') }}</div>
+                        <orderHistory :id="itemId" @input="init" />
                     </div>
                 </div>
             </div>
@@ -118,6 +118,7 @@
                 showUpdateDialog: false,
                 showQRDialog: false,
                 loading: false,
+                success: false,
             }
         },
         mounted(){
@@ -128,10 +129,12 @@
         },
         methods:{
             async init(){
+                this.success = false
                 this.loading = true
                 this.itemId = this.$route.params ? this.$route.params.id : null
                 await this.getData()
                 this.loading = false
+                this.success = true
             },
             async getData(){
                 let params = {

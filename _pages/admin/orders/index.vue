@@ -8,7 +8,7 @@
                             <div class="text-primary text-bold">
                                 N°. {{ order.id.toString().padStart(5,'0') }}
                                 <span class="float-right mobile-only">
-                                    {{ order.status }}
+                                    {{ order.orderStatus.name }}
                                 </span>
                             </div>
                             <q-separator class="q-my-md"/>
@@ -40,7 +40,7 @@
                         </div>
                         <div class="col-12 col-md-3 text-center gt-sm">
                             <div class="q-py-sm">
-                                <q-chip :label="order.status"/>
+                                <q-chip :label="order.orderStatus.name"/>
                             </div>
                             <div class="q-pt-sm">
                                 <q-btn color="positive" label="Ver Orden" :to="{name: 'qlogistic.orders.show',params:{id: order.id}}" />
@@ -82,15 +82,15 @@
             })
         },
         methods:{
-            init(){
+            async init(){
                 this.loading = true
-                this.getData()
+                await this.getData()
                 this.loading = false
             },
             async getData(){
                 let params = {
                     params:{
-                        include: 'originBusiness,destinationBusiness',
+                        include: 'originBusiness,destinationBusiness,orderStatus',
                     }
                 }
                 await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{

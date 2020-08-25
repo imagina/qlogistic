@@ -12,6 +12,7 @@ export default {
   orderCreation: 'Order Creation',
   addItem: 'Add Package Item',
   deleteItem: 'Delete Package Item',
+  historial: 'History',
   form:{
     origin: 'Origin',
     destination: 'Destination',
@@ -25,9 +26,17 @@ export default {
     hospitalary: 'Hospitalary Network',
     observations: 'Delivery and/or Collection Observations',
     observations2: 'Observations',
+    transportBusiness: 'Transport Business',
+    transportSelection: 'Select Business',
+    deliveredTo: 'Delivered to',
+    deliveredToName: 'Employee Name',
+    businessPosition: 'Position',
+    signature: 'Signature',
     additionalInfo: 'Additional Info',
     originBusiness: 'Origin Business',
     originBusinessName: 'Business Name',
     package: 'Package',
+    typeTerrestrial: 'Terrestrial',
+    typeAir: 'Air',
   }
 }

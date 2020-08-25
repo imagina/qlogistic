@@ -12,11 +12,11 @@
                         <div class="text-caption q-px-md">
                             <div class="q-pa-xs">
                                 <div><b>{{ $tr('qlogistic.layout.form.origin') }}:</b> {{ history.order.originBusiness.name }}</div>
-                                <div>Lorem Ipsum, Ibagué - Tolima</div>
+                                <div><b>{{ $tr('ui.label.address') }}:</b> {{ history.order.originBusiness.coords }}, {{ history.order.originBusiness.city.name }}</div>
                             </div>
                             <div class="q-pa-xs">
                                 <div><b>{{ $tr('qlogistic.layout.form.destination') }}:</b> {{ history.order.destinationBusiness.name }}</div>
-                                <div>Lorem Ipsum, Manizales - Caldas</div>
+                                <div><b>{{ $tr('ui.label.address') }}:</b> {{ history.order.destinationBusiness.coords }}, {{ history.order.destinationBusiness.city.name }}</div>
                             </div>
                             <div class="q-pa-xs">
                                 <b>{{ $tr('ui.form.status') }}:</b> {{ history.orderStatus.name }}
@@ -26,7 +26,7 @@
                 </q-item-section>
                 <q-item-section avatar class="items-baseline">
                     <div class="col-12 q-py-lg">
-                        <q-btn flat dense color="positive" icon="far fa-eye">
+                        <q-btn flat dense color="positive" icon="far fa-eye" @click="()=> {itemSelected = history.id;showHistoryModal = true}">
                             <q-tooltip>
                                 Ver
                             </q-tooltip>
@@ -34,13 +34,16 @@
                     </div>
                 </q-item-section>
             </q-item>
+            <orderHistoryModal :itemId="itemSelected" v-model="showHistoryModal" />
         </q-list>
         <inner-loading :visible="loading"/>
     </div>
 </template>
 <script>
+    import OrderHistoryModal from "@imagina/qlogistic/_components/orders/orderHistoryModal";
     export default {
         name: "orderHistory",
+        components: {OrderHistoryModal},
         props:{
             id:{
                 default: null
@@ -54,6 +57,8 @@
                 histories: [],
                 loading: false,
                 success: false,
+                itemSelected: null,
+                showHistoryModal: false,
             }
         },
         mounted(){
@@ -67,8 +72,10 @@
                 this.loading = true
                 let params = {
                     params:{
-                        include: 'order,order.originBusiness,order.destinationBusiness,orderStatus',
-                        order: this.id
+                        include: 'order,order.originBusiness,order.destinationBusiness,orderStatus,order.city,order.originBusiness.city,order.destinationBusiness.city',
+                        filter:{
+                            orderId: this.id
+                        },
                     }
                 }
                 await this.$crud.index('apiRoutes.qlogistic.orderStatusHistories',params).then(response =>{

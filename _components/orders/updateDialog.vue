@@ -35,11 +35,11 @@
                         <q-separator class="q-my-md" />
                         <div class="row" v-if="locale.form.orderStatusId === 3">
                             <div class="col-12">
-                                <q-radio label="Terrestre" color="primary" :val="1" />
-                                <q-radio label="Aéreo" color="primary" :val="2" />
+                                <q-radio :label="$tr('qlogistic.layout.form.typeTerrestrial')" color="primary" :val="1" v-model="locale.formTemplate.type" />
+                                <q-radio :label="$tr('qlogistic.layout.form.typeAir')" color="primary" :val="2" v-model="locale.formTemplate.type" />
                             </div>
                             <div class="col-12">
-                                <div class="text-primary text-caption text-bold q-px-md q-py-sm">Empresa Transportadora</div>
+                                <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.transportBusiness') }}:</div>
                                 <q-select
                                         outlined
                                         dense
@@ -47,7 +47,7 @@
                                         :loading="businessLoading"
                                         v-model="locale.formTemplate.transportBusinessId"
                                         :options="businessOptions"
-                                        label="Selección de Empresa"
+                                        :label="$tr('qlogistic.layout.form.transportSelection')"
                                         map-options
                                         emit-value
                                         use-input
@@ -59,20 +59,20 @@
                         </div>
                         <div class="row" v-if="locale.form.orderStatusId === 5">
                             <div class="col-12">
-                                <div class="text-primary text-caption text-bold q-px-md q-py-sm">Entregado A:</div>
-                                <q-input  outlined dense label="Nombre funcionario"
+                                <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.deliveredTo') }}:</div>
+                                <q-input  outlined dense :label="$tr('qlogistic.layout.form.deliveredToName')"
                                           v-model="locale.formTemplate.deliveredTo"
                                           :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
                             </div>
                             <div class="col-12">
-                                <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.label.phone') }}:</div>
-                                <q-input  outlined dense label="Teléfono"
+                                <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.form.phone') }}:</div>
+                                <q-input  outlined dense :label="$tr('ui.form.phone')"
                                           v-model="locale.formTemplate.phone"
                                           :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
                             </div>
                             <div class="col-12">
-                                <div class="text-primary text-caption text-bold q-px-md q-py-sm">Cargo:</div>
-                                <q-input  outlined dense label="Cargo"
+                                <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.businessPosition') }}:</div>
+                                <q-input  outlined dense :label="$tr('qlogistic.layout.form.businessPosition')"
                                           v-model="locale.formTemplate.businessPosition"
                                           :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
                             </div>
@@ -89,7 +89,7 @@
                         <div class="row" v-if="locale.form.orderStatusId === 5">
                             <q-separator class="q-my-md" />
                             <div class="col-12">
-                                <div class="text-subtitle2 text-bold text-primary q-px-md q-py-sm">Firma:</div>
+                                <div class="text-subtitle2 text-bold text-primary q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.signature') }}:</div>
                                 <q-input  outlined dense label="" type="textarea"
                                           v-model="locale.formTemplate.signature"
                                           :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
@@ -136,7 +136,8 @@
                       observations: null,
                       orderStatusId: 1,
                       orderId: this.itemId,
-                      userId: this.$store.state.quserAuth.userData.id
+                      userId: this.$store.state.quserAuth.userData.id,
+                      type: 1,
                   }
               }
           }
@@ -177,7 +178,7 @@
             },
             async getBusiness() {
                 await this.$crud.index('apiRoutes.qlogistic.business').then(response => {
-                    this.business = this.$clone(response.data)
+                    this.business = this.$array.select(response.data, { label: 'name', id: 'id' })
                     this.businessOptions = this.$clone(this.business)
                 }).catch(error => {
                     this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
@@ -190,6 +191,7 @@
                     this.$crud.create(configName, this.getDataForm()).then(response => {
                         this.$alert.success({message: `${this.$tr('ui.message.recordCreated')}`})
                         this.loading = false
+                        this.show = false
                     }).catch(error => {
                         this.loading = false
                         this.$alert.error({message: this.$tr('ui.message.recordNoUpdated'), pos: 'bottom'})
