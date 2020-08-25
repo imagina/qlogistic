@@ -61,6 +61,11 @@
       featuredSupporters,
       highCharts: Chart
     },
+    mounted(){
+      this.$nextTick(()=>{
+        this.$root.$emit('dataToHeader',this.$attrs)
+      })
+    },
     data(){
       return {
         chartOptionsOrders: {

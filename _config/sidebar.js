@@ -4,8 +4,9 @@ const pages = config('pages') // Get Pages from config
 export default [
     pages.qlogistic.businessShow,
     {
-        title: "Ordenes",
+        title: "qlogistic.sidebar.adminGroup",
         icon: "fas fa-clipboard-list",
+        translatable: false,
         children:[
             pages.qlogistic.ordersCreate,
             pages.qlogistic.ordersSearch,

@@ -115,7 +115,11 @@
       //configList,
       menuList
     },
-    watch: {},
+    watch: {
+      $route (to, from){
+        this.attribs = null
+      }
+    },
     mounted() {
       this.$nextTick(function () {
         this.$root.$on('dataToHeader',this.datatoHeader)
