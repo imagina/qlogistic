@@ -24,10 +24,10 @@
                                                         <q-img :src="form.mainImage.path" v-if="form.mainImage" />
                                                     </div>
                                                     <div>
-                                                        <q-btn size="sm" flat dense color="secondary" icon="fab fa-facebook" />
-                                                        <q-btn size="sm" flat dense color="secondary" icon="fab fa-instagram" />
-                                                        <q-btn size="sm" flat dense color="secondary" icon="fab fa-twitter" />
-                                                        <q-btn size="sm" flat dense color="secondary" icon="fab fa-linkedin-in" />
+                                                        <q-btn type="a" size="sm" flat dense color="secondary" icon="fab fa-facebook" :href="form.facebookUrl" target="_blank" />
+                                                        <q-btn type="a" size="sm" flat dense color="secondary" icon="fab fa-instagram" :href="form.instagramUrl" target="_blank" />
+                                                        <q-btn type="a" size="sm" flat dense color="secondary" icon="fab fa-twitter" :href="form.twitterUrl" target="_blank" />
+                                                        <q-btn type="a" size="sm" flat dense color="secondary" icon="fab fa-linkedin-in" :href="form.youtubeUrl" target="_blank" />
                                                     </div>
                                                     <q-separator class="q-my-md" />
                                                     <div class="text-caption text-justify">
@@ -123,7 +123,7 @@
                 </q-card>
             </div>
             <div class="col-12 col-md-6 q-pa-sm">
-                <recentOrders :id="itemId" />
+                <recentOrders />
             </div>
         </div>
         <q-page-sticky position="bottom-right" :offset="[18, 18]">
@@ -177,14 +177,21 @@
                 this.getData()
             },
             async getData(){
-                if(this.userData.business) {
-                    await this.$crud.show('apiRoutes.qlogistic.business', this.userData.business.id).then(response => {
-                        this.form = this.$clone(response.data)
-                        this.itemId = this.$clone(this.form.id)
-                    }).catch(error => {
-                        this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
-                    })
+                let params = {
+                    params: {
+                        filter: {
+                            allTranslations: true,
+                            user: this.userData.id,
+                        }
+                    }
                 }
+                await this.$crud.index('apiRoutes.qlogistic.business',params).then(response => {
+                    let dataForm = this.$clone(response.data[0])
+                    this.form = dataForm
+                    this.itemId= dataForm.id
+                }).catch(error => {
+                    this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                })
             }
         }
     }

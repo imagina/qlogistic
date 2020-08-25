@@ -21,15 +21,15 @@
                                                     <b>Fecha: </b> {{ order.createdAt }}
                                                 </div>
                                                 <div class="col-12 col-lg-4 right-border text-center-md">
-                                                    {{ order.enterprise }}
+                                                    {{ order.originBusiness.name }}
                                                 </div>
                                                 <div class="col-12 col-lg-4 right-border text-center-md">
-                                                    <b>Origen: </b> {{ order.origin }}
+                                                    <b>Origen: </b> {{ order.originBusiness.coords }}
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-12 col-lg-4 text-center-md">
-                                            <b>Destino: </b> {{ order.destination }}
+                                            <b>Destino: </b> {{ order.destinationBusiness.name }}
                                         </div>
                                     </div>
                                 </div>
@@ -88,7 +88,12 @@
                 this.loading = false
             },
             async getData(){
-                await this.$crud.index('apiRoutes.qlogistic.orders').then(response =>{
+                let params = {
+                    params:{
+                        include: 'originBusiness,destinationBusiness',
+                    }
+                }
+                await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{
                     this.orders = response.data
                 }).catch(error => {
                     this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})

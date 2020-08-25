@@ -65,7 +65,7 @@
                                             <div class="col-12">
                                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.form.description') }}</div>
                                                 <q-input rounded  outlined dense :label="`${$tr('ui.form.description')}`"
-                                                         :rules="[val => !!val || $tr('ui.message.fieldRequired')]" type="textarea"/>
+                                                         :rules="[val => !!val || $tr('ui.message.fieldRequired')]" type="textarea" v-model="locale.formTemplate.description"/>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">Usuario</div>
@@ -134,7 +134,7 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.form.address') }}</div>
-                                                <q-input rounded  outlined dense :label="$tr('ui.form.address')"
+                                                <q-input rounded  outlined dense :label="$tr('ui.form.address')" v-model="locale.formTemplate.coords"
                                                          :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
                                             </div>
                                             <div class="col-12 col-md-6">
@@ -150,6 +150,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.webUrl') }}</div>
                                                 <q-input rounded  outlined dense :label="$tr('qlogistic.layout.form.webUrl')"
+                                                         v-model="locale.formTemplate.webUrl"
                                                          :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
                                             </div>
                                         </div>
@@ -187,6 +188,7 @@
         },
         data(){
             return {
+                itemId: null,
                 locale: {},
                 loading: false,
                 loadingCategory: false,
@@ -208,11 +210,9 @@
                 return {
                     fields:{
                         nit: null,
-                        description: null,
-                        name: null,
                         email: null,
                         phone: null,
-                        userId: null,
+                        userId: this.$store.state.quserAuth.userData.id,
                         cityId: null,
                         provinceId: null,
                         webUrl: null,
@@ -220,10 +220,16 @@
                         instagramUrl: null,
                         twitterUrl: null,
                         youtubeUrl: null,
+                        coords: null,
                     },
                     fieldsTranslatable:{
+                        description: null,
+                        name: null,
                     }
                 }
+            },
+            userData(){
+                return this.$store.state.quserAuth.userData
             }
         },
         mounted(){
@@ -238,13 +244,36 @@
                 this.loading = true
                 this.locale = this.$clone(this.dataLocale)//Add fields
                 if (this.locale.success) this.$refs.localeComponent.vReset()//Reset locale
-                this.getUsers()
-                this.getProvinces()
+                await this.getUsers()
+                await this.getProvinces()
+                await this.getData()
                 this.loading = false
                 this.success = true
             },
+            //get business data
+            async getData(){
+                let configName = 'apiRoutes.qlogistic.business'
+                let params = {
+                    params: {
+                        filter: {
+                            allTranslations: true,
+                            user: this.userData.id,
+                        }
+                    }
+                }
+                //Request
+                this.$crud.index(configName,params).then(response => {
+                    if(response.data.length > 0) {
+                        let dataForm = this.$clone(response.data[0])
+                        this.locale.form = dataForm
+                        this.itemId= dataForm.id
+                    }
+                }).catch(error => {
+                    this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                })
+            },
             //Search users
-            getUsers() {
+            async getUsers() {
                 this.userLoading = true
                 let configName = 'apiRoutes.quser.users'
                 let params = {
@@ -270,7 +299,7 @@
             },
 
             //Search provinces
-            getProvinces() {
+            async getProvinces() {
                 this.provinceLoading = true
                 let configName = 'apiRoutes.qlocations.provinces'
                 let params = {
@@ -296,7 +325,7 @@
             },
 
             //Search cities
-            getCities(){
+            async getCities(){
                 this.cityLoading = true
                 let configName = 'apiRoutes.qlocations.cities'
                 let params = {
@@ -316,11 +345,39 @@
                     this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
                 })
             },
-            getBusiness(){
-
+            async save(){
+                if (await this.$refs.localeComponent.validateForm()) {
+                    this.loading = true
+                    let configName = 'apiRoutes.qlogistic.business'
+                    if (this.itemId === null) {
+                        this.$crud.create(configName, this.getDataForm()).then(response => {
+                            this.$alert.success({message: `${this.$tr('ui.message.recordCreated')}`})
+                            this.itemId = response.data.id
+                            this.loading = false
+                        }).catch(error => {
+                            this.loading = false
+                            this.$alert.error({message: this.$tr('ui.message.recordNoUpdated'), pos: 'bottom'})
+                        })
+                    } else {
+                        this.$crud.update(configName, this.itemId, this.getDataForm()).then(response => {
+                            this.$alert.success({message: `${this.$tr('ui.message.recordUpdated')}`})
+                            this.loading = false
+                        }).catch(error => {
+                            this.loading = false
+                            this.$alert.error({message: this.$tr('ui.message.recordNoUpdated'), pos: 'bottom'})
+                        })
+                    }
+                }
             },
-            save(){
-
+            getDataForm() {
+                let response = this.locale.form
+                for (var item in response) {
+                    let valueItem = response[item]
+                    if (valueItem == null || valueItem == undefined)
+                        delete response[item]
+                }
+                //response.selectable = JSON.stringify(response.selectable)
+                return response
             },
         }
     }

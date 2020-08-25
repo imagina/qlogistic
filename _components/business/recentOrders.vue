@@ -45,7 +45,9 @@
             }
         },
         computed:{
-
+            userData(){
+                return this.$store.state.quserAuth.userData
+            }
         },
         data(){
             return {
@@ -64,7 +66,7 @@
                 let params = {
                     params:{
                         filter: {
-                            business: this.id
+                            user: this.userData.id
                         }
                     }
                 }

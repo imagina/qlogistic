@@ -23,7 +23,7 @@
                                         <q-item-section side>
                                             <div class="row q-py-sm">
                                                 <div class="col-12">
-                                                    <div class="text-h6 text-secondary">Estado: Recibido</div>
+                                                    <div class="text-h6 text-secondary">Estado: {{ order.orderStatus.name }}</div>
                                                 </div>
                                             </div>
                                         </q-item-section>
@@ -43,18 +43,18 @@
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-12 q-my-sm">
-                                        <div class="text-subtitle1 text-bold text-uppercase q-pl-sm">Origen:</div>
-                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />Nombre de la Empresa</div>
-                                        <div class="text-caption text-primary text-bold q-pl-sm">Empresa</div>
-                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />Lorem Ipsum, Ibagué - Tolima</div>
-                                        <div class="text-caption text-primary text-bold q-pl-sm">Dirección</div>
+                                        <div class="text-subtitle1 text-bold text-uppercase q-pl-sm">{{ $tr('qlogistic.layout.form.origin')  }}:</div>
+                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ order.originBusiness.name }}</div>
+                                        <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.orderBusiness')  }}</div>
+                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ order.originBusiness.coords }} , {{ order.originBusiness.city.name }}</div>
+                                        <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.form.origin')  }}</div>
                                         <q-separator class="q-my-md" />
-                                        <div class="text-subtitle1 text-bold text-uppercase q-pl-sm">Destino:</div>
-                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />Manizales - Caldas</div>
-                                        <div class="text-caption text-primary text-bold q-pl-sm">Destino</div>
+                                        <div class="text-subtitle1 text-bold text-uppercase q-pl-sm">{{ $tr('qlogistic.layout.form.destination')  }}:</div>
+                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ order.city.name }}, {{ order.city.province.name }}</div>
+                                        <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.form.destination')  }}</div>
                                         <q-separator class="q-my-md" />
-                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />Nombre Institución</div>
-                                        <div class="text-caption text-primary text-bold q-pl-sm">Red Hospitalaria</div>
+                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ order.destinationBusiness.name }}</div>
+                                        <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.form.hospitalary')  }}</div>
                                         <q-separator class="q-my-md" />
                                         <div class="text-subtitle1 text-bold text-uppercase q-pl-sm">Info Adicional:</div>
                                         <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />30</div>
@@ -66,12 +66,7 @@
                                     <div class="col-12 q-my-md">
                                         <div class="text-subtitle2 text-bold text-primary">Observaciones</div>
                                         <div class="text-caption text-justify">
-                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-                                            sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-                                            magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
-                                            quis nostrud exerci tation ullamcorper suscipit lobortis nisl
-                                            ut aliquip ex in vulputate velit esse molestie consequat,
-                                            feugiat nulla facilisis at vero eros et accumsan et iusto .
+                                            {{ order.observations }}
                                         </div>
                                     </div>
                                 </div>
@@ -118,7 +113,7 @@
         },
         data(){
             return {
-                form: {},
+                order: {},
                 itemId: null,
                 showUpdateDialog: false,
                 showQRDialog: false,
@@ -139,10 +134,15 @@
                 this.loading = false
             },
             async getData(){
-                await this.$crud.index('apiRoutes.qlogistic.orders', this.itemId).then(response =>{
-                    this.form = response.data
+                let params = {
+                    params:{
+                        include: 'orderStatus,originBusiness,originBusiness.city,destinationBusiness,destinationBusiness.city,city,city.province'
+                    }
+                }
+                await this.$crud.show('apiRoutes.qlogistic.orders', this.itemId, params).then(response =>{
+                    this.order = response.data
                 }).catch(error =>{
-
+                    this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
                 })
             }
         }

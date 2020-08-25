@@ -117,7 +117,7 @@
     },
     watch: {
       $route (to, from){
-        this.attribs = null
+        this.attribs = {}
       }
     },
     mounted() {
