@@ -27,7 +27,7 @@
                     </q-item-section>
                     <q-item-section avatar class="items-baseline">
                         <div class="col-12 q-py-sm">
-                            <q-btn flat dense color="positive" icon="far fa-eye" @click="()=> {itemSelected = history.id;showHistoryModal = true}">
+                            <q-btn flat dense color="positive" icon="far fa-eye" :to="{name: 'qlogistic.orders.show',params:{id: order.id}}">
                                 <q-tooltip>
                                     {{ $tr('qlogistic.layout.viewOrder') }}
                                 </q-tooltip>

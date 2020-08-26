@@ -5,10 +5,10 @@
           <orders label="Total de Ordenes" />
       </div>
       <div class="col-4 col-lg-3 q-px-sm">
-        <orders label="Ordenes en Progreso" :status="1" color="negative" />
+        <orders label="Ordenes en Progreso" status="1,2,3,4,5" color="negative" />
       </div>
       <div class="col-4 col-lg-3 q-px-sm">
-        <orders label="Ordenes Completadas" :status="2" color="orange" />
+        <orders label="Ordenes Completadas" status="6" color="orange" />
       </div>
     </div>
     <div class="row q-col-gutter-y-md full-width q-py-md">
@@ -64,6 +64,7 @@
     mounted(){
       this.$nextTick(()=>{
         this.$root.$emit('dataToHeader',this.$attrs)
+        this.init()
       })
     },
     data(){
@@ -112,7 +113,7 @@
                 text: ""
             },
             xAxis: {
-                categories: ["", "", "", "", ""],
+                categories: [],
                 title: {
                     text: null
                 }
@@ -121,7 +122,7 @@
                 gridLineWidth:0,//Set this to zero
                 min: 0,
                 title: {
-                    text: "Empresas",
+                    text: this.$tr('qlogistic.layout.orders'),
                     align: "middle"
                 },
                 labels: {
@@ -134,10 +135,40 @@
             series: [
                 {
                     name: "Empresas",
-                    data: [100, 20, 300, 203, 50]
+                    data: []
                 }
             ]
         }
+      }
+    },
+    methods:{
+      async init(){
+        await this.getBusiness()
+      },
+      async getBusiness(){
+        let params = {
+          params: {
+            include: 'orders',
+            filter: {
+              allTranslations: true,
+            }
+          }
+        }
+        await this.$crud.index('apiRoutes.qlogistic.business',params).then(response => {
+          let business = this.$clone(response.data)
+          let businessSeries = {
+            name: this.$tr('qlogistic.layout.orders'),
+            data: []
+          }
+          for(let x in business){
+            businessSeries.data.push(business[x].orders ? business[x].orders.length : 0)
+            this.chartOptionsOrders2.xAxis.categories.push(business[x].name)
+          }
+          this.chartOptionsOrders2.series = [businessSeries]
+        }).catch(error => {
+          console.error(error)
+          this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+        })
       }
     }
   }

@@ -247,6 +247,7 @@
                 await this.getUsers()
                 await this.getProvinces()
                 await this.getData()
+                await this.getCities()
                 this.loading = false
                 this.success = true
             },
@@ -255,6 +256,7 @@
                 let configName = 'apiRoutes.qlogistic.business'
                 let params = {
                     params: {
+                        include: 'city',
                         filter: {
                             allTranslations: true,
                             user: this.userData.id,
@@ -262,10 +264,11 @@
                     }
                 }
                 //Request
-                this.$crud.index(configName,params).then(response => {
+                await this.$crud.index(configName,params).then(response => {
                     if(response.data.length > 0) {
                         let dataForm = this.$clone(response.data[0])
                         this.locale.form = dataForm
+                        this.locale.form.provinceId= this.$clone(dataForm.city.provinceId)
                         this.itemId= dataForm.id
                     }
                 }).catch(error => {

@@ -1,4 +1,5 @@
 export default {
+  orders: 'Órdenes',
   activeOrders: 'Ordenes Activas',
   viewOrder: 'Ver Orden',
   ordersCreate: 'Crear Orden',
@@ -13,6 +14,7 @@ export default {
   addItem: 'Añadir Elemento al Embalaje',
   deleteItem: 'Quitar Elemento del Embalaje',
   historial: 'Historial',
+  generateQR: 'Generar QR',
   form:{
     origin: 'Origen',
     destination: 'Destino',

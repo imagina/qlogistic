@@ -14,7 +14,7 @@
                         {{ user.fullName }}
                     </q-item-label>
                     <q-item-label class="text-primary text-caption text-bold">
-                        Ordenes Procesadas: {{ user.orders || 0 }}
+                        Ordenes Procesadas: {{ user.logisticOrders.length || 0 }}
                     </q-item-label>
                 </q-item-section>
             </q-item>
@@ -49,14 +49,12 @@
                 let configName = 'apiRoutes.quser.users'
                 let params = {
                     params: {
+                        include: 'logisticOrders',
                         filter: {
                             allTranslations: true,
                         }
                     }
                 }
-                /*if(typeof this.locale.form.countryId != 'undefined'){
-                  params.params.filter.country = this.locale.form.countryId
-                }*/
                 //Request
                 this.$crud.index(configName,params).then(response => {
                     this.users = response.data

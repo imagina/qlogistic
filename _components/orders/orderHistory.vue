@@ -93,7 +93,7 @@
 <style lang="stylus">
     #orderHistoryComponent
         .q-list
-            margin: 10px 30px
+            margin: 10px 0 10px 30px
             border-left 3px solid $grey-4
             .q-item
                 margin-left -25px

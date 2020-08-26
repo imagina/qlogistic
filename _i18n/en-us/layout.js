@@ -1,4 +1,5 @@
 export default {
+  orders: 'Orders',
   activeOrders: 'Active Orders',
   viewOrder: 'View Order',
   featuredSupporters: 'Featured Supporters',
@@ -13,6 +14,7 @@ export default {
   addItem: 'Add Package Item',
   deleteItem: 'Delete Package Item',
   historial: 'History',
+  generateQR: 'Generate QR',
   form:{
     origin: 'Origin',
     destination: 'Destination',

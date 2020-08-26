@@ -72,12 +72,20 @@
                                 </div>
                             </div>
                             <div class="col-12 text-right desktop-only">
-                                <q-btn class="q-mr-sm" label="Generar QR" icon="fas fa-print" rounded color="primary" @click="()=>{showQRDialog = true}" />
-                                <q-btn :label="$tr('ui.label.update')" icon="fas fa-save" rounded color="positive" @click="()=>{showUpdateDialog = true}" />
+                                <q-btn class="q-mr-sm" :label="$tr('qlogistic.layout.generateQR')" icon="fas fa-print" rounded color="primary" @click="()=>{showQRDialog = true}" />
+                                <q-btn v-if="$auth.hasAccess('ilogistics.orderstatushistories.create')"  :label="$tr('ui.label.update')" icon="fas fa-save" rounded color="positive" @click="()=>{showUpdateDialog = true}" />
                             </div>
                             <q-page-sticky position="bottom-right" :offset="[18, 60]" class="mobile-only">
-                                <q-btn class="q-mr-sm" label="Generar QR" icon="fas fa-print" rounded color="primary" @click="()=>{showQRDialog = true}" />
-                                <q-btn :label="$tr('ui.label.update')" icon="fas fa-save" rounded color="positive" @click="()=>{showUpdateDialog = true}" />
+                                <q-btn class="q-mr-sm" icon="fas fa-print" rounded color="primary" @click="()=>{showQRDialog = true}">
+                                    <q-tooltip>
+                                        {{ $tr('qlogistic.layout.generateQR') }}
+                                    </q-tooltip>
+                                </q-btn>
+                                <q-btn v-if="$auth.hasAccess('ilogistics.orderstatushistories.create')" icon="fas fa-save" rounded color="positive" @click="()=>{showUpdateDialog = true}">
+                                    <q-tooltip>
+                                        {{ $tr('ui.label.update') }}
+                                    </q-tooltip>
+                                </q-btn>
                             </q-page-sticky>
                         </div>
                     </q-card-section>

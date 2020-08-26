@@ -93,7 +93,7 @@
     </q-header>
 
     <!-- MENU -->
-    <q-drawer bordered id="menu_master" class="no-shadow" v-model="drawer.menu">
+    <q-drawer bordered id="menu_master" class="no-shadow bg-primary" content-class="bg-primary" v-model="drawer.menu">
       <!-- === LOGO === -->
       <div class="text-center q-pa-xl full-width" style="background-color: #074E89">
         <router-link :to="{ name: 'app.home'}" tag="a">

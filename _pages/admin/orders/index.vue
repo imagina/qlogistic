@@ -34,7 +34,7 @@
                                     </div>
                                 </div>
                                 <div class="col-4 lt-md flex content-end">
-                                    <q-btn color="positive" label="Ver Orden" :to="{name: 'qlogistic.orders.show',params:{id: order.id}}" />
+                                    <q-btn color="positive" :label="$tr('qlogistic.layout.viewOrder')" :to="{name: 'qlogistic.orders.show',params:{id: order.id}}" />
                                 </div>
                             </div>
                         </div>

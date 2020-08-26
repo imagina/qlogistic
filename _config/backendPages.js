@@ -44,7 +44,7 @@ export default {
         }
     },
     ordersIndex:{
-        permission: null,
+        permission: 'ilogistics.orders.index',
         activated: true,
         path: '/logistic/orders/index',
         name: 'qlogistic.orders.index',
@@ -61,7 +61,7 @@ export default {
         }
     },
     ordersCreate:{
-        permission: null,
+        permission: 'ilogistics.orders.create',
         activated: true,
         path: '/logistic/orders/create',
         name: 'qlogistic.orders.create',
