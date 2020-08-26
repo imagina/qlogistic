@@ -143,29 +143,6 @@
                                                 <q-input rounded  outlined dense :label="$tr('qlogistic.layout.form.patientDni')"
                                                          :rules="[val => !!val || $tr('ui.message.fieldRequired')]" v-model="locale.formTemplate.customerDni"/>
                                             </div>
-                                            <!--<div class="col-12 col-md-6">
-                                                <div class="text-primary text-caption text-bold q-px-md q-py-sm">N°. de Piezas:</div>
-                                                <q-input rounded  outlined dense label="N°. de Piezas"
-                                                         :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="text-primary text-caption text-bold q-px-md q-py-sm">Embalaje:</div>
-                                                <q-select
-                                                        rounded
-                                                        outlined
-                                                        dense
-                                                        use-chips
-                                                        :loading="hospLoading"
-                                                        :options="hospOptions"
-
-                                                        label="Embalaje"
-                                                        map-options
-                                                        emit-value
-                                                        use-input
-                                                        @filter="(val, update)=>update(()=>{hospOptions = $helper.filterOptions(val,hosp,locale.formTemplate.hospitalaryId)})"
-                                                        option-label="label"
-                                                />
-                                            </div>-->
                                         </div>
                                         <div class="col-12 q-py-sm">
                                             <div class="row">

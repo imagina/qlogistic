@@ -23,7 +23,7 @@
                                         <q-item-section side>
                                             <div class="row q-py-sm">
                                                 <div class="col-12">
-                                                    <div class="text-h6 text-secondary">Estado: {{ order.orderStatus.name }}</div>
+                                                    <div class="text-h6 text-secondary">{{ $tr('ui.form.status') }}: {{ order.orderStatus.name }}</div>
                                                 </div>
                                             </div>
                                         </q-item-section>
@@ -56,12 +56,22 @@
                                         <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ order.destinationBusiness.name }}</div>
                                         <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.form.hospitalary')  }}</div>
                                         <q-separator class="q-my-md" />
-                                        <div class="text-subtitle1 text-bold text-uppercase q-pl-sm">Info Adicional:</div>
-                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />30</div>
-                                        <div class="text-caption text-primary text-bold q-pl-sm">N°. de Piezas</div>
-                                        <q-separator class="q-my-md" />
-                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />Embalaje</div>
-                                        <div class="text-caption text-primary text-bold q-pl-sm">Embalaje</div>
+                                        <div class="text-subtitle1 text-bold text-uppercase q-pl-sm">{{ $tr('qlogistic.layout.form.additionalInfo') }}:</div>
+                                        <div v-for="(item,i) in order.items">
+                                            <q-separator class="q-my-md" />
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />
+                                                        {{ item.name }}
+                                                    </div>
+                                                    <div class="text-caption text-primary text-bold q-pl-sm">{{ item.description }}</div>
+                                                </div>
+                                                <div class="col-3">
+                                                    <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ item.quantity }}</div>
+                                                    <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.form.pieces') }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-12 q-my-md">
                                         <div class="text-subtitle2 text-bold text-primary">{{ $tr('qlogistic.layout.form.observations2') }}</div>
@@ -147,7 +157,7 @@
             async getData(){
                 let params = {
                     params:{
-                        include: 'orderStatus,originBusiness,originBusiness.city,destinationBusiness,destinationBusiness.city,city,city.province'
+                        include: 'items,orderStatus,originBusiness,originBusiness.city,destinationBusiness,destinationBusiness.city,city,city.province'
                     }
                 }
                 await this.$crud.show('apiRoutes.qlogistic.orders', this.itemId, params).then(response =>{

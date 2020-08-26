@@ -40,5 +40,6 @@ export default {
     package: 'Package',
     typeTerrestrial: 'Terrestrial',
     typeAir: 'Air',
+    pieces: '# of pieces',
   }
 }

@@ -40,5 +40,6 @@ export default {
     package: 'Embalaje',
     typeTerrestrial: 'Terrestre',
     typeAir: 'Aéreo',
+    pieces: 'N°. de Piezas',
   }
 }
