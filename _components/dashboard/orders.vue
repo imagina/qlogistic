@@ -53,7 +53,7 @@
             async getData(){
                 let params = {
                     params:{
-                        include: 'status',
+                        include: 'orderStatus',
                         filter:{
                             status: this.status
                         }
