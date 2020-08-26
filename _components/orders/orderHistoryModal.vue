@@ -21,7 +21,7 @@
                             <div><b>Ciudad Destino:</b> {{ history.order.destinationBusiness.city.name  }}</div>
                         </div>
                         <div class="q-pa-xs">
-                            <div><b>Hora: 08:00 am</b></div>
+                            <div><b>Hora: {{ $trd(history.createdAt, {type: 'time'}) }}</b></div>
                         </div>
                         <div class="q-pa-xs">
                             <div><b>Modificado por:</b> {{ history.user.fullName }}</div>
