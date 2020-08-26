@@ -8,7 +8,7 @@ export default {
         layout: () => import('@imagina/qlogistic/_layouts/admin/master'),
     },
     businessShow: {
-        permission: null,
+        permission: 'ibusiness.businesses.edit',
         activated: true,
         path: '/logistic/myBusiness',
         name: 'qlogistic.business.show',
@@ -26,7 +26,7 @@ export default {
         }
     },
     businessEdit: {
-        permission: null,
+        permission: 'ibusiness.businesses.edit',
         activated: true,
         path: '/logistic/myBusiness/edit',
         name: 'qlogistic.business.edit',

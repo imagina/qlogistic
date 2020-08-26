@@ -74,8 +74,9 @@
                                                         outlined
                                                         dense
                                                         use-chips
+                                                        multiple
                                                         :loading="userLoading"
-                                                        v-model="locale.formTemplate.userId"
+                                                        v-model="locale.formTemplate.users"
                                                         :options="usersOptions"
                                                         label="Usuario"
                                                         map-options
@@ -212,6 +213,7 @@
                         nit: null,
                         email: null,
                         phone: null,
+                        users: [],
                         userId: this.$store.state.quserAuth.userData.id,
                         cityId: null,
                         provinceId: null,
@@ -256,7 +258,7 @@
                 let configName = 'apiRoutes.qlogistic.business'
                 let params = {
                     params: {
-                        include: 'city',
+                        include: 'city,users',
                         filter: {
                             allTranslations: true,
                             user: this.userData.id,
@@ -267,8 +269,12 @@
                 await this.$crud.index(configName,params).then(response => {
                     if(response.data.length > 0) {
                         let dataForm = this.$clone(response.data[0])
-                        this.locale.form = dataForm
+                        this.locale.form = this.$clone(dataForm)
                         this.locale.form.provinceId= this.$clone(dataForm.city.provinceId)
+                        this.locale.form.users = []
+                        for(let user of dataForm.users){
+                            this.locale.form.users.push(user.id)
+                        }
                         this.itemId= dataForm.id
                     }
                 }).catch(error => {
