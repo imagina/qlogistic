@@ -402,6 +402,8 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="stylus">
+    .img-fluid
+        width 100%
+        height auto
 </style>

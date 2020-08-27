@@ -5,11 +5,11 @@
                 <div class="col-12 q-pa-sm">
                     <q-card class="q-pa-md" style="border-radius: 10px">
                         <q-card-section>
-                            <div class="row">
-                                <div class="col-12 col-md-5 desktop-only">
+                            <div class="row q-col-gutter-sm">
+                                <div class="col-12 col-md-5" v-if="$q.platform.is.desktop">
                                     <q-img :src="form.mainImage.path" v-if="form.mainImage" />
                                 </div>
-                                <div class="col-12 col-md-7">
+                                <div :class="'col-12'+($q.platform.is.desktop?' col-md-7':'')">
                                     <q-list>
                                         <q-item>
                                             <q-item-section avatar style="width: 30px" class="items-baseline">
@@ -17,22 +17,28 @@
                                                     <q-icon name="fas fa-building" size="xs" color="primary" class="q-mt-sm" />
                                                 </div>
                                             </q-item-section>
-                                            <q-item-section>
-                                                <div class="row q-py-md">
+                                            <q-item-section class="items-baseline">
+                                                <div class="row q-py-md full-width">
                                                     <div class="col-12">
                                                         <div class="text-h6 text-primary q-mb-md">{{ form.name || 'Nombre Empresa' }}</div>
-                                                        <div class="q-py-md mobile-only">
-                                                            <q-img :src="form.mainImage.path" v-if="form.mainImage" />
-                                                        </div>
-                                                        <div>
-                                                            <q-btn type="a" size="sm" flat dense color="secondary" icon="fab fa-facebook" :href="form.facebookUrl || ''" target="_blank" />
-                                                            <q-btn type="a" size="sm" flat dense color="secondary" icon="fab fa-instagram" :href="form.instagramUrl || ''" target="_blank" />
-                                                            <q-btn type="a" size="sm" flat dense color="secondary" icon="fab fa-twitter" :href="form.twitterUrl || ''" target="_blank" />
-                                                            <q-btn type="a" size="sm" flat dense color="secondary" icon="fab fa-linkedin-in" :href="form.youtubeUrl || ''" target="_blank" />
-                                                        </div>
-                                                        <q-separator class="q-my-md" />
-                                                        <div class="text-caption text-justify">
-                                                            {{ form.description || 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex in vulputate velit esse molestie consequat, feugiat nulla facilisis at vero eros et accumsan et iusto.' }}
+                                                        <div class="row q-col-gutter-md">
+                                                            <div :class="'col-12'+($q.platform.is.mobile?' col-md-5':'')">
+                                                                <div class="q-py-md" v-if="$q.platform.is.mobile">
+                                                                    <q-img :src="form.mainImage.path" v-if="form.mainImage" />
+                                                                </div>
+                                                            </div>
+                                                            <div :class="'col-12'+($q.platform.is.mobile?' col-md-7':'')">
+                                                                <div>
+                                                                    <q-btn type="a" size="sm" flat dense color="secondary" icon="fab fa-facebook" :href="form.facebookUrl || ''" target="_blank" />
+                                                                    <q-btn type="a" size="sm" flat dense color="secondary" icon="fab fa-instagram" :href="form.instagramUrl || ''" target="_blank" />
+                                                                    <q-btn type="a" size="sm" flat dense color="secondary" icon="fab fa-twitter" :href="form.twitterUrl || ''" target="_blank" />
+                                                                    <q-btn type="a" size="sm" flat dense color="secondary" icon="fab fa-linkedin-in" :href="form.youtubeUrl || ''" target="_blank" />
+                                                                </div>
+                                                                <q-separator class="q-my-md" />
+                                                                <div class="text-caption text-justify">
+                                                                    {{ form.description || 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex in vulputate velit esse molestie consequat, feugiat nulla facilisis at vero eros et accumsan et iusto.' }}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
