@@ -35,8 +35,10 @@
                         <q-separator class="q-my-md" />
                         <div class="row" v-if="locale.form.orderStatusId === 3">
                             <div class="col-12">
-                                <q-radio :label="$tr('qlogistic.layout.form.typeTerrestrial')" color="primary" :val="1" v-model="locale.formTemplate.type" />
-                                <q-radio :label="$tr('qlogistic.layout.form.typeAir')" color="primary" :val="2" v-model="locale.formTemplate.type" />
+                                <q-field borderless flat v-model="locale.formTemplate.shippingType" :rules="[val => !!val || $tr('ui.message.fieldRequired')]">
+                                    <q-radio :label="$tr('qlogistic.layout.form.typeTerrestrial')" color="primary" :val="1" v-model="locale.formTemplate.shippingType" />
+                                    <q-radio :label="$tr('qlogistic.layout.form.typeAir')" color="primary" :val="2" v-model="locale.formTemplate.shippingType" />
+                                </q-field>
                             </div>
                             <div class="col-12">
                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.transportBusiness') }}:</div>
@@ -53,6 +55,7 @@
                                         use-input
                                         @filter="(val, update)=>update(()=>{businessOptions = $helper.filterOptions(val,business,locale.formTemplate.transportBusinessId)})"
                                         option-label="label"
+                                        :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                 />
                             </div>
                             <q-separator class="q-my-lg" />
@@ -86,6 +89,16 @@
                                           :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
                             </div>
                         </div>
+                        <div class="row" v-if="locale.form.orderStatusId === 3">
+                            <div class="text-subtitle2 text-bold text-primary q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.addPhotos') }}:</div>
+                            <media-form
+                                    v-model="locale.formTemplate.mediasMulti"
+                                    entity="Modules\Ilogistics\Entities\OrderStatusHistory"
+                                    :entityId="itemId || null"
+                                    zone='gallery'
+                                    multiple
+                            />
+                        </div>
                         <div class="row" v-if="locale.form.orderStatusId === 5">
                             <q-separator class="q-my-md" />
                             <div class="col-12">
@@ -109,8 +122,12 @@
 </template>
 
 <script>
+    import mediaForm from '@imagina/qmedia/_components/form'
     export default {
         name: "updateDialog",
+        components:{
+            mediaForm
+        },
         props:{
             value: {default: false},
             itemId: {default: false},
@@ -137,7 +154,8 @@
                       orderStatusId: 1,
                       orderId: this.itemId,
                       userId: this.$store.state.quserAuth.userData.id,
-                      type: 1,
+                      shippingType: 0,
+                      mediasMulti: {},
                   }
               }
           }
@@ -149,7 +167,7 @@
                 success: false,
                 loading: false,
                 businessLoading: false,
-                selectedStatus: { id:1, name:'Recibido'},
+                selectedStatus: { id:1, name:'Recibido' },
                 statuses: [
                     {id:1, name:'Recibido'},
                     {id:2, name:'Transito Ciudad de Origen'},

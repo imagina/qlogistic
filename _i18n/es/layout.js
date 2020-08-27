@@ -15,6 +15,7 @@ export default {
   deleteItem: 'Quitar Elemento del Embalaje',
   historial: 'Historial',
   generateQR: 'Generar QR',
+  businessInfo: 'Información Empresa',
   form:{
     origin: 'Origen',
     destination: 'Destino',
@@ -41,5 +42,12 @@ export default {
     typeTerrestrial: 'Terrestre',
     typeAir: 'Aéreo',
     pieces: 'N°. de Piezas',
+    originCity: 'Ciudad Origen',
+    destinationCity: 'Ciudad Destino',
+    shippingBusiness: 'Empresa de Envío',
+    shipping: 'Envío',
+    editedBy: 'Modificado por',
+    addPhotos: 'Agregar Fotografías',
+    photoSupport: 'Soporte Fotográfico',
   }
 }

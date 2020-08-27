@@ -13,12 +13,17 @@
                             <q-card-section>
                                 <div class="row">
                                     <div class="col-12 col-md-3 q-pa-lg">
-                                        <div class="text-subtitle1 text-uppercase text-bold">Informacion Empresa:</div>
+                                        <div class="text-subtitle1 text-uppercase text-bold">{{ $tr('qlogistic.layout.businessInfo') }}:</div>
                                     </div>
                                     <div class="col-12 col-md-9">
                                         <div class="row q-col-gutter-md">
                                             <div class="col-6 col-md-5">
-
+                                                <media-form
+                                                    v-model="locale.formTemplate.mediasSingle"
+                                                    entity="Modules\Ibusiness\Entities\Business"
+                                                    :entityId="itemId || null"
+                                                    zone='mainimage'
+                                                />
                                             </div>
                                             <div class="col-6 col-md-7">
                                                 <q-input dense v-model="locale.formTemplate.facebookUrl">
@@ -68,7 +73,7 @@
                                                          :rules="[val => !!val || $tr('ui.message.fieldRequired')]" type="textarea" v-model="locale.formTemplate.description"/>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <div class="text-primary text-caption text-bold q-px-md q-py-sm">Usuario</div>
+                                                <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.label.user') }}</div>
                                                 <q-select
                                                         rounded
                                                         outlined
@@ -78,11 +83,11 @@
                                                         :loading="userLoading"
                                                         v-model="locale.formTemplate.users"
                                                         :options="usersOptions"
-                                                        label="Usuario"
+                                                        :label="$tr('ui.label.user')"
                                                         map-options
                                                         emit-value
                                                         use-input
-                                                        @filter="(val, update)=>update(()=>{usersOptions = $helper.filterOptions(val,users,locale.formTemplate.userId)})"
+                                                        @filter="(val, update)=>update(()=>{usersOptions = $helper.filterOptions(val,users,locale.formTemplate.users)})"
                                                         option-label="label"
                                                 />
                                             </div>
@@ -92,7 +97,7 @@
                                 <q-separator class="q-my-md" />
                                 <div class="row q-col-gutter-md">
                                     <div class="col-12 col-md-3 q-pa-xl">
-                                        <div class="text-subtitle1 text-uppercase text-bold">Contacto:</div>
+                                        <div class="text-subtitle1 text-uppercase text-bold">{{ $tr('ui.label.contact') }}:</div>
                                     </div>
                                     <div class="col-12 col-md-9">
                                         <div class="row q-col-gutter-x-md">
@@ -113,6 +118,7 @@
                                                         @blur="getCities"
                                                         @filter="(val, update)=>update(()=>{provincesOptions = $helper.filterOptions(val,provinces,locale.formTemplate.provinceId)})"
                                                         option-label="label"
+                                                        :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                                 />
                                             </div>
                                             <div class="col-12 col-md-6">
@@ -131,6 +137,7 @@
                                                         use-input
                                                         @filter="(val, update)=>update(()=>{citiesOptions = $helper.filterOptions(val,cities,locale.formTemplate.cityId)})"
                                                         option-label="label"
+                                                        :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                                 />
                                             </div>
                                             <div class="col-12 col-md-6">
@@ -182,10 +189,12 @@
 
 <script>
     import recentOrders from "@imagina/qlogistic/_components/business/recentOrders";
+    import mediaForm from '@imagina/qmedia/_components/form'
     export default {
         name: "businessShow",
         components:{
-            recentOrders
+            recentOrders,
+            mediaForm,
         },
         data(){
             return {
@@ -223,6 +232,7 @@
                         twitterUrl: null,
                         youtubeUrl: null,
                         coords: null,
+                        mediasSingle: {},
                     },
                     fieldsTranslatable:{
                         description: null,

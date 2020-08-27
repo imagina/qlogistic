@@ -15,6 +15,7 @@ export default {
   deleteItem: 'Delete Package Item',
   historial: 'History',
   generateQR: 'Generate QR',
+  businessInfo: 'Business Information',
   form:{
     origin: 'Origin',
     destination: 'Destination',
@@ -41,5 +42,12 @@ export default {
     typeTerrestrial: 'Terrestrial',
     typeAir: 'Air',
     pieces: '# of pieces',
+    originCity: 'Origin City',
+    destinationCity: 'Destination City',
+    shippingBusiness: 'Shipping Business',
+    shipping: 'Shipping',
+    editedBy: 'Edited By',
+    addPhotos: 'Add Photos',
+    photoSupport: 'Photo Support',
   }
 }

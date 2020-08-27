@@ -18,18 +18,18 @@
                                         <div class="col-12 col-lg-8">
                                             <div class="row q-col-gutter-sm">
                                                 <div class="col-12 col-lg-4 right-border">
-                                                    <b>Fecha: </b> {{ order.createdAt }}
+                                                    <b>{{ $tr('ui.form.date') }}: </b> {{ $trd(order.createdAt) }}
                                                 </div>
                                                 <div class="col-12 col-lg-4 right-border text-center-md">
                                                     {{ order.originBusiness.name }}
                                                 </div>
                                                 <div class="col-12 col-lg-4 right-border text-center-md">
-                                                    <b>Origen: </b> {{ order.originBusiness.coords }}
+                                                    <b>{{ $tr('qlogistic.layout.form.origin') }}: </b> {{ order.originBusiness.coords }}
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-12 col-lg-4 text-center-md">
-                                            <b>Destino: </b> {{ order.destinationBusiness.name }}
+                                            <b>{{ $tr('qlogistic.layout.form.destination') }}: </b> {{ order.destinationBusiness.name }}
                                         </div>
                                     </div>
                                 </div>

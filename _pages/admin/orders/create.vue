@@ -56,6 +56,7 @@
                                                         use-input
                                                         @filter="(val, update)=>update(()=>{businessOptions = $helper.filterOptions(val,business,locale.formTemplate.originBusinessId)})"
                                                         option-label="label"
+                                                        :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                                 />
                                             </div>
                                         </div>
@@ -85,6 +86,7 @@
                                                         @blur="getCities"
                                                         @filter="(val, update)=>update(()=>{provincesOptions = $helper.filterOptions(val,provinces,locale.formTemplate.provinceId)})"
                                                         option-label="label"
+                                                        :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                                 />
                                             </div>
                                             <div class="col-12 col-md-6">
@@ -103,6 +105,7 @@
                                                         use-input
                                                         @filter="(val, update)=>update(()=>{citiesOptions = $helper.filterOptions(val,cities,locale.formTemplate.cityId)})"
                                                         option-label="label"
+                                                        :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                                 />
                                             </div>
                                             <div class="col-12 col-md-6">
@@ -121,6 +124,7 @@
                                                         use-input
                                                         @filter="(val, update)=>update(()=>{hospOptions = $helper.filterOptions(val,hosp,locale.formTemplate.destinationBusinessId)})"
                                                         option-label="label"
+                                                        :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                                 />
                                             </div>
                                         </div>

@@ -15,41 +15,35 @@
                     <q-separator class="q-my-md" />
                     <div class="col-12">
                         <div class="q-pa-xs">
-                            <div><b>Ciudad Origen:</b> {{ history.order.originBusiness.city.name }}</div>
-                            <div><b>Envío:</b> Terrestre</div>
-                            <div v-if="history.transportBusiness"><b>Empresa de Envío:</b> {{ history.transportBusiness.name  }}</div>
-                            <div><b>Ciudad Destino:</b> {{ history.order.destinationBusiness.city.name  }}</div>
+                            <div v-if="history.shippingType > 0"><b>{{ $tr('qlogistic.layout.form.shipping') }}:</b> {{ shippingTypes[history.shippingType] }}</div>
+                            <div><b>{{ $tr('qlogistic.layout.form.originCity') }}:</b> {{ history.order.originBusiness.city.name }}</div>
+                            <div v-if="history.transportBusiness"><b>{{ $tr('qlogistic.layout.form.shippingBusiness') }}:</b> {{ history.transportBusiness.name  }}</div>
+                            <div><b>{{ $tr('qlogistic.layout.form.destinationCity') }}:</b> {{ history.order.destinationBusiness.city.name  }}</div>
                         </div>
                         <div class="q-pa-xs">
-                            <div><b>Hora: {{ $trd(history.createdAt, {type: 'time'}) }}</b></div>
+                            <div><b>{{ $tr('ui.label.hour') }}: {{ $trd(history.createdAt, {type: 'time'}) }}</b></div>
                         </div>
                         <div class="q-pa-xs">
-                            <div><b>Modificado por:</b> {{ history.user.fullName }}</div>
+                            <div><b>{{ $tr('qlogistic.layout.form.editedBy') }}:</b> {{ history.user.fullName }}</div>
                         </div>
                     </div>
                     <q-separator class="q-my-md" />
                     <div class="col-12">
                         <div class="q-pa-xs text-primary text-bold">
-                            Observaciones
+                            {{ $tr('qlogistic.layout.form.observations2') }}
                         </div>
                         <div class="q-pa-xs text-justify">
                             {{ history.observations }}
                         </div>
                     </div>
                     <q-separator class="q-my-md" />
-                    <div class="col-12">
+                    <div class="col-12" v-if="history.gallery.length > 0">
                         <div class="q-pa-xs text-primary text-bold">
-                            Soporte Fotográfico
+                            {{ $tr('qlogistic.layout.form.photoSupport') }}
                         </div>
                         <div class=" row q-pa-xs q-col-gutter-sm">
-                            <div class="col-4">
-                                <q-img src="statics/img001.jpg" />
-                            </div>
-                            <div class="col-4">
-                                <q-img src="statics/img001.jpg" />
-                            </div>
-                            <div class="col-4">
-                                <q-img src="statics/img001.jpg" />
+                            <div class="col-4" v-for="(image,i) in history.gallery" :key="i">
+                                <q-img :src="image.path" />
                             </div>
                         </div>
                     </div>
@@ -82,6 +76,11 @@
                 history: {},
                 success: false,
                 loading: false,
+                shippingTypes:[
+                    "",
+                    this.$tr('qlogistic.layout.form.typeTerrestrial'),
+                    this.$tr('qlogistic.layout.form.typeAir'),
+                ],
             }
         },
         methods:{
