@@ -137,10 +137,10 @@
         <div v-else>
             <not-result/>
         </div>
-        <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <q-page-sticky position="bottom-right" :offset="[18, 35]">
             <q-btn no-caps rounded dense icon="fas fa-plus" class="q-pa-sm mobile-only" size="sm" color="primary" :to="{name: 'qlogistic.orders.create'}">
                 <q-tooltip>
-                    Crear Orden
+                    {{ $tr('qlogistic.layout.ordersCreate') }}
                 </q-tooltip>
             </q-btn>
             <q-btn no-caps rounded icon="fas fa-plus" class="q-pa-sm desktop-only" size="sm" color="primary" :label="$tr('qlogistic.layout.ordersCreate')" :to="{name: 'qlogistic.orders.create'}" />

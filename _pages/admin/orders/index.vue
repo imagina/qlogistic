@@ -48,6 +48,13 @@
                         </div>
                     </div>
                 </q-card>
+                <q-page-sticky position="bottom-right" :offset="[18, 50]">
+                    <q-btn no-caps rounded dense icon="fas fa-plus" class="q-pa-sm mobile-only" size="sm" color="primary" :to="{name: 'qlogistic.orders.create'}">
+                        <q-tooltip>
+                            {{ $tr('qlogistic.layout.ordersCreate') }}
+                        </q-tooltip>
+                    </q-btn>
+                </q-page-sticky>
             </div>
         </div>
         <div class="row" v-else>
