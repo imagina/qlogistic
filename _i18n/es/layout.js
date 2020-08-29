@@ -49,5 +49,8 @@ export default {
     editedBy: 'Modificado por',
     addPhotos: 'Agregar Fotografías',
     photoSupport: 'Soporte Fotográfico',
+  },
+  message:{
+    businessNotFound: 'Lo sentimos. En este momento no tiene una empresa asignada a su perfil. Favor contactar al administrador del sistema.',
   }
 }

@@ -49,5 +49,8 @@ export default {
     editedBy: 'Edited By',
     addPhotos: 'Add Photos',
     photoSupport: 'Photo Support',
+  },
+  message:{
+    businessNotFound: 'Sorry, you don\'t have any assigned business into your profile. Please contact with the system administrator.',
   }
 }
