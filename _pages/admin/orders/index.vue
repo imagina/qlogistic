@@ -24,12 +24,12 @@
                                                     {{ order.originBusiness.name }}
                                                 </div>
                                                 <div class="col-12 col-lg-4 right-border text-center-md">
-                                                    <b>{{ $tr('qlogistic.layout.form.origin') }}: </b> {{ order.originBusiness.coords }}
+                                                    <b>{{ $tr('qlogistic.layout.form.origin') }}: </b> {{ order.originBusiness.city.name }}
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-12 col-lg-4 text-center-md">
-                                            <b>{{ $tr('qlogistic.layout.form.destination') }}: </b> {{ order.destinationBusiness.name }}
+                                            <b>{{ $tr('qlogistic.layout.form.destination') }}: </b> {{ order.destinationBusiness.name }}, {{ order.destinationBusiness.city.name }}
                                         </div>
                                     </div>
                                 </div>
@@ -100,7 +100,7 @@
             async getData(){
                 let params = {
                     params:{
-                        include: 'originBusiness,destinationBusiness,orderStatus',
+                        include: 'originBusiness,destinationBusiness,orderStatus,originBusiness.city,destinationBusiness.city',
                         filter:{}
                     }
                 }

@@ -24,7 +24,7 @@
         chartOptions: {
           chart: {
             type: "column",
-            height: 9 / 16 * 100 + "%" // 16:9 ratio
+            height: 9 / 16 * 100 + "%", // 16:9 ratio
           },
           title: {
             text: ""

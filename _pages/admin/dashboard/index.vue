@@ -46,14 +46,12 @@
   import businessChart from '@imagina/qlogistic/_components/dashboard/businessChart'
   import activeOrders from "@imagina/qlogistic/_components/dashboard/activeOrders";
   import featuredSupporters from "@imagina/qlogistic/_components/dashboard/featuredSupporters";
-  import {Chart} from 'highcharts-vue';
   export default {
     name: 'PageIndex',
     components: {
       orders,
       activeOrders,
       featuredSupporters,
-      highCharts: Chart,
       orderAverages,
       businessChart
     },
