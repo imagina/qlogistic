@@ -37,7 +37,7 @@
                         <div class="text-center q-pa-lg">
                             <p>
                                 <qrRead @input="redirectTo" v-if="showQR" @error="showQR = false" />
-                                <q-input v-else dense outlined v-model="itemId" @blur="search" />
+                                <q-input v-else dense outlined v-model="itemId" @blur="$router.push({name: 'qlogistic.orders.searchShow',params:{id: itemId}})" />
                             </p>
                         </div>
                     </q-card-section>
@@ -53,6 +53,11 @@
     export default {
         name: "search",
         components: {OrderHistory, qrRead},
+        watch:{
+            '$route'(){
+                this.init()
+            }
+        },
         data(){
             return {
                 itemId: null,
@@ -70,6 +75,13 @@
                 this.$root.$emit('dataToHeader',this.$attrs)
                 /*this.$root.$off('searchElement')
                 this.$root.$on('searchElement',this.search)*/
+                this.itemId = this.$route.params.id || null
+                if(this.itemId!==null) {
+                    this.showSearch = false
+                    this.search()
+                }else{
+                    this.showSearch= true
+                }
             },
             async search(){
                 let params = {
@@ -85,7 +97,7 @@
                 })
             },
             redirectTo(response){
-                this.$router.push({name: 'qlogistic.orders.show',params:{id: response}})
+                this.$router.push({name: 'qlogistic.orders.searchShow',params:{id: response}})
             }
         }
     }

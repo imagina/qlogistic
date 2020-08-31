@@ -94,6 +94,23 @@ export default {
             headerTitle: 'Órdenes / Buscar Orden'
         }
     },
+    ordersSearchShow:{
+        permission: null,
+        activated: true,
+        path: '/logistic/orders/search/:id',
+        name: 'qlogistic.orders.searchShow',
+        page: () => import('@imagina/qlogistic/_pages/admin/orders/search'),
+        layout: () => import('@imagina/qlogistic/_layouts/admin/master'),
+        title: 'qlogistic.sidebar.adminOrderSearch',
+        icon: 'fas fa-circle',
+        authenticated: true,
+        props: {
+            search: {
+                title: 'qlogistic.sidebar.adminOrderSearch',
+            },
+            headerTitle: 'Órdenes / Buscar Orden'
+        }
+    },
     ordersShow:{
         permission: null,
         activated: true,
