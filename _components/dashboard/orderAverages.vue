@@ -51,7 +51,7 @@
           },
           series: [
             {
-              name: "Promedio de Ordenes por Mes",
+              name: this.$tr('qlogistic.layout.orderAverage'),
               data: []
             }
           ]
