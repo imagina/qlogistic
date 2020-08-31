@@ -40,6 +40,7 @@
             <div v-else>
                 <notResults />
             </div>
+            <inner-loading :visible="loading" />
         </q-card-section>
     </q-card>
 </template>
@@ -56,7 +57,9 @@
 
         },
         computed:{
-
+            userData(){
+                return this.$store.state.quserAuth.userData
+            }
         },
         data(){
             return {
@@ -72,16 +75,28 @@
             })
         },
         methods:{
-            init(){
+            async init(){
                 this.loading = true
-                this.getData()
+                await this.getData()
                 this.loading = false
             },
             async getData(){
                 let params = {
                     params:{
                         include: 'orderStatus,originBusiness,originBusiness.city,destinationBusiness,destinationBusiness.city',
+                        filter:{},
                     }
+                }
+                if(this.userData.business){
+                    params.params.filter.originBusiness = this.userData.business.id
+                }
+                if(this.userData.businesses.length > 0){
+                    let business = this.userData.businesses
+                    let bdata = []
+                    for (let x in business){
+                        bdata.push(business[x].id)
+                    }
+                    params.params.filter.originBusiness = bdata.join(',')
                 }
                 await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{
                     this.orders = response.data

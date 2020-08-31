@@ -79,6 +79,7 @@
                                                                 use-input
                                                                 @filter="(val, update)=>update(()=>{usersOptions = $helper.filterOptions(val,users,locale.formTemplate.users)})"
                                                                 option-label="label"
+                                                                :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                                         />
                                                     </div>
                                                 </div>
@@ -304,43 +305,30 @@
                 this.locale = this.$clone(this.dataLocale)//Add fields
                 if (this.locale.success) this.$refs.localeComponent.vReset()//Reset locale
                 this.success = true
-                if(this.$auth.hasAccess('ilogistics.orders.manageothers')) {
-                    await this.getBusinessData()
-                    await this.getUsers()
-                }
+                await this.getBusinessData()
                 await this.getBusiness()
                 await this.getProvinces()
+                await this.getDestinations()
+                if(this.userBusinessId!==null) {
+                    this.locale.form.originBusinessId = this.userBusinessId
+                    await this.getUsers()
+                }
                 this.success = true
                 this.loading = false
-                if(this.locale.form.originBusinessId===null){
-                    this.locale.form.originBusinessId = this.business[0].id
-                }
             },
 
             async getBusinessData(){
-                let configName = 'apiRoutes.qlogistic.business'
-                let params = {
-                    params: {
-                        include: 'city,users',
-                        filter: {
-                            allTranslations: true,
-                            field: 'user_id'
-                        }
+                let businessData = this.userData.business || null
+                if(businessData) {
+                    this.business = this.$array.select([businessData], {label: 'name', id: 'id'})
+                    this.userBusinessId = this.$clone(businessData.id)
+                }else{
+                    if(!this.$auth.hasAccess('ilogistics.orders.manageothers')) {
+                        this.business = this.$array.select(this.userData.businesses, {label: 'name', id: 'id'})
+                        this.userBusinessId = this.$clone(this.userData.businesses[0].id)
                     }
                 }
-                //Request
-                await this.$crud.show(configName,this.userData.id,params).then(response => {
-                    if(Object.keys(response.data).length > 0) {
-                        let businessData = this.$clone(response.data)
-                        this.business = this.$array.select([businessData], { label: 'name', id: 'id' })
-                        this.locale.form.originBusinessId = businessData.id
-                        this.userBusinessId = businessData.id
-                    }
-                }).catch(error => {
-                    this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
-                })
             },
-
             //Search provinces
             async getBusiness() {
                 let configName = 'apiRoutes.qlogistic.business'
@@ -354,14 +342,10 @@
                 //Request
                 if(this.$auth.hasAccess('ilogistics.orders.manageothers')){
                     this.businessLoading = true
-                    this.hospLoading= true
                     await this.$crud.index(configName,params).then(response => {
                         this.business = this.$array.select(response.data, { label: 'name', id: 'id' })
                         this.businessOptions = this.$clone(this.business)
-                        this.hosp = this.$array.select(response.data, { label: 'name', id: 'id' })
-                        this.hospOptions = this.$clone(this.hosp)
                         this.businessLoading = false
-                        this.hospLoading= false
                     }).catch(error => {
                         this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
                         this.businessLoading = false
@@ -375,29 +359,54 @@
                 }
             },
 
-            //Search users
-            async getUsers() {
-                this.userLoading = true
-                let configName = 'apiRoutes.quser.users'
+            //Search provinces
+            async getDestinations() {
+                let configName = 'apiRoutes.qlogistic.business'
                 let params = {
                     params: {
                         filter: {
                             allTranslations: true,
-                            country: 48,
-                            business: this.locale.form.originBusinessId
                         }
                     }
                 }
-                //Request
-                await this.$crud.index(configName,params).then(response => {
-                    this.users = this.$array.select(response.data, { label: 'fullName', id: 'id' })
-                    this.usersOptions = this.$clone(this.users)
-                    this.userLoading = false
-                    //this.locale.form.userId = this.$clone(this.users[0].value)
-                }).catch(error => {
-                    this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
-                    this.userLoading = false
-                })
+                 this.hospLoading= true
+                 await this.$crud.index(configName,params).then(response => {
+                        this.hosp = this.$array.select(response.data, { label: 'name', id: 'id' })
+                        this.hospOptions = this.$clone(this.hosp)
+                        this.hospLoading= false
+                 }).catch(error => {
+                     this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                     this.hospLoading= false
+                 })
+            },
+
+            //Search users
+            async getUsers() {
+                if(this.locale.form.originBusinessId){
+                    this.userLoading = true
+                    let configName = 'apiRoutes.quser.users'
+                    let params = {
+                        params: {
+                            filter: {
+                                allTranslations: true,
+                                country: 48,
+                                business: this.locale.form.originBusinessId
+                            }
+                        }
+                    }
+                    //Request
+                    await this.$crud.index(configName,params).then(response => {
+                        this.users = this.$array.select(response.data, { label: 'fullName', id: 'id' })
+                        this.usersOptions = this.$clone(this.users)
+                        this.userLoading = false
+                    }).catch(error => {
+                        this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                        this.userLoading = false
+                    })
+                }else{
+                    this.users = []
+                    this.usersOptions = []
+                }
             },
 
             //Search provinces

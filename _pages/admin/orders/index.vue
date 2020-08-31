@@ -74,6 +74,9 @@
             notResults
         },
         computed:{
+            userData(){
+                return this.$store.state.quserAuth.userData
+            }
         },
         data(){
             return {
@@ -98,7 +101,19 @@
                 let params = {
                     params:{
                         include: 'originBusiness,destinationBusiness,orderStatus',
+                        filter:{}
                     }
+                }
+                if(this.userData.business){
+                    params.params.filter.originBusiness = this.userData.business.id
+                }
+                if(this.userData.businesses.length > 0){
+                    let business = this.userData.businesses
+                    let bdata = []
+                    for (let x in business){
+                        bdata.push(business[x].id)
+                    }
+                    params.params.filter.originBusiness = bdata.join(',')
                 }
                 await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{
                     this.orders = response.data

@@ -75,10 +75,11 @@
                 let params = {
                     params:{
                         include: 'items,orderStatus,originBusiness,originBusiness.city,destinationBusiness,destinationBusiness.city,city,city.province',
-                        filter: {
-                            user: this.userData.id
-                        }
+                        filter: {}
                     }
+                }
+                if(this.userData.business){
+                    params.params.filter.originBusiness = this.userData.business.id
                 }
                 await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{
                     this.orders = response.data

@@ -18,11 +18,7 @@
             <activeOrders />
           </div>
           <div class="col-12">
-            <q-card class="q-pa-lg" style="border-radius: 10px">
-              <div class="text-h6 text-primary q-mb-md">{{ $tr('qlogistic.layout.orderAverage') }}</div>
-              <q-separator class="q-my-md" />
-              <highCharts :options="chartOptionsOrders"></highCharts>
-            </q-card>
+              <orderAverages />
           </div>
         </div>
       </div>
@@ -32,11 +28,7 @@
                 <featuredSupporters />
               </div>
               <div class="col-12">
-                <q-card class="q-pa-lg" style="border-radius: 10px">
-                    <div class="text-h6 text-primary q-mb-md">{{ $tr('qlogistic.layout.business') }}</div>
-                    <q-separator class="q-my-md" />
-                    <highCharts :options="chartOptionsOrders2"></highCharts>
-                </q-card>
+                <businessChart />
               </div>
           </div>
       </div>
@@ -50,6 +42,8 @@
 
 <script>
   import orders from '@imagina/qlogistic/_components/dashboard/orders'
+  import orderAverages from '@imagina/qlogistic/_components/dashboard/orderAverages'
+  import businessChart from '@imagina/qlogistic/_components/dashboard/businessChart'
   import activeOrders from "@imagina/qlogistic/_components/dashboard/activeOrders";
   import featuredSupporters from "@imagina/qlogistic/_components/dashboard/featuredSupporters";
   import {Chart} from 'highcharts-vue';
@@ -59,7 +53,9 @@
       orders,
       activeOrders,
       featuredSupporters,
-      highCharts: Chart
+      highCharts: Chart,
+      orderAverages,
+      businessChart
     },
     mounted(){
       this.$nextTick(()=>{
@@ -69,107 +65,12 @@
     },
     data(){
       return {
-        chartOptionsOrders: {
-          chart: {
-            type: "column",
-            height: 9 / 16 * 100 + "%" // 16:9 ratio
-          },
-          title: {
-            text: ""
-          },
-          xAxis: {
-            categories: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
-            title: {
-              text: null
-            }
-          },
-          yAxis: {
-              gridLineWidth:0,//Set this to zero
-              min: 0,
-              title: {
-                  text: "Ordenes",
-                  align: "middle"
-              },
-              labels: {
-                  overflow: "justify"
-              }
-          },
-          credits: {
-            enabled: false
-          },
-          series: [
-            {
-              name: "Promedio de Ordenes por Mes",
-              data: [107, 31, 635, 203, 20]
-            }
-          ]
-        },
-        chartOptionsOrders2: {
-            chart: {
-                type: "bar",
-                height: 9 / 16 * 100 + "%" // 16:9 ratio
-            },
-            title: {
-                text: ""
-            },
-            xAxis: {
-                categories: [],
-                title: {
-                    text: null
-                }
-            },
-            yAxis: {
-                gridLineWidth:0,//Set this to zero
-                min: 0,
-                title: {
-                    text: this.$tr('qlogistic.layout.orders'),
-                    align: "middle"
-                },
-                labels: {
-                    overflow: "justify"
-                }
-            },
-            credits: {
-                enabled: false
-            },
-            series: [
-                {
-                    name: "Empresas",
-                    data: []
-                }
-            ]
-        }
+
       }
     },
     methods:{
       async init(){
-        await this.getBusiness()
       },
-      async getBusiness(){
-        let params = {
-          params: {
-            include: 'orders',
-            filter: {
-              allTranslations: true,
-            }
-          }
-        }
-        await this.$crud.index('apiRoutes.qlogistic.business',params).then(response => {
-          let business = this.$clone(response.data)
-          let businessSeries = {
-            name: this.$tr('qlogistic.layout.orders'),
-            data: []
-          }
-          for(let x in business){
-            businessSeries.data.push(business[x].orders ? business[x].orders.length : 0)
-            this.chartOptionsOrders2.xAxis.categories.push(business[x].name)
-          }
-          this.chartOptionsOrders2.series = [businessSeries]
-        }).catch(error => {
-          console.error(error)
-          this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
-        })
-      }
     }
   }
 </script>

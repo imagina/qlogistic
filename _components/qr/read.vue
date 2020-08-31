@@ -22,7 +22,7 @@
         data(){
             return {
                 error: '',
-                respose: '',
+                response: '',
             }
         },
         methods:{
@@ -49,6 +49,7 @@
                     } else {
                         this.error = "ERROR: "+error
                     }
+                    this.$emit('error')
                 }
             }
         }

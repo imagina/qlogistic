@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-center relative-position" v-if="itemId !== null">
+    <div class="flex flex-center relative-position" v-if="showSearch === false">
         <div class="row q-pa-sm full-width justify-center">
             <div class="col-12 col-md-8">
                 <q-card class="q-pa-xs text-white bg-primary" style="border-radius: 10px">
@@ -20,7 +20,7 @@
             <div class="col-12 col-md-8">
                 <q-card style="border-radius: 10px">
                     <q-card-section class="q-pa-none">
-                        <orderHistorySearch :id="itemId" />
+                        <orderHistory :id="itemId" />
                     </q-card-section>
                 </q-card>
             </div>
@@ -32,11 +32,12 @@
                 <q-card class="q-pa-md" style="border-radius: 10px">
                     <q-card-section>
                         <div class="text-subtitle1 text-bold text-primary q-mb-md">
-                            <q-icon name="fas fa-clipboard-list" size="16px" /> Código
+                            <q-icon name="fas fa-clipboard-list" size="16px" /> {{ $tr('ui.form.code') }}
                         </div>
                         <div class="text-center q-pa-lg">
                             <p>
-                                <qrRead @input="redirectTo" />
+                                <qrRead @input="redirectTo" v-if="showQR" @error="showQR = false" />
+                                <q-input v-else dense outlined v-model="itemId" @blur="search" />
                             </p>
                         </div>
                     </q-card-section>
@@ -47,15 +48,16 @@
 </template>
 
 <script>
-    import OrderHistorySearch from "@imagina/qlogistic/_components/orders/orderHistorySearch";
+    import OrderHistory from "@imagina/qlogistic/_components/orders/orderHistory";
     import qrRead from '@imagina/qlogistic/_components/qr/read'
     export default {
         name: "search",
-        components: {OrderHistorySearch, qrRead},
+        components: {OrderHistory, qrRead},
         data(){
             return {
                 itemId: null,
-                showSearch: false,
+                showSearch: true,
+                showQR: true,
             }
         },
         mounted(){
@@ -66,11 +68,21 @@
         methods:{
             init(){
                 this.$root.$emit('dataToHeader',this.$attrs)
-                this.$root.$off('searchElement')
-                this.$root.$on('searchElement',this.search)
+                /*this.$root.$off('searchElement')
+                this.$root.$on('searchElement',this.search)*/
             },
-            search(item){
-                this.itemId = item
+            async search(){
+                let params = {
+                    params:{
+                        include: 'items'
+                    }
+                }
+                await this.$crud.show('apiRoutes.qlogistic.orders', this.itemId, params).then(response =>{
+                    this.showSearch = false
+                }).catch(error =>{
+                    this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                    this.showSearch = true
+                })
             },
             redirectTo(response){
                 this.$router.push({name: 'qlogistic.orders.show',params:{id: response}})
