@@ -24,7 +24,7 @@
       </div>
       <div class="col-12 col-md-6 q-px-sm">
           <div class="row q-col-gutter-y-md">
-              <div class="col-12">
+              <div class="col-12" v-if="$auth.hasAccess('profile.user.index')">
                 <featuredSupporters />
               </div>
               <div class="col-12">

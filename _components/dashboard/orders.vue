@@ -31,7 +31,9 @@
             }
         },
         computed:{
-
+            userData(){
+                return this.$store.state.quserAuth.userData
+            }
         },
         data(){
             return {
@@ -55,7 +57,8 @@
                     params:{
                         include: 'orderStatus',
                         filter:{
-                            status: this.status
+                            status: this.status,
+                            user: this.userData.id
                         }
                     }
                 }

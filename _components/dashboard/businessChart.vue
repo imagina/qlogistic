@@ -18,6 +18,11 @@
         this.init()
       })
     },
+    computed:{
+      userData(){
+        return this.$store.state.quserAuth.userData
+      }
+    },
     data(){
       return {
         loading: false,
@@ -75,6 +80,7 @@
             include: 'orders',
             filter: {
               allTranslations: true,
+              user: this.userData.id
             }
           }
         }

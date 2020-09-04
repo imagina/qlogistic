@@ -3,41 +3,43 @@
         <q-card-section class="q-pa-none">
             <div class="text-h6 text-primary q-mb-md">{{ $tr('qlogistic.layout.activeOrders') }}</div>
             <q-separator class="q-mb-lg" />
-            <q-list v-if="orders.length > 0" class="full-height" v-for="(order,index) in orders" :key="index">
-                <q-item>
-                    <q-item-section>
-                        <div class="text-caption q-pa-md">
-                            <q-item-label class="text-primary text-bold q-pa-sm">
-                                N°. {{ order.id.toString().padStart(5,'0') }}
-                            </q-item-label>
-                            <div class="text-caption q-px-md">
-                                <div class="q-pa-xs">
-                                    <div><b>{{ $tr('qlogistic.layout.form.origin') }}:</b> {{ order.originBusiness.name }}</div>
-                                    <div>{{ order.originBusiness.coords }}, {{ order.originBusiness.city.name }}</div>
-                                </div>
-                                <div class="q-pa-xs">
-                                    <div><b>{{ $tr('qlogistic.layout.form.destination') }}:</b> {{ order.destinationBusiness.name }}</div>
-                                    <div>{{ order.destinationBusiness.coords }}, {{ order.destinationBusiness.city.name }}</div>
-                                </div>
-                                <div class="q-pa-xs">
-                                    <b>{{ $tr('ui.form.status') }}:</b> {{ order.orderStatus.name }}
+            <div v-if="orders.length > 0">
+                <q-list class="full-height" v-for="(order,index) in orders" :key="index">
+                    <q-item>
+                        <q-item-section>
+                            <div class="text-caption q-pa-md">
+                                <q-item-label class="text-primary text-bold q-pa-sm">
+                                    N°. {{ order.id.toString().padStart(5,'0') }}
+                                </q-item-label>
+                                <div class="text-caption q-px-md">
+                                    <div class="q-pa-xs">
+                                        <div><b>{{ $tr('qlogistic.layout.form.origin') }}:</b> {{ order.originBusiness.name }}</div>
+                                        <div>{{ order.originBusiness.coords }}, {{ order.originBusiness.city.name }}</div>
+                                    </div>
+                                    <div class="q-pa-xs">
+                                        <div><b>{{ $tr('qlogistic.layout.form.destination') }}:</b> {{ order.destinationBusiness.name }}</div>
+                                        <div>{{ order.destinationBusiness.coords }}, {{ order.destinationBusiness.city.name }}</div>
+                                    </div>
+                                    <div class="q-pa-xs">
+                                        <b>{{ $tr('ui.form.status') }}:</b> {{ order.orderStatus.name }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </q-item-section>
-                    <q-item-section avatar class="items-baseline">
-                        <div class="col-12 q-py-sm">
-                            <q-btn flat dense color="positive" icon="far fa-eye" :to="{name: 'qlogistic.orders.show',params:{id: order.id}}">
-                                <q-tooltip>
-                                    {{ $tr('qlogistic.layout.viewOrder') }}
-                                </q-tooltip>
-                            </q-btn>
-                        </div>
-                    </q-item-section>
-                </q-item>
-                <q-separator class="q-mb-lg" />
-            </q-list>
-            <div v-else>
+                        </q-item-section>
+                        <q-item-section avatar class="items-baseline">
+                            <div class="col-12 q-py-sm">
+                                <q-btn flat dense color="positive" icon="far fa-eye" :to="{name: 'qlogistic.orders.show',params:{id: order.id}}">
+                                    <q-tooltip>
+                                        {{ $tr('qlogistic.layout.viewOrder') }}
+                                    </q-tooltip>
+                                </q-btn>
+                            </div>
+                        </q-item-section>
+                    </q-item>
+                    <q-separator class="q-mb-lg" />
+                </q-list>
+            </div>
+            <div class="col-12" v-else>
                 <notResults />
             </div>
             <inner-loading :visible="loading" />
@@ -84,7 +86,9 @@
                 let params = {
                     params:{
                         include: 'orderStatus,originBusiness,originBusiness.city,destinationBusiness,destinationBusiness.city',
-                        filter:{},
+                        filter:{
+                            user: this.userData.id
+                        },
                     }
                 }
                 if(this.userData.business){

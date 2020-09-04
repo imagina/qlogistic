@@ -18,6 +18,11 @@
         this.init()
       })
     },
+    computed:{
+      userData(){
+        return this.$store.state.quserAuth.userData
+      }
+    },
     data(){
       return {
         loading: false,
@@ -86,7 +91,8 @@
                 date:{
                   from: month.getFullYear()+'-'+monthNumber.toString().padStart(2,'0')+'-01',
                   to: month.getFullYear()+'-'+monthNumber.toString().padStart(2,'0')+'-31',
-                }
+                },
+                user: this.userData.id
               }
             }
           }
