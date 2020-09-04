@@ -91,7 +91,7 @@
                         },
                     }
                 }
-                if(this.userData.business){
+                /*if(this.userData.business){
                     params.params.filter.originBusiness = this.userData.business.id
                 }
                 if(this.userData.businesses.length > 0){
@@ -101,7 +101,8 @@
                         bdata.push(business[x].id)
                     }
                     params.params.filter.originBusiness = bdata.join(',')
-                }
+                }*/
+                console.error(params)
                 await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{
                     this.orders = response.data
                 }).catch(error => {
