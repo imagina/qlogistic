@@ -325,7 +325,8 @@
                 }else{
                     if(!this.$auth.hasAccess('ilogistics.orders.manageothers')) {
                         this.business = this.$array.select(this.userData.businesses, {label: 'name', id: 'id'})
-                        this.userBusinessId = this.$clone(this.userData.businesses[0].id)
+                        if(this.userData.businesses.length>0)
+                            this.userBusinessId = this.$clone(this.userData.businesses[0].id)
                     }
                 }
             },

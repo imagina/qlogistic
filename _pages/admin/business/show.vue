@@ -187,7 +187,10 @@
         },
         methods:{
             async init(){
-                this.$root.$emit('dataToHeader',this.$attrs)
+                let attrs = this.$attrs
+                if(this.userData.business === null)
+                    attrs.edit.label = 'ui.label.create'
+                this.$root.$emit('dataToHeader',attrs)
                 this.getData()
             },
             async getData(){

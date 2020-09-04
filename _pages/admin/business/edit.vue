@@ -198,11 +198,11 @@
         },
         data(){
             return {
+                success: false,
                 itemId: null,
                 locale: {},
                 loading: false,
                 loadingCategory: false,
-                success: false,
                 userLoading: false,
                 users:[],
                 usersOptions:[],
@@ -218,12 +218,12 @@
         computed:{
             dataLocale(){
                 return {
-                    fields:{
+                    fields: {
                         nit: null,
                         email: null,
                         phone: null,
                         users: [],
-                        userId: this.$store.state.quserAuth.userData.id,
+                        userId: this.userData.id,
                         cityId: null,
                         provinceId: null,
                         webUrl: null,
@@ -234,7 +234,7 @@
                         coords: null,
                         mediasSingle: {},
                     },
-                    fieldsTranslatable:{
+                    fieldsTranslatable: {
                         description: null,
                         name: null,
                     }
@@ -245,9 +245,9 @@
             }
         },
         mounted(){
-            this.$nextTick(()=>{
+            this.$nextTick(async ()=>{
                 this.$root.$emit('dataToHeader',this.$attrs)
-                this.init()
+                await this.init()
             })
         },
         methods:{
@@ -352,17 +352,19 @@
                         filter: {allTranslations: true}
                     }
                 }
-                if(typeof this.locale.form.provinceId != 'undefined'){
+                if(typeof this.locale.form != 'undefined'){
                     params.params.filter.province = this.locale.form.provinceId
-                }
-                //Request
-                this.$crud.index(configName,params).then(response => {
-                    this.cities =  this.$array.select(response.data, { label: 'name', id: 'id' })
-                    this.citiesOptions = this.$clone(this.cities)
+                    //Request
+                    this.$crud.index(configName,params).then(response => {
+                        this.cities =  this.$array.select(response.data, { label: 'name', id: 'id' })
+                        this.citiesOptions = this.$clone(this.cities)
+                        this.cityLoading = false
+                    }).catch(error => {
+                        this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                    })
+                }else{
                     this.cityLoading = false
-                }).catch(error => {
-                    this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
-                })
+                }
             },
             async save(){
                 if (await this.$refs.localeComponent.validateForm()) {

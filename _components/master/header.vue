@@ -67,7 +67,7 @@
                 </div>
               </div>
               <div class="full-width text-right q-py-md" v-if="attribs.edit">
-                <q-btn rounded icon="fas fa-edit" :label="$tr('ui.label.edit')" color="secondary" :to="attribs.edit.to" />
+                <q-btn rounded icon="fas fa-edit" :label="attribs.edit.label ? $tr('ui.label.edit') : $tr(attribs.edit.label)" color="secondary" :to="attribs.edit.to" />
               </div>
             </div>
           </div>

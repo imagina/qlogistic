@@ -101,7 +101,9 @@
                 let params = {
                     params:{
                         include: 'originBusiness,destinationBusiness,orderStatus,originBusiness.city,destinationBusiness.city',
-                        filter:{}
+                        filter:{
+                            user: this.userData.id
+                        }
                     }
                 }
                 if(this.userData.business){
