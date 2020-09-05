@@ -6,7 +6,7 @@
                     <locales v-model="locale" ref="localeComponent" :form="$refs.formContent" />
                 </div>
             </div>
-            <q-form @submit="save" autocorrect="off" autocomplete="off" ref="formContent" @validation-error="$alert.error($tr('ui.message.formInvalid'))" v-if="locale.success">
+            <q-form @submit="save" autocorrect="off" autocomplete="off" autocapitalize="off" spellcheck="false" ref="formContent" @validation-error="$alert.error($tr('ui.message.formInvalid'))" v-if="locale.success">
                 <div class="row full-width q-py-sm">
                     <div class="col-12">
                         <q-card class="q-pa-md" style="border-radius: 10px">
@@ -26,34 +26,46 @@
                                                 />
                                             </div>
                                             <div class="col-6 col-md-7">
-                                                <q-input dense v-model="locale.formTemplate.facebookUrl">
-                                                    <template v-slot:prepend>
+                                                <q-expansion-item
+                                                    icon="fas fa-user-friends"
+                                                    header-class="text-primary"
+                                                    :label="$trp('ui.label.socialNetwork')"
+                                                    dense
+                                                    dense-toggle
+                                                    expand-separator
+                                                    expand-icon="fas fa-chevron-down"
+                                                    expanded-icon="fas fa-chevron-up"
+                                                    expand-icon-class="text-primary"
+                                                >
+                                                    <q-input dense v-model="locale.formTemplate.facebookUrl">
+                                                        <template v-slot:prepend>
                                                         <span class="text-subtitle1">
-                                                            <q-icon color="black" name="fab fa-facebook" class="q-mr-sm" size="xs" />/
+                                                            <q-icon color="primary" name="fab fa-facebook" class="q-mr-sm" size="xs" />/
                                                         </span>
-                                                    </template>
-                                                </q-input>
-                                                <q-input dense v-model="locale.formTemplate.instagramUrl">
-                                                    <template v-slot:prepend>
+                                                        </template>
+                                                    </q-input>
+                                                    <q-input dense v-model="locale.formTemplate.instagramUrl">
+                                                        <template v-slot:prepend>
                                                         <span class="text-subtitle1">
-                                                            <q-icon color="black" name="fab fa-instagram" class="q-mr-sm" size="xs" />/
+                                                            <q-icon color="primary" name="fab fa-instagram" class="q-mr-sm" size="xs" />/
                                                         </span>
-                                                    </template>
-                                                </q-input>
-                                                <q-input dense v-model="locale.formTemplate.twitterUrl">
-                                                    <template v-slot:prepend>
+                                                        </template>
+                                                    </q-input>
+                                                    <q-input dense v-model="locale.formTemplate.twitterUrl">
+                                                        <template v-slot:prepend>
                                                         <span class="text-subtitle1">
-                                                            <q-icon color="black" name="fab fa-twitter" class="q-mr-sm" size="xs" />/
+                                                            <q-icon color="primary" name="fab fa-twitter" class="q-mr-sm" size="xs" />/
                                                         </span>
-                                                    </template>
-                                                </q-input>
-                                                <q-input dense v-model="locale.formTemplate.youtubeUrl">
-                                                    <template v-slot:prepend>
+                                                        </template>
+                                                    </q-input>
+                                                    <q-input dense v-model="locale.formTemplate.youtubeUrl">
+                                                        <template v-slot:prepend>
                                                         <span class="text-subtitle1">
-                                                            <q-icon color="black" name="fab fa-linkedin-in" class="q-mr-sm" size="xs" />/
+                                                            <q-icon color="primary" name="fab fa-linkedin-in" class="q-mr-sm" size="xs" />/
                                                         </span>
-                                                    </template>
-                                                </q-input>
+                                                        </template>
+                                                    </q-input>
+                                                </q-expansion-item>
                                             </div>
                                         </div>
                                         <div class="row q-col-gutter-x-md q-py-sm">
@@ -70,7 +82,7 @@
                                             <div class="col-12">
                                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.form.description') }}</div>
                                                 <q-input rounded  outlined dense :label="`${$tr('ui.form.description')}`"
-                                                         :rules="[val => !!val || $tr('ui.message.fieldRequired')]" type="textarea" v-model="locale.formTemplate.description"/>
+                                                         type="textarea" v-model="locale.formTemplate.description"/>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.label.user') }}</div>
@@ -97,7 +109,7 @@
                                 <q-separator class="q-my-md" />
                                 <div class="row q-col-gutter-md">
                                     <div class="col-12 col-md-3 q-pa-xl">
-                                        <div class="text-subtitle1 text-uppercase text-bold">{{ $tr('ui.label.contact') }}:</div>
+                                        <div class="text-subtitle1 text-uppercase text-bold">{{ $tr('ui.label.address') }}:</div>
                                     </div>
                                     <div class="col-12 col-md-9">
                                         <div class="row q-col-gutter-x-md">
@@ -152,14 +164,13 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.email') }}</div>
-                                                <q-input rounded  outlined dense :label="$tr('qlogistic.layout.form.email')" v-model="locale.formTemplate.email"
-                                                         :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
+                                                <q-input rounded  outlined dense :label="$tr('qlogistic.layout.form.email')" v-model="locale.formTemplate.email" />
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.webUrl') }}</div>
                                                 <q-input rounded  outlined dense :label="$tr('qlogistic.layout.form.webUrl')"
                                                          v-model="locale.formTemplate.webUrl"
-                                                         :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
+                                                 />
                                             </div>
                                         </div>
                                     </div>
@@ -264,32 +275,33 @@
                 this.success = true
             },
             //get business data
-            async getData(){
-                let configName = 'apiRoutes.qlogistic.business'
-                let params = {
-                    params: {
-                        include: 'city,users',
-                        filter: {
-                            allTranslations: true,
-                            user: this.userData.id,
+            async getData() {
+                if (this.userData.business) {
+                    let configName = 'apiRoutes.qlogistic.business'
+                    let params = {
+                        params: {
+                            include: 'city,users,city.province',
+                            filter: {
+                                allTranslations: true,
+                            }
                         }
                     }
+                    //Request
+                    await this.$crud.show(configName, this.userData.business.id, params).then(response => {
+                        if (Object.keys(response.data).length > 0) {
+                            let dataForm = this.$clone(response.data)
+                            this.locale.form = this.$clone(dataForm)
+                            this.locale.form.provinceId = this.$clone(dataForm.city.provinceId)
+                            this.locale.form.users = []
+                            for (let user of dataForm.users) {
+                                this.locale.form.users.push(user.id)
+                            }
+                            this.itemId = dataForm.id
+                        }
+                    }).catch(error => {
+                        this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                    })
                 }
-                //Request
-                await this.$crud.index(configName,params).then(response => {
-                    if(response.data.length > 0) {
-                        let dataForm = this.$clone(response.data[0])
-                        this.locale.form = this.$clone(dataForm)
-                        this.locale.form.provinceId= this.$clone(dataForm.city.provinceId)
-                        this.locale.form.users = []
-                        for(let user of dataForm.users){
-                            this.locale.form.users.push(user.id)
-                        }
-                        this.itemId= dataForm.id
-                    }
-                }).catch(error => {
-                    this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
-                })
             },
             //Search users
             async getUsers() {
@@ -375,6 +387,7 @@
                             this.$alert.success({message: `${this.$tr('ui.message.recordCreated')}`})
                             this.itemId = response.data.id
                             this.loading = false
+                            this.$store.dispatch('quserAuth/AUTH_UPDATE')
                         }).catch(error => {
                             this.loading = false
                             this.$alert.error({message: this.$tr('ui.message.recordNoUpdated'), pos: 'bottom'})
@@ -383,6 +396,7 @@
                         this.$crud.update(configName, this.itemId, this.getDataForm()).then(response => {
                             this.$alert.success({message: `${this.$tr('ui.message.recordUpdated')}`})
                             this.loading = false
+                            this.$store.dispatch('quserAuth/AUTH_UPDATE')
                         }).catch(error => {
                             this.loading = false
                             this.$alert.error({message: this.$tr('ui.message.recordNoUpdated'), pos: 'bottom'})

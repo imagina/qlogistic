@@ -51,6 +51,6 @@ export default {
     photoSupport: 'Photo Support',
   },
   message:{
-    businessNotFound: 'Sorry, you don\'t have any assigned business into your profile. Please contact with the system administrator.',
+    businessNotFound: 'Sorry, you don\'t have any assigned business into your profile. Please register your business information in',
   }
 }

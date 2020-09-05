@@ -16,7 +16,7 @@
                             </div>
                             <div class="q-pa-xs">
                                 <div><b>{{ $tr('qlogistic.layout.form.destination') }}:</b> {{ history.order.destinationBusiness.name }}</div>
-                                <div><b>{{ $tr('ui.label.address') }}:</b> {{ history.order.destinationBusiness.coords }}, {{ history.order.destinationBusiness.city.name }}</div>
+                                <div><b>{{ $tr('ui.label.address') }}:</b> {{ history.order.destinationBusiness.coords }}, {{ history.order.city.name }}</div>
                             </div>
                             <div class="q-pa-xs">
                                 <b>{{ $tr('ui.form.status') }}:</b> {{ history.orderStatus.name }}

@@ -51,6 +51,6 @@ export default {
     photoSupport: 'Soporte Fotográfico',
   },
   message:{
-    businessNotFound: 'Lo sentimos. En este momento no tiene una empresa asignada a su perfil. Favor contactar al administrador del sistema.',
+    businessNotFound: 'Lo sentimos. En este momento no tiene una empresa asignada a su perfil. Favor ingresa los datos de su empresa haciendo clic en',
   }
 }

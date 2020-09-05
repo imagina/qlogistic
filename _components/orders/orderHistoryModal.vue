@@ -18,7 +18,7 @@
                             <div v-if="history.shippingType > 0"><b>{{ $tr('qlogistic.layout.form.shipping') }}:</b> {{ shippingTypes[history.shippingType] }}</div>
                             <div><b>{{ $tr('qlogistic.layout.form.originCity') }}:</b> {{ history.order.originBusiness.city.name }}</div>
                             <div v-if="history.transportBusiness"><b>{{ $tr('qlogistic.layout.form.shippingBusiness') }}:</b> {{ history.transportBusiness.name  }}</div>
-                            <div><b>{{ $tr('qlogistic.layout.form.destinationCity') }}:</b> {{ history.order.destinationBusiness.city.name  }}</div>
+                            <div><b>{{ $tr('qlogistic.layout.form.destinationCity') }}:</b> {{ history.order.city.name  }}</div>
                         </div>
                         <div class="q-pa-xs">
                             <div><b>{{ $tr('ui.label.hour') }}: {{ $trd(history.createdAt, {type: 'time'}) }}</b></div>

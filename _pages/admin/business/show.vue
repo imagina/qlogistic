@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-center relative-position">
-        <div class="full-width" v-if="form">
+        <div class="full-width" v-if="Object.keys(form).length > 0">
             <div class="row full-width q-pb-md">
                 <div class="col-12 q-pa-sm">
                     <q-card class="q-pa-md" style="border-radius: 10px">
@@ -36,7 +36,7 @@
                                                                 </div>
                                                                 <q-separator class="q-my-md" />
                                                                 <div class="text-caption text-justify">
-                                                                    {{ form.description || 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex in vulputate velit esse molestie consequat, feugiat nulla facilisis at vero eros et accumsan et iusto.' }}
+                                                                    {{ form.description }}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -55,7 +55,7 @@
                 <div class="col-12 col-md-6 q-pa-sm">
                     <q-card class="q-pa-lg" style="border-radius: 10px">
                         <q-card-section>
-                            <div class="text-h6 text-primary q-mb-md">Información de Contacto</div>
+                            <div class="text-h6 text-primary q-mb-md">{{ $tr('ui.label.contact') }}</div>
                             <q-separator class="q-my-md" />
                             <div class="row q-pa-sm">
                                 <div class="col-12">
@@ -65,8 +65,8 @@
                                                 <q-icon name="far fa-address-card" color="primary" />
                                             </q-item-section>
                                             <q-item-section>
-                                                <div class="text-caption text-bold text-primary">NIT</div>
-                                                <div class="text-caption">{{ form.nit || '000000000000000' }}</div>
+                                                <div class="text-caption text-bold text-primary">{{ $tr('qlogistic.layout.form.businessId') }}</div>
+                                                <div class="text-caption">{{ form.nit || '' }}</div>
                                             </q-item-section>
                                         </q-item>
                                         <q-item class="q-my-md">
@@ -75,7 +75,7 @@
                                             </q-item-section>
                                             <q-item-section>
                                                 <div class="text-caption text-bold text-primary">{{ $tr('qlogistic.layout.form.province') }}</div>
-                                                <div class="text-caption">{{ form.city.province ? form.city.province.name : 'Tolima' }}</div>
+                                                <div class="text-caption">{{ form.city.province ? form.city.province.name : '' }}</div>
                                             </q-item-section>
                                         </q-item>
                                         <q-item class="q-my-md">
@@ -84,7 +84,7 @@
                                             </q-item-section>
                                             <q-item-section>
                                                 <div class="text-caption text-bold text-primary">{{ $tr('ui.form.city') }}</div>
-                                                <div class="text-caption">{{ form.city ? form.city.name : 'Ibagué' }}</div>
+                                                <div class="text-caption">{{ form.city ? form.city.name : '' }}</div>
                                             </q-item-section>
                                         </q-item>
                                         <q-item class="q-my-md">
@@ -93,7 +93,7 @@
                                             </q-item-section>
                                             <q-item-section>
                                                 <div class="text-caption text-bold text-primary">{{ $tr('ui.form.address') }}</div>
-                                                <div class="text-caption">{{ form.coords || 'Calle 20 4-56' }}</div>
+                                                <div class="text-caption">{{ form.coords }}</div>
                                             </q-item-section>
                                         </q-item>
                                         <q-item class="q-my-md">
@@ -102,7 +102,7 @@
                                             </q-item-section>
                                             <q-item-section>
                                                 <div class="text-caption text-bold text-primary">{{ $tr('ui.form.phone') }}</div>
-                                                <div class="text-caption">{{ form.phone || '00000000000000' }}</div>
+                                                <div class="text-caption">{{ form.phone }}</div>
                                             </q-item-section>
                                         </q-item>
                                         <q-item class="q-my-md">
@@ -111,7 +111,7 @@
                                             </q-item-section>
                                             <q-item-section>
                                                 <div class="text-caption text-bold text-primary">{{ $tr('ui.form.email') }}</div>
-                                                <div class="text-caption">{{ form.email || 'mail@miempresa.com' }}</div>
+                                                <div class="text-caption">{{ form.email }}</div>
                                             </q-item-section>
                                         </q-item>
                                         <q-item class="q-my-md">
@@ -120,7 +120,7 @@
                                             </q-item-section>
                                             <q-item-section>
                                                 <div class="text-caption text-bold text-primary">{{ $tr('qlogistic.layout.form.webUrl') }}</div>
-                                                <div class="text-caption">{{ form.webUrl || 'www.nombreempresa.com' }}</div>
+                                                <div class="text-caption">{{ form.webUrl }}</div>
                                             </q-item-section>
                                         </q-item>
                                     </q-list>
@@ -174,7 +174,7 @@
         },
         data(){
             return {
-                form: null,
+                form: {},
                 loading: false,
                 success: false,
                 itemId: null,
@@ -188,7 +188,7 @@
         methods:{
             async init(){
                 let attrs = this.$attrs
-                if(this.userData.business === null)
+                if(this.userData.business)
                     attrs.edit.label = 'ui.label.create'
                 this.$root.$emit('dataToHeader',attrs)
                 this.getData()
@@ -196,26 +196,27 @@
             async getData(){
                 this.success = false
                 this.loading = true
-                let params = {
-                    params: {
-                        include: 'city,city.province',
-                        filter: {
-                            allTranslations: true,
-                            user: this.userData.id,
+                if(this.userData.business) {
+                    let configName = 'apiRoutes.qlogistic.business'
+                    let params = {
+                        params: {
+                            include: 'city,users,city.province',
+                            filter: {
+                                allTranslations: true,
+                            }
                         }
                     }
+                    //Request
+                    await this.$crud.show(configName, this.userData.business.id, params).then(response => {
+                        if (Object.keys(response.data).length > 0) {
+                            let dataForm = this.$clone(response.data)
+                            this.form = this.$clone(dataForm)
+                            this.itemId = dataForm.id
+                        }
+                    }).catch(error => {
+                        this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                    })
                 }
-                await this.$crud.index('apiRoutes.qlogistic.business',params).then(response => {
-                    if(response.data.length > 0) {
-                        let dataForm = this.$clone(response.data[0])
-                        this.form = dataForm
-                        this.itemId = dataForm.id
-                    }
-                }).catch(error => {
-                    console.error(error)
-                    this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
-                    this.loading = false
-                })
                 this.success = true
                 this.loading = false
             }

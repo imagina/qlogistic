@@ -29,7 +29,7 @@
                                             </div>
                                         </div>
                                         <div class="col-12 col-lg-4 text-center-md">
-                                            <b>{{ $tr('qlogistic.layout.form.destination') }}: </b> {{ order.destinationBusiness.name }}, {{ order.destinationBusiness.city.name }}
+                                            <b>{{ $tr('qlogistic.layout.form.destination') }}: </b> {{ order.destinationBusiness.name }}, {{ order.city.name }}
                                         </div>
                                     </div>
                                 </div>
@@ -100,7 +100,7 @@
             async getData(){
                 let params = {
                     params:{
-                        include: 'originBusiness,destinationBusiness,orderStatus,originBusiness.city,destinationBusiness.city',
+                        include: 'originBusiness,destinationBusiness,orderStatus,originBusiness.city,city',
                         filter:{
                             user: this.userData.id
                         }

@@ -59,7 +59,7 @@
                                                                 :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                                         />
                                                         <div v-else>
-                                                            {{ $tr('qlogistic.layout.message.businessNotFound') }}
+                                                            {{ $tr('qlogistic.layout.message.businessNotFound') }} <q-btn rounded color="secondary" :label="$tr('ui.label.edit')" icon="fas fa-edit" :to="{name: 'qlogistic.business.edit'}" />
                                                         </div>
                                                     </div>
                                                     <div class="col-12" v-if="$auth.hasAccess('ilogistics.orders.manageothers')">
@@ -353,10 +353,15 @@
                         this.hospLoading= false
                     })
                 }else{
-                    let businessesData = this.userData.businesses
-                    this.business = this.$array.select(businessesData, { label: 'name', id: 'id' })
-                    this.businessOptions = this.$clone(this.business)
-                    //this.locale.form.originBusinessId = this.$clone(this.business[0].value)
+                    let businessData = this.$clone(this.userData.business)
+                    if(businessData) {
+                        this.business = this.$array.select([businessData], {label: 'name', id: 'id'})
+                        this.businessOptions = this.$clone(this.business)
+                    }else{
+                        this.business = []
+                        this.businessOptions = []
+                    }
+                    //this.locale.form.originBusinessId = this.$clone(this.userData.business.id)
                 }
             },
 
@@ -385,19 +390,18 @@
             async getUsers() {
                 if(this.locale.form.originBusinessId){
                     this.userLoading = true
-                    let configName = 'apiRoutes.quser.users'
+                    let configName = 'apiRoutes.qlogistic.business'
                     let params = {
                         params: {
+                            include: 'users',
                             filter: {
                                 allTranslations: true,
-                                country: 48,
-                                business: this.locale.form.originBusinessId
                             }
                         }
                     }
                     //Request
-                    await this.$crud.index(configName,params).then(response => {
-                        this.users = this.$array.select(response.data, { label: 'fullName', id: 'id' })
+                    await this.$crud.show(configName,this.locale.form.originBusinessId,params).then(response => {
+                        this.users = this.$array.select(response.data.users, { label: 'fullName', id: 'id' })
                         this.usersOptions = this.$clone(this.users)
                         this.userLoading = false
                     }).catch(error => {
