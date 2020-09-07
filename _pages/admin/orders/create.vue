@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-center relative-position">
         <div class="full-width">
-            <q-form @submit="create" autocorrect="off" autocomplete="off" ref="formContent" @validation-error="$alert.error($tr('ui.message.formInvalid'))">
+            <q-form class="form-content" @submit="create" autocorrect="off" autocomplete="off" ref="formContent" @validation-error="$alert.error($tr('ui.message.formInvalid'))">
                 <div class="row" v-if="success">
                     <div class="col-12">
                         <locales v-model="locale" ref="localeComponent" :form="$refs.formContent" />
@@ -40,6 +40,7 @@
                                                     <div class="col-12">
                                                         <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.originBusiness') }}</div>
                                                         <q-select
+                                                                input-class="origin-business-id"
                                                                 v-if="business.length > 0"
                                                                 :readonly="!$auth.hasAccess('ilogistics.orders.manageothers') || this.userBusinessId != null"
                                                                 rounded
@@ -65,6 +66,7 @@
                                                     <div class="col-12" v-if="$auth.hasAccess('ilogistics.orders.manageothers')">
                                                         <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.label.user') }}</div>
                                                         <q-select
+                                                                input-class="user-id"
                                                                 rounded
                                                                 outlined
                                                                 dense
@@ -95,6 +97,7 @@
                                                     <div class="col-12 col-md-6">
                                                         <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.province') }}</div>
                                                         <q-select
+                                                                input-class="province-id"
                                                                 rounded
                                                                 outlined
                                                                 dense
@@ -115,6 +118,7 @@
                                                     <div class="col-12 col-md-6">
                                                         <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlocations.layout.form.city') }}</div>
                                                         <q-select
+                                                                input-class="city-id"
                                                                 @blur="getDestinations"
                                                                 rounded
                                                                 outlined
