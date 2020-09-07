@@ -6,4 +6,7 @@ export default {
   myBusiness: 'Business',
   myBusinessEdit: 'Edit Business',
   dashboard: 'Dashboard',
+  businesses: 'Businesses',
+  businessesCreate: 'Create Business',
+  businessesEdit: 'Edit Business',
 }

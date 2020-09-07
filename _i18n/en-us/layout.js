@@ -16,6 +16,8 @@ export default {
   historial: 'History',
   generateQR: 'Generate QR',
   businessInfo: 'Business Information',
+  newBusiness: 'New Business',
+  updateBusiness: 'Edit Business',
   form:{
     origin: 'Origin',
     destination: 'Destination',
@@ -49,6 +51,8 @@ export default {
     editedBy: 'Edited By',
     addPhotos: 'Add Photos',
     photoSupport: 'Photo Support',
+    user: 'Member Users',    
+    business: 'Business',
   },
   message:{
     businessNotFound: 'Sorry, you don\'t have any assigned business into your profile. Please register your business information in',

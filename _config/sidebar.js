@@ -2,6 +2,7 @@ const pages = config('pages') // Get Pages from config
 
 //E-commerce
 export default [
+    pages.qlogistic.businesses,
     pages.qlogistic.businessShow,
     {
         title: "qlogistic.sidebar.adminGroup",

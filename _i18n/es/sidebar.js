@@ -7,4 +7,7 @@ export default {
   myBusiness: 'Empresa',
   myBusinessEdit: 'Editar Empresa',
   dashboard: 'Panel de Control',
+  businesses: 'Empresas',
+  businessesCreate: 'Crear Empresa',
+  businessesEdit: 'Editar Empresa',
 }

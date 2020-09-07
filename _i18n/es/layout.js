@@ -16,6 +16,8 @@ export default {
   historial: 'Historial',
   generateQR: 'Generar QR',
   businessInfo: 'Información Empresa',
+  newBusiness: 'Nueva Empresa',
+  updateBusiness: 'Editar Empresa',
   form:{
     origin: 'Origen',
     destination: 'Destino',
@@ -49,6 +51,8 @@ export default {
     editedBy: 'Modificado por',
     addPhotos: 'Agregar Fotografías',
     photoSupport: 'Soporte Fotográfico',
+    user: 'Usuarios Miembros',
+    business: 'Empresa',
   },
   message:{
     businessNotFound: 'Lo sentimos. En este momento no tiene una empresa asignada a su perfil. Favor ingresa los datos de su empresa haciendo clic en',

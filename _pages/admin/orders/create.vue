@@ -115,6 +115,7 @@
                                                     <div class="col-12 col-md-6">
                                                         <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlocations.layout.form.city') }}</div>
                                                         <q-select
+                                                                @blur="getDestinations"
                                                                 rounded
                                                                 outlined
                                                                 dense
@@ -337,6 +338,7 @@
                     params: {
                         filter: {
                             allTranslations: true,
+                            type: 1
                         }
                     }
                 }
@@ -367,23 +369,33 @@
 
             //Search provinces
             async getDestinations() {
-                let configName = 'apiRoutes.qlogistic.business'
-                let params = {
-                    params: {
-                        filter: {
-                            allTranslations: true,
+                if(this.locale.form.provinceId !== null || this.locale.form.cityId !== null) {
+                    let configName = 'apiRoutes.qlogistic.business'
+                    let params = {
+                        params: {
+                            filter: {
+                                allTranslations: true,
+                                type: 2,
+                            }
                         }
                     }
-                }
-                 this.hospLoading= true
-                 await this.$crud.index(configName,params).then(response => {
-                        this.hosp = this.$array.select(response.data, { label: 'name', id: 'id' })
+
+                    if (this.locale.form.provinceId !== null) {
+                        params.params.filter.province = this.locale.form.provinceId
+                    }
+                    if (this.locale.form.cityId !== null) {
+                        params.params.filter.city = this.locale.form.cityId
+                    }
+                    this.hospLoading = true
+                    await this.$crud.index(configName, params).then(response => {
+                        this.hosp = this.$array.select(response.data, {label: 'name', id: 'id'})
                         this.hospOptions = this.$clone(this.hosp)
-                        this.hospLoading= false
-                 }).catch(error => {
-                     this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
-                     this.hospLoading= false
-                 })
+                        this.hospLoading = false
+                    }).catch(error => {
+                        this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                        this.hospLoading = false
+                    })
+                }
             },
 
             //Search users
@@ -457,6 +469,7 @@
                     this.cities =  this.$array.select(response.data, { label: 'name', id: 'id' })
                     this.citiesOptions = this.$clone(this.cities)
                     this.cityLoading = false
+                    this.getDestinations()
                 }).catch(error => {
                     this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
                 })

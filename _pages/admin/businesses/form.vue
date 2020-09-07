@@ -16,6 +16,12 @@
                                         <div class="text-subtitle1 text-uppercase text-bold">{{ $tr('qlogistic.layout.businessInfo') }}:</div>
                                     </div>
                                     <div class="col-12 col-md-9">
+                                        <div class="row">
+                                            <div class="col-12 q-py-md">
+                                                <q-radio v-model="locale.formTemplate.typeId" :val="1" :label="$tr('qlogistic.layout.form.business')" />
+                                                <q-radio v-model="locale.formTemplate.typeId" :val="2" :label="$tr('qlogistic.layout.form.hospitalary')" @click.native="()=>{locale.form.userId = null}" />
+                                            </div>
+                                        </div>
                                         <div class="row q-col-gutter-md">
                                             <div class="col-6 col-md-5">
                                                 <media-form
@@ -84,8 +90,26 @@
                                                 <q-input rounded  outlined dense :label="`${$tr('ui.form.description')}`"
                                                          type="textarea" v-model="locale.formTemplate.description"/>
                                             </div>
-                                            <!---<div class="col-12 col-md-6">
+                                            <div class="col-12 col-md-6" v-if="locale.form.typeId === 1">
                                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.label.user') }}</div>
+                                                <q-select
+                                                        rounded
+                                                        outlined
+                                                        dense
+                                                        use-chips
+                                                        :loading="userLoading"
+                                                        v-model="locale.formTemplate.userId"
+                                                        :options="usersOptions"
+                                                        :label="$tr('ui.label.user')"
+                                                        map-options
+                                                        emit-value
+                                                        use-input
+                                                        @filter="(val, update)=>update(()=>{usersOptions = $helper.filterOptions(val,users,locale.formTemplate.userId)})"
+                                                        option-label="label"
+                                                />
+                                            </div>
+                                            <div class="col-12 col-md-6" v-if="locale.form.typeId === 1">
+                                                <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.user') }}</div>
                                                 <q-select
                                                         rounded
                                                         outlined
@@ -95,14 +119,14 @@
                                                         :loading="userLoading"
                                                         v-model="locale.formTemplate.users"
                                                         :options="usersOptions"
-                                                        :label="$tr('ui.label.user')"
+                                                        :label="$tr('qlogistic.layout.form.user')"
                                                         map-options
                                                         emit-value
                                                         use-input
                                                         @filter="(val, update)=>update(()=>{usersOptions = $helper.filterOptions(val,users,locale.formTemplate.users)})"
                                                         option-label="label"
                                                 />
-                                            </div>-->
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -234,7 +258,7 @@
                         email: null,
                         phone: null,
                         users: [],
-                        userId: this.userData.id,
+                        userId: null,
                         cityId: null,
                         provinceId: null,
                         webUrl: null,
@@ -256,6 +280,11 @@
                 return this.$store.state.quserAuth.userData
             }
         },
+        watch:{
+          '$route.params'(){
+              this.init()
+          }
+        },
         mounted(){
             this.$nextTick(async ()=>{
                 this.$root.$emit('dataToHeader',this.$attrs)
@@ -266,6 +295,7 @@
             async init(){
                 this.success = false
                 this.loading = true
+                this.itemId = this.$route.params.id || null
                 this.locale = this.$clone(this.dataLocale)//Add fields
                 if (this.locale.success) this.$refs.localeComponent.vReset()//Reset locale
                 await this.getUsers()
@@ -277,7 +307,7 @@
             },
             //get business data
             async getData() {
-                if (this.userData.business) {
+                if (this.itemId) {
                     let configName = 'apiRoutes.qlogistic.business'
                     let params = {
                         params: {
@@ -288,7 +318,7 @@
                         }
                     }
                     //Request
-                    await this.$crud.show(configName, this.userData.business.id, params).then(response => {
+                    await this.$crud.show(configName, this.itemId, params).then(response => {
                         if (Object.keys(response.data).length > 0) {
                             let dataForm = this.$clone(response.data)
                             this.locale.form = this.$clone(dataForm)
@@ -388,18 +418,19 @@
                             this.$alert.success({message: `${this.$tr('ui.message.recordCreated')}`})
                             this.itemId = response.data.id
                             this.loading = false
-                            this.$store.dispatch('quserAuth/AUTH_UPDATE')
+                            this.$router.push({name: 'qlogistic.businesses.index'})
                         }).catch(error => {
                             this.loading = false
+                            console.error(error)
                             this.$alert.error({message: this.$tr('ui.message.recordNoUpdated'), pos: 'bottom'})
                         })
                     } else {
                         this.$crud.update(configName, this.itemId, this.getDataForm()).then(response => {
                             this.$alert.success({message: `${this.$tr('ui.message.recordUpdated')}`})
                             this.loading = false
-                            this.$store.dispatch('quserAuth/AUTH_UPDATE')
                         }).catch(error => {
                             this.loading = false
+                            console.error(error)
                             this.$alert.error({message: this.$tr('ui.message.recordNoUpdated'), pos: 'bottom'})
                         })
                     }
