@@ -5,10 +5,10 @@
           <orders label="Total de Ordenes" />
       </div>
       <div class="col-4 col-lg-3 q-px-sm">
-        <orders label="Ordenes en Progreso" status="1,2,3,4,5" color="negative" />
+        <orders label="Ordenes en Progreso" status="1,2,3,4" color="negative" />
       </div>
       <div class="col-4 col-lg-3 q-px-sm">
-        <orders label="Ordenes Completadas" status="6" color="orange" />
+        <orders label="Ordenes Completadas" status="5" color="orange" />
       </div>
     </div>
     <div class="row q-col-gutter-y-md full-width q-py-md">

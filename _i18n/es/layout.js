@@ -28,7 +28,7 @@ export default {
     webUrl: 'Sitio Web',
     patient: 'Paciente',
     patientDni: 'N° de Cédula',
-    hospitalary: 'Red Hospitalaria',
+    destinationBusiness: 'Empresa de Destino',
     observations: 'Observaciones de Entrega y/o Recolección',
     observations2: 'Observaciones',
     transportBusiness: 'Empresa Transportadora',

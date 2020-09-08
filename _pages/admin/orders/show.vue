@@ -46,17 +46,31 @@
                                         <div class="text-subtitle1 text-bold text-uppercase q-pl-sm">{{ $tr('qlogistic.layout.form.origin')  }}:</div>
                                         <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ order.originBusiness.name }}</div>
                                         <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.orderBusiness')  }}</div>
-                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ order.originBusiness.coords }} , {{ order.originBusiness.city.name }}</div>
+                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ order.originAddress }} , {{ order.originCity.name }}</div>
                                         <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.form.origin')  }}</div>
                                         <q-separator class="q-my-md" />
                                         <div class="text-subtitle1 text-bold text-uppercase q-pl-sm">{{ $tr('qlogistic.layout.form.destination')  }}:</div>
-                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ order.city.name }}, {{ order.city.province.name }}</div>
+                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ order.destinationCity.name }}, {{ order.destinationCity.province.name }}</div>
                                         <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.form.destination')  }}</div>
                                         <q-separator class="q-my-md" />
                                         <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ order.destinationBusiness.name }}</div>
-                                        <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.form.hospitalary')  }}</div>
+                                        <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.form.destinationBusiness')  }}</div>
                                         <q-separator class="q-my-md" />
                                         <div class="text-subtitle1 text-bold text-uppercase q-pl-sm">{{ $tr('qlogistic.layout.form.additionalInfo') }}:</div>
+                                        <div class="row q-ma-md">
+                                          <div class="col-12 col-md-6">
+                                            <div class="text-subtitle2 text-bold text-primary">{{ $tr('qlogistic.layout.form.patient') }}</div>
+                                            <div class="text-caption text-justify">
+                                              {{ order.customerName }}
+                                            </div>
+                                          </div>
+                                          <div class="col-12 col-md-6">
+                                            <div class="text-subtitle2 text-bold text-primary">{{ $tr('qlogistic.layout.form.patientDni') }}</div>
+                                            <div class="text-caption text-justify">
+                                              {{ order.customerDni }}
+                                            </div>
+                                          </div>
+                                        </div>
                                         <div v-for="(item,i) in order.items">
                                             <q-separator class="q-my-md" />
                                             <div class="row">
@@ -110,7 +124,7 @@
                 </div>
             </div>
             <div class="col-12">
-                <updateDialog :item-id="itemId" v-model="showUpdateDialog" />
+                <updateDialog :item-id="itemId" v-model="showUpdateDialog" @created="init" />
                 <qrDialog :item-id="itemId" v-model="showQRDialog" />
             </div>
         </div>
@@ -128,6 +142,16 @@
             orderHistory,
             updateDialog,
             qrDialog
+        },
+        watch:{
+          '$route.params'(){
+            this.init()
+          }
+        },
+        computed:{
+          userData(){
+            return this.$store.state.quserAuth.userData
+          }
         },
         data(){
             return {
@@ -157,8 +181,20 @@
             async getData(){
                 let params = {
                     params:{
-                        include: 'items,orderStatus,originBusiness,originBusiness.city,destinationBusiness,destinationBusiness.city,city,city.province'
+                        include: 'items,orderStatus,originBusiness,originCity,destinationBusiness,destinationCity,destinationCity.province',
+                        filter: {},
                     }
+                }
+                if(this.userData.business !== null){
+                  params.params.filter.user = this.userData.id
+                  params.params.filter.originBusiness = this.userData.business.id
+                }else if(this.userData.businesses.length > 0){
+                  let business = this.userData.businesses
+                  let bdata = []
+                  for (let x in business){
+                    bdata.push(business[x].id)
+                  }
+                  params.params.filter.originBusiness = bdata.join(',')
                 }
                 await this.$crud.show('apiRoutes.qlogistic.orders', this.itemId, params).then(response =>{
                     this.order = response.data

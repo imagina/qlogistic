@@ -13,11 +13,6 @@
     components: {
       highCharts: Chart
     },
-    mounted(){
-      this.$nextTick(()=>{
-        this.init()
-      })
-    },
     computed:{
       userData(){
         return this.$store.state.quserAuth.userData
@@ -92,9 +87,11 @@
                   from: month.getFullYear()+'-'+monthNumber.toString().padStart(2,'0')+'-01',
                   to: month.getFullYear()+'-'+monthNumber.toString().padStart(2,'0')+'-31',
                 },
-                user: this.userData.id
               }
             }
+          }
+          if(this.userData.business!==null || this.userData.businesses.length > 0){
+            params.params.filter.user = this.userData.id
           }
           await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{
             monthSeries.data.push(response.data.length)

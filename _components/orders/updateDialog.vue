@@ -108,7 +108,7 @@
                                           :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row q-py-md">
                             <div class="col-12 text-right">
                                 <q-btn rounded color="positive" icon="fas fa-paper-plane" label="Enviar" type="submit" />
                             </div>
@@ -167,15 +167,8 @@
                 success: false,
                 loading: false,
                 businessLoading: false,
-                selectedStatus: { id:1, name:'Recibido' },
-                statuses: [
-                    {id:1, name:'Recibido'},
-                    {id:2, name:'Transito Ciudad de Origen'},
-                    {id:3, name:'Envío Nacional'},
-                    {id:4, name:'Transito Ciudad Destino'},
-                    {id:5, name:'Entregado'},
-                    {id:6, name:'Completado'}
-                ],
+                selectedStatus: {},
+                statuses: [],
                 business:[],
                 businessOptions:[],
             }
@@ -184,6 +177,7 @@
             async initForm() {
                 this.show = this.value//Assign props value to show modal
                 await this.getBusiness()
+                await this.getStatuses()
                 await this.getData()
             },
             async getData() {
@@ -194,8 +188,31 @@
                 this.success = true
                 this.loading = false
             },
+            async getStatuses(){
+              let params = {
+                params:{
+                  filter:{
+                    allTranslations: true,
+                  }
+                }
+              }
+              await this.$crud.index('apiRoutes.qlogistic.orderStatuses',params).then(response => {
+                this.statuses = response.data
+                this.selectedStatus = this.statuses[0]
+              }).catch(error => {
+                this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+              })
+            },
             async getBusiness() {
-                await this.$crud.index('apiRoutes.qlogistic.business').then(response => {
+                let params = {
+                  params:{
+                    filter:{
+                      allTranslations: true,
+                      type: 3
+                    }
+                  }
+                }
+                await this.$crud.index('apiRoutes.qlogistic.business',params).then(response => {
                     this.business = this.$array.select(response.data, { label: 'name', id: 'id' })
                     this.businessOptions = this.$clone(this.business)
                 }).catch(error => {
@@ -208,6 +225,7 @@
                     let configName = 'apiRoutes.qlogistic.orderStatusHistories'
                     this.$crud.create(configName, this.getDataForm()).then(response => {
                         this.$alert.success({message: `${this.$tr('ui.message.recordCreated')}`})
+                        this.$emit('created')
                         this.loading = false
                         this.show = false
                     }).catch(error => {

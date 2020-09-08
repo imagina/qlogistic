@@ -24,12 +24,12 @@
                                                     {{ order.originBusiness.name }}
                                                 </div>
                                                 <div class="col-12 col-lg-4 right-border text-center-md">
-                                                    <b>{{ $tr('qlogistic.layout.form.origin') }}: </b> {{ order.originBusiness.city.name }}
+                                                    <b>{{ $tr('qlogistic.layout.form.origin') }}: </b> {{ order.originCity.name }}
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-12 col-lg-4 text-center-md">
-                                            <b>{{ $tr('qlogistic.layout.form.destination') }}: </b> {{ order.destinationBusiness.name }}, {{ order.city.name }}
+                                            <b>{{ $tr('qlogistic.layout.form.destination') }}: </b> {{ order.destinationBusiness.name }}, {{ order.destinationCity.name }}
                                         </div>
                                     </div>
                                 </div>
@@ -100,16 +100,15 @@
             async getData(){
                 let params = {
                     params:{
-                        include: 'originBusiness,destinationBusiness,orderStatus,originBusiness.city,city',
+                        include: 'originBusiness,destinationBusiness,orderStatus,originCity,destinationCity',
                         filter:{
-                            user: this.userData.id
                         }
                     }
                 }
-                if(this.userData.business){
+                if(this.userData.business !== null){
+                    params.params.filter.user = this.userData.id
                     params.params.filter.originBusiness = this.userData.business.id
-                }
-                if(this.userData.businesses.length > 0){
+                }else if(this.userData.businesses.length > 0){
                     let business = this.userData.businesses
                     let bdata = []
                     for (let x in business){

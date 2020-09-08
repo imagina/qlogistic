@@ -37,7 +37,7 @@
                         <div class="text-center q-pa-lg">
                             <p>
                                 <qrRead @input="redirectTo" v-if="showQR" @error="showQR = false" />
-                                <q-input v-else dense outlined v-model="itemId" @blur="$router.push({name: 'qlogistic.orders.searchShow',params:{id: itemId}})" />
+                                <q-input v-else dense outlined v-model="itemId" @blur="$router.push({name: 'qlogistic.orders.searchShow',params:{id: itemId}})" @keyup.enter="$router.push({name: 'qlogistic.orders.searchShow',params:{id: itemId}})" />
                             </p>
                         </div>
                     </q-card-section>

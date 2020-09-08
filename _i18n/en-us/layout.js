@@ -28,7 +28,7 @@ export default {
     webUrl: 'Web Site',
     patient: 'Patiene',
     patientDni: 'ID',
-    hospitalary: 'Hospitalary Network',
+    destinationBusiness: 'Destination Business',
     observations: 'Delivery and/or Collection Observations',
     observations2: 'Observations',
     transportBusiness: 'Transport Business',
@@ -51,7 +51,7 @@ export default {
     editedBy: 'Edited By',
     addPhotos: 'Add Photos',
     photoSupport: 'Photo Support',
-    user: 'Member Users',    
+    user: 'Member Users',
     business: 'Business',
   },
   message:{

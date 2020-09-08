@@ -18,8 +18,7 @@
                                     <div class="col-12 col-md-9">
                                         <div class="row">
                                             <div class="col-12 q-py-md">
-                                                <q-radio v-model="locale.formTemplate.typeId" :val="1" :label="$tr('qlogistic.layout.form.business')" />
-                                                <q-radio v-model="locale.formTemplate.typeId" :val="2" :label="$tr('qlogistic.layout.form.hospitalary')" @click.native="()=>{locale.form.userId = null}" />
+                                                <q-radio v-model="locale.formTemplate.typeId" :val="type.id" :label="type.name" v-for="(type, i) in types" :key="i" />
                                             </div>
                                         </div>
                                         <div class="row q-col-gutter-md">
@@ -248,6 +247,7 @@
                 citiesOptions: [],
                 provinceLoading: false,
                 cityLoading: false,
+                types:[],
             }
         },
         computed:{
@@ -298,6 +298,7 @@
                 this.itemId = this.$route.params.id || null
                 this.locale = this.$clone(this.dataLocale)//Add fields
                 if (this.locale.success) this.$refs.localeComponent.vReset()//Reset locale
+                await this.getTypes()
                 await this.getUsers()
                 await this.getProvinces()
                 await this.getData()
@@ -408,6 +409,21 @@
                 }else{
                     this.cityLoading = false
                 }
+            },
+            getTypes(){
+              let configName = 'apiRoutes.qlogistic.businessTypes'
+              let params = {
+                params: {
+                  filter: {
+                    allTranslations: true,
+                  }
+                }
+              }
+              this.$crud.index(configName,params).then(response => {
+                this.types =  response.data
+              }).catch(error => {
+                this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+              })
             },
             async save(){
                 if (await this.$refs.localeComponent.validateForm()) {

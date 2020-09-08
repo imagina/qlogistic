@@ -12,11 +12,12 @@
                         <div class="text-caption q-px-md">
                             <div class="q-pa-xs">
                                 <div><b>{{ $tr('qlogistic.layout.form.origin') }}:</b> {{ history.order.originBusiness.name }}</div>
-                                <div><b>{{ $tr('ui.label.address') }}:</b> {{ history.order.originBusiness.coords }}, {{ history.order.originBusiness.city.name }}</div>
+                                <div><b>{{ $tr('ui.label.address') }}:</b> {{ history.order.originAddress }}, {{ history.order.originCity.name }}</div>
                             </div>
                             <div class="q-pa-xs">
                                 <div><b>{{ $tr('qlogistic.layout.form.destination') }}:</b> {{ history.order.destinationBusiness.name }}</div>
-                                <div><b>{{ $tr('ui.label.address') }}:</b> {{ history.order.destinationBusiness.coords }}, {{ history.order.city.name }}</div>
+                                <div><b>{{ $tr('ui.label.address') }}:</b> {{ history.order.destinationAddress }}, {{ history.order.destinationCity.name }}</div>
+                                <div>{{ $trd(history.createdAt, {type: 'long'}) }}</div>
                             </div>
                             <div class="q-pa-xs">
                                 <b>{{ $tr('ui.form.status') }}:</b> {{ history.orderStatus.name }}
@@ -52,6 +53,11 @@
         computed:{
 
         },
+        watch:{
+          id(){
+            this.init()
+          }
+        },
         data(){
             return {
                 histories: [],
@@ -72,7 +78,7 @@
                 this.loading = true
                 let params = {
                     params:{
-                        include: 'order,order.originBusiness,order.destinationBusiness,orderStatus,order.city,order.originBusiness.city,order.destinationBusiness.city',
+                        include: 'order,order.originBusiness,order.destinationBusiness,orderStatus,order.originCity,order.destinationCity',
                         filter:{
                             orderId: this.id
                         },

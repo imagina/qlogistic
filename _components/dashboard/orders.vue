@@ -58,9 +58,11 @@
                         include: 'orderStatus',
                         filter:{
                             status: this.status,
-                            user: this.userData.id
                         }
                     }
+                }
+              if(this.userData.business!==null || this.userData.businesses.length > 0){
+                  params.params.filter.user = this.userData.id
                 }
                 await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{
                     this.orders = response.data

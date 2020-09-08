@@ -21,7 +21,7 @@
                             <div><b>{{ $tr('qlogistic.layout.form.destinationCity') }}:</b> {{ history.order.city.name  }}</div>
                         </div>
                         <div class="q-pa-xs">
-                            <div><b>{{ $tr('ui.label.hour') }}: {{ $trd(history.createdAt, {type: 'time'}) }}</b></div>
+                            <div>{{ $trd(history.createdAt, {type: 'long'}) }}</div>
                         </div>
                         <div class="q-pa-xs">
                             <div><b>{{ $tr('qlogistic.layout.form.editedBy') }}:</b> {{ history.user.fullName }}</div>
@@ -95,7 +95,7 @@
                 let configName = 'apiRoutes.qlogistic.orderStatusHistories'
                 let params = {
                     params:{
-                        include: 'order,order.originBusiness,order.destinationBusiness,orderStatus,order.city,order.originBusiness.city,order.destinationBusiness.city,user',
+                        include: 'order,order.originBusiness,order.destinationBusiness,orderStatus,order.originCity,order.destinationCity,user',
                     },
                     refresh: true,
                 }

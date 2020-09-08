@@ -77,7 +77,7 @@
         <q-toolbar-title style="height: 40px;min-height: 40px">
           <div class="row">
             <div class="col-10 q-px-sm">
-              <q-input dense input-class="text-primary q-pa-none" borderless @blur="search" v-model="searchValue">
+              <q-input dense input-class="text-primary q-pa-none" borderless @blur="search" @keyup.enter="search" v-model="searchValue">
                 <template v-slot:append>
                   <q-icon v-if="searchValue === ''" name="search" color="primary" />
                   <q-icon v-else name="clear" color="primary" class="cursor-pointer" @click="searchValue = ''" />
