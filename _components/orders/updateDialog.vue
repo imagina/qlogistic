@@ -89,7 +89,16 @@
                                           :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
                             </div>
                         </div>
-                        <div class="row" v-if="locale.form.orderStatusId === 3">
+                        <div class="row" v-if="locale.form.orderStatusId === 5">
+                          <q-separator class="q-my-md" />
+                          <div class="col-12">
+                            <div class="text-subtitle2 text-bold text-primary q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.signature') }}:</div>
+                            <q-input  outlined dense label="" type="textarea"
+                                    v-model="locale.formTemplate.signature"
+                                    :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
+                          </div>
+                        </div>
+                        <div class="row" v-if="locale.form.orderStatusId === 3 || locale.form.orderStatusId === 5">
                             <div class="text-subtitle2 text-bold text-primary q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.addPhotos') }}:</div>
                             <media-form
                                     v-model="locale.formTemplate.mediasMulti"
@@ -98,15 +107,6 @@
                                     zone='gallery'
                                     multiple
                             />
-                        </div>
-                        <div class="row" v-if="locale.form.orderStatusId === 5">
-                            <q-separator class="q-my-md" />
-                            <div class="col-12">
-                                <div class="text-subtitle2 text-bold text-primary q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.signature') }}:</div>
-                                <q-input  outlined dense label="" type="textarea"
-                                          v-model="locale.formTemplate.signature"
-                                          :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
-                            </div>
                         </div>
                         <div class="row q-py-md">
                             <div class="col-12 text-right">
