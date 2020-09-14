@@ -1,14 +1,14 @@
 <template>
-    <q-dialog v-model="show" no-esc-dismiss no-backdrop-dismiss no-route-dismiss content-class="q-container">
+    <q-dialog v-model="show" content-class="q-container">
         <q-card style="border-radius: 10px;max-width: 480px;width:100%">
-            <q-toolbar class="bg-primary text-white" v-if="success">
+            <q-toolbar class="bg-primary text-white">
                 <q-toolbar-title>
-                    <span class="q-py-md">#{{ history.order.id.toString().padStart(5,'0') }}</span>
+                    <span class="q-py-md">#{{ history.order ? history.order.id.toString().padStart(5,'0') : '00000' }}</span>
                 </q-toolbar-title>
                 <q-btn flat round dense icon="close" v-close-popup />
             </q-toolbar>
-            <q-card-section style="max-height: 85vh" class="scroll q-pa-lg" v-if="success">
-                <div class="row">
+            <q-card-section style="max-height: 85vh" class="scroll q-pa-lg">
+                <div class="row" v-if="success">
                     <div class="col-12 text-secondary">
                         <q-icon name="fas fa-check-circle" color="secondary" class="q-mr-sm" /> {{ history.orderStatus.name }}
                     </div>

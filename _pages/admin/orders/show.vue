@@ -74,15 +74,24 @@
                                         <div v-for="(item,i) in order.items">
                                             <q-separator class="q-my-md" />
                                             <div class="row">
-                                                <div class="col-9">
+                                                <div class="col-6">
                                                     <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />
-                                                        {{ item.name }}
+                                                      {{ item.description }}
                                                     </div>
-                                                    <div class="text-caption text-primary text-bold q-pl-sm">{{ item.description }}</div>
+                                                    <div class="text-caption text-primary text-bold q-pl-sm">{{ item.packagingType.name }}</div>
                                                 </div>
                                                 <div class="col-3">
-                                                    <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ item.quantity }}</div>
+                                                    <div class="text-subtitle1">
+                                                      <q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ item.quantity }}
+                                                    </div>
                                                     <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.form.pieces') }}</div>
+                                                </div>
+                                                <div class="col-3">
+                                                  <q-btn v-if="$auth.hasAccess('ilogistics.orders.print') && item.qrs" class="q-mr-sm" icon="fas fa-print" rounded color="primary" @click="()=>{orderItemId = item.id;showQRDialog = true}">
+                                                    <q-tooltip>
+                                                      {{ $tr('qlogistic.layout.generateQR') }}
+                                                    </q-tooltip>
+                                                  </q-btn>
                                                 </div>
                                             </div>
                                         </div>
@@ -96,15 +105,15 @@
                                 </div>
                             </div>
                             <div class="col-12 text-right desktop-only">
-                                <q-btn class="q-mr-sm" :label="$tr('qlogistic.layout.generateQR')" icon="fas fa-print" rounded color="primary" @click="()=>{showQRDialog = true}" />
+                                <!--<q-btn class="q-mr-sm" :label="$tr('qlogistic.layout.generateQR')" icon="fas fa-print" rounded color="primary" @click="()=>{showQRDialog = true}" />-->
                                 <q-btn v-if="$auth.hasAccess('ilogistics.orderstatushistories.create')"  :label="$tr('ui.label.update')" icon="fas fa-save" rounded color="positive" @click="()=>{showUpdateDialog = true}" />
                             </div>
                             <q-page-sticky position="bottom-right" :offset="[18, 60]" class="mobile-only">
-                                <q-btn class="q-mr-sm" icon="fas fa-print" rounded color="primary" @click="()=>{showQRDialog = true}">
+                                <!--<q-btn class="q-mr-sm" icon="fas fa-print" rounded color="primary" @click="()=>{showQRDialog = true}">
                                     <q-tooltip>
                                         {{ $tr('qlogistic.layout.generateQR') }}
                                     </q-tooltip>
-                                </q-btn>
+                                </q-btn>-->
                                 <q-btn v-if="$auth.hasAccess('ilogistics.orderstatushistories.create')" icon="fas fa-save" rounded color="positive" @click="()=>{showUpdateDialog = true}">
                                     <q-tooltip>
                                         {{ $tr('ui.label.update') }}
@@ -123,10 +132,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12">
-                <updateDialog :item-id="itemId" v-model="showUpdateDialog" @created="init" />
-                <qrDialog :item-id="itemId" v-model="showQRDialog" />
-            </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <updateDialog :item-id="itemId" :order-history-id="false" v-model="showUpdateDialog" @created="init" />
+            <qrDialog :item-id="orderItemId" v-model="showQRDialog" />
+          </div>
         </div>
         <inner-loading :visible="loading" />
     </div>
@@ -161,6 +172,7 @@
                 showQRDialog: false,
                 loading: false,
                 success: false,
+                orderItemId: null,
             }
         },
         mounted(){
@@ -181,7 +193,7 @@
             async getData(){
                 let params = {
                     params:{
-                        include: 'items,orderStatus,originBusiness,originCity,destinationBusiness,destinationCity,destinationCity.province',
+                        include: 'items,items.qrs,items.packagingType,orderStatus,originBusiness,originCity,destinationBusiness,destinationCity,destinationCity.province',
                         filter: {},
                     }
                 }

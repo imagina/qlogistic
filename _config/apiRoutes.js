@@ -5,8 +5,10 @@ const urlBase = `${baseApiUrl}/${moduleName}/${moduleVersion}`;
 
 export default {
   orders : `${urlBase}/orders`,
+  orderItems : `${urlBase}/orderItems`,
   orderStatuses : `${urlBase}/orderStatuses`,
   orderStatusHistories : `${urlBase}/order-status-histories`,
+  packagingTypes : `${urlBase}/packagingTypes`,
   business : `${baseApiUrl}/ibusiness/v1/business`,
   businessTypes : `${baseApiUrl}/ibusiness/v1/type`,
 }

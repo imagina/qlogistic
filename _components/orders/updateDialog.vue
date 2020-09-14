@@ -1,5 +1,5 @@
 <template>
-    <q-dialog v-model="show" no-backdrop-dismiss no-route-dismiss content-class="q-container" v-bind="this.$q.platform.is.mobile?{fullHeight: true,maximized: true}:{}">
+    <q-dialog v-model="show" content-class="q-container" v-bind="this.$q.platform.is.mobile?{fullHeight: true,maximized: true}:{}">
         <q-card style="border-radius: 10px;max-width: 480px;width:100%" class="relative-position">
             <q-toolbar class="bg-primary text-white">
                 <q-toolbar-title>
@@ -19,7 +19,7 @@
                         <div class="row q-col-gutter-md">
                             <div class="col-12 text-right">
                                 <span class="text-subtitle2 text-primary q-pa-sm text-bold"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />Modificar Estado:</span>
-                                <q-btn-dropdown rounded no-caps color="secondary" :label="selectedStatus.name">
+                                <q-btn-dropdown :disable="orderHistoryId!=false" rounded no-caps color="secondary" :label="selectedStatus.name">
                                     <q-list>
                                         <q-item tag="label" v-ripple clickable v-for="(status,index) in statuses" :key="index" v-close-popup>
                                             <q-item-section>
@@ -31,6 +31,34 @@
                                     </q-list>
                                 </q-btn-dropdown>
                             </div>
+                        </div>
+                        <div class="row q-col-gutter-md">
+                          <div class="col-12">
+                            <div v-for="(item,i) in order.items">
+                              <q-separator class="q-my-md" />
+                              <div class="row">
+                                <div class="col-6">
+                                  <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />
+                                    {{ item.description }}
+                                  </div>
+                                  <div class="text-caption text-primary text-bold q-pl-sm">{{ item.packagingType.name }}</div>
+                                </div>
+                                <div class="col-3">
+                                  <div class="text-subtitle1">
+                                    <q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ options.selectedQRS ? options.selectedQRS[item.id].length : 0 }} / {{ item.quantity }}
+                                  </div>
+                                  <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.form.pieces') }}</div>
+                                </div>
+                                <div class="col-3">
+                                  <q-btn class="q-mr-sm" v-if="item.qrs" icon="fas fa-qrcode" rounded color="primary" @click="()=>{orderItemId = item.id;selectedItems = options.selectedQRS ? options.selectedQRS[item.id] : [];showQRDialog = true}">
+                                    <q-tooltip>
+                                      {{ $tr('qlogistic.layout.scanQR') }}
+                                    </q-tooltip>
+                                  </q-btn>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                         <q-separator class="q-my-md" />
                         <div class="row" v-if="locale.form.orderStatusId === 3">
@@ -115,22 +143,26 @@
                         </div>
                     </q-form>
                 </div>
-                <inner-loading :visible="loading"/>
+                <qrScanDialog :item-id="orderItemId" :selected-items="selectedItems" v-model="showQRDialog" @select="selectQRS" />
             </q-card-section>
+            <inner-loading :visible="loading" />
         </q-card>
     </q-dialog>
 </template>
 
 <script>
     import mediaForm from '@imagina/qmedia/_components/form'
+    import qrScanDialog from '@imagina/qlogistic/_components/orders/qrScanDialog'
     export default {
         name: "updateDialog",
         components:{
-            mediaForm
+            mediaForm,
+          qrScanDialog
         },
         props:{
             value: {default: false},
             itemId: {default: false},
+            orderHistoryId: {default: false},
         },
         watch: {
             value(newValue) {
@@ -155,6 +187,9 @@
                       orderId: this.itemId,
                       userId: this.$store.state.quserAuth.userData.id,
                       shippingType: 0,
+                      options:{
+                        selectedQRS: []
+                      },
                       mediasMulti: {},
                   }
               }
@@ -167,26 +202,66 @@
                 success: false,
                 loading: false,
                 businessLoading: false,
+                order:{},
                 selectedStatus: {},
                 statuses: [],
                 business:[],
                 businessOptions:[],
+                orderItemId: null,
+                showQRDialog: false,
+                options: {
+                  selectedQRS: [],
+                },
+                selectedItems:[],
             }
         },
         methods: {
             async initForm() {
                 this.show = this.value//Assign props value to show modal
-                await this.getBusiness()
-                await this.getStatuses()
-                await this.getData()
-            },
-            async getData() {
                 this.success = false
                 this.loading = true
+                await this.getOrder()
+                await this.getBusiness()
+                await this.getStatuses()
                 this.locale = this.$clone(this.dataLocale)//Add fields
                 if (this.locale.success) this.$refs.localeComponent.vReset()//Reset locale
+                await this.getHistory()
                 this.success = true
                 this.loading = false
+            },
+            async getOrder(){
+              let params = {
+                refresh: true,
+                params:{
+                  include: 'items,items.qrs,items.packagingType,orderStatus,originBusiness,originCity,destinationBusiness,destinationCity,destinationCity.province',
+                  filter: {},
+                }
+              }
+              await this.$crud.show('apiRoutes.qlogistic.orders', this.itemId, params).then(response =>{
+                this.order = response.data
+              }).catch(error =>{
+                this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+              })
+            },
+            async getHistory(){
+              let params = {
+                refresh: true,
+                params:{
+                }
+              }
+              if(this.orderHistoryId!=false){
+                await this.$crud.show('apiRoutes.qlogistic.orderStatusHistories', this.orderHistoryId, params).then(response =>{
+                  let dataForm = this.$clone(response.data)
+                  this.locale.form = this.$clone(dataForm)
+                  this.options = dataForm.options
+                }).catch(error =>{
+                  this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                })
+              }else{
+                for(let x in this.order.items){
+                  this.options.selectedQRS[this.order.items[x].id] = []
+                }
+              }
             },
             async getStatuses(){
               let params = {
@@ -223,15 +298,29 @@
                 if (await this.$refs.localeComponent.validateForm()) {
                     this.loading = true
                     let configName = 'apiRoutes.qlogistic.orderStatusHistories'
-                    this.$crud.create(configName, this.getDataForm()).then(response => {
+                    let formData = this.$clone(this.getDataForm())
+                    formData.options = this.options
+                    if(this.orderHistoryId) {
+                      this.$crud.update(configName, this.orderHistoryId, formData).then(response => {
+                        this.$alert.success({message: `${this.$tr('ui.message.recordCreated')}`})
+                        this.$emit('updated')
+                        this.loading = false
+                        this.show = false
+                      }).catch(error => {
+                        this.loading = false
+                        this.$alert.error({message: this.$tr('ui.message.recordNoUpdated'), pos: 'bottom'})
+                      })
+                    }else{
+                      this.$crud.create(configName, formData).then(response => {
                         this.$alert.success({message: `${this.$tr('ui.message.recordCreated')}`})
                         this.$emit('created')
                         this.loading = false
                         this.show = false
-                    }).catch(error => {
+                      }).catch(error => {
                         this.loading = false
                         this.$alert.error({message: this.$tr('ui.message.recordNoUpdated'), pos: 'bottom'})
-                    })
+                      })
+                    }
                 }
             },
             getDataForm() {
@@ -244,6 +333,12 @@
                 //response.selectable = JSON.stringify(response.selectable)
                 return response
             },
+            selectQRS(data){
+              this.showQRDialog = false
+              let dataQ = this.$clone(data)
+              this.options.selectedQRS[dataQ.id] = dataQ.checked
+              this.locale.form.options.selectedQRS[dataQ.id] = dataQ.checked
+            }
         }
     }
 </script>

@@ -32,19 +32,26 @@
                                 Ver
                             </q-tooltip>
                         </q-btn>
+                        <q-btn v-if="$auth.hasAccess('ilogistics.orderstatushistories.edit')" flat dense color="positive" icon="far fa-edit" @click="()=> {itemSelected = history.id;showUpdateDialog = true}">
+                          <q-tooltip>
+                            {{ $tr('ui.label.edit') }}
+                          </q-tooltip>
+                        </q-btn>
                     </div>
                 </q-item-section>
             </q-item>
-            <orderHistoryModal :itemId="itemSelected" v-model="showHistoryModal" />
         </q-list>
+        <orderHistoryModal :itemId="itemSelected" v-model="showHistoryModal" />
+        <updateDialog :item-id="id" :order-history-id="itemSelected" v-model="showUpdateDialog" @updated="init" />
         <inner-loading :visible="loading"/>
     </div>
 </template>
 <script>
     import OrderHistoryModal from "@imagina/qlogistic/_components/orders/orderHistoryModal";
+    import updateDialog from "@imagina/qlogistic/_components/orders/updateDialog"
     export default {
         name: "orderHistory",
-        components: {OrderHistoryModal},
+        components: {OrderHistoryModal,updateDialog},
         props:{
             id:{
                 default: null
@@ -65,6 +72,7 @@
                 success: false,
                 itemSelected: null,
                 showHistoryModal: false,
+                showUpdateDialog: false,
             }
         },
         mounted(){

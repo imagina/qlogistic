@@ -14,10 +14,11 @@ export default {
   addItem: 'Add Package Item',
   deleteItem: 'Delete Package Item',
   historial: 'History',
-  generateQR: 'Generate QR',
+  generateQR: 'Generate QR Code',
   businessInfo: 'Business Information',
   newBusiness: 'New Business',
   updateBusiness: 'Edit Business',
+  scanQR: 'Scan QR Code',
   form:{
     origin: 'Origin',
     destination: 'Destination',
@@ -56,5 +57,6 @@ export default {
   },
   message:{
     businessNotFound: 'Sorry, you don\'t have any assigned business into your profile. Please register your business information in',
+    qrCodeAlreadySelected: 'Sorry, this QR Code has already been selected.',
   }
 }

@@ -35,6 +35,33 @@
               },
               {name: 'actions', label: this.$tr('ui.form.actions'), align: 'left'},
             ],
+            filters:{
+              type:{
+                type: 'select',
+                loadOptions: { //Async load options form request, only in types [select, multiSelect]
+                  apiRoute: 'apiRoutes.qlogistic.businessTypes', //apiRoute to request
+                  select: {label: 'name', id: 'id'}, //Define fields to config select
+                },
+                props:{
+                  label: this.$tr('ui.form.type'),
+                }
+              },
+              city:{
+                type: 'select',
+                loadOptions: { //Async load options form request, only in types [select, multiSelect]
+                  apiRoute: 'apiRoutes.qlocations.cities', //apiRoute to request
+                  select: {label: 'name', id: 'id'}, //Define fields to config select
+                  requestParams: {
+                    filter:{
+                      country: 48
+                    }
+                  }
+                },
+                props:{
+                  label: this.$tr('ui.form.city'),
+                }
+              }
+            },
             requestParams: {
               include: 'city,city.province,type',
             }

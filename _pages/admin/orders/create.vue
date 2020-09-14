@@ -100,11 +100,6 @@
                                                           :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                                       />
                                                     </div>
-                                                    <div class="col-12">
-                                                      <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.form.address') }}</div>
-                                                      <q-input rounded  outlined dense :label="$tr('ui.form.address')" v-model="locale.formTemplate.originAddress"
-                                                               :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
-                                                    </div>
                                                     <div class="col-12 col-md-6">
                                                       <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.province') }}</div>
                                                       <q-select
@@ -146,15 +141,40 @@
                                                           :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                                       />
                                                   </div>
+                                                  <div class="col-12">
+                                                    <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.form.address') }}</div>
+                                                    <q-input rounded  outlined dense :label="$tr('ui.form.address')" v-model="locale.formTemplate.originAddress"
+                                                             :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
+                                                  </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <q-separator class="q-my-md"/>
                                         <div class="row q-col-gutter-md q-pa-lg">
-                                            <div class="col-12 col-md-3 q-pa-lg">
-                                                <div class="text-subtitle1 text-uppercase text-bold">{{ $tr('qlogistic.layout.form.destination') }}:</div>
-                                            </div>
-                                            <div class="col-12 col-md-9">
+                                              <div class="col-12 col-md-3 q-pa-lg">
+                                                  <div class="text-subtitle1 text-uppercase text-bold">{{ $tr('qlogistic.layout.form.destination') }}:</div>
+                                              </div>
+                                              <div class="col-12 col-md-9">
+                                                <div class="col-12">
+                                                  <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.destinationBusiness') }}:</div>
+                                                  <q-select
+                                                      @blur="getDestinationBusiness"
+                                                      rounded
+                                                      outlined
+                                                      dense
+                                                      use-chips
+                                                      :loading="hospLoading"
+                                                      :options="hospOptions"
+                                                      :label="$tr('qlogistic.layout.form.destinationBusiness')"
+                                                      v-model="locale.formTemplate.destinationBusinessId"
+                                                      map-options
+                                                      emit-value
+                                                      use-input
+                                                      @filter="(val, update)=>update(()=>{hospOptions = $helper.filterOptions(val,hosp,locale.formTemplate.destinationBusinessId)})"
+                                                      option-label="label"
+                                                      :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
+                                                  />
+                                                </div>
                                                 <div class="row q-col-gutter-md">
                                                     <div class="col-12 col-md-6">
                                                         <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.province') }}</div>
@@ -181,7 +201,6 @@
                                                         <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlocations.layout.form.city') }}</div>
                                                         <q-select
                                                                 input-class="city-id"
-                                                                @blur="getDestinations"
                                                                 rounded
                                                                 outlined
                                                                 dense
@@ -197,26 +216,6 @@
                                                                 option-label="label"
                                                                 :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                                         />
-                                                    </div>
-                                                    <div class="col-12">
-                                                      <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.destinationBusiness') }}:</div>
-                                                      <q-select
-                                                          @blur="getDestinationBusiness"
-                                                          rounded
-                                                          outlined
-                                                          dense
-                                                          use-chips
-                                                          :loading="hospLoading"
-                                                          :options="hospOptions"
-                                                          :label="$tr('qlogistic.layout.form.destinationBusiness')"
-                                                          v-model="locale.formTemplate.destinationBusinessId"
-                                                          map-options
-                                                          emit-value
-                                                          use-input
-                                                          @filter="(val, update)=>update(()=>{hospOptions = $helper.filterOptions(val,hosp,locale.formTemplate.destinationBusinessId)})"
-                                                          option-label="label"
-                                                          :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
-                                                      />
                                                     </div>
                                                     <div class="col-12">
                                                       <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.form.address') }}</div>
@@ -259,8 +258,23 @@
                                                     </div>
                                                     <div class="row q-col-gutter-sm q-py-sm" v-for="(item,i) in locale.formTemplate.orderItems" :key="i">
                                                         <div class="col-3 col-md-4">
-                                                            <q-input rounded  outlined dense :label="$tr('ui.form.name')" v-model="item.name"
-                                                                     :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
+                                                            <!---<q-input rounded  outlined dense :label="$tr('ui.form.name')" v-model="item.name"
+                                                                     :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>-->
+                                                            <q-select
+                                                                rounded
+                                                                outlined
+                                                                dense
+                                                                use-chips
+                                                                :options="item.packageOptions"
+                                                                :label="$tr('ui.form.type')"
+                                                                v-model="item.packagingTypeId"
+                                                                map-options
+                                                                emit-value
+                                                                use-input
+                                                                @filter="(val, update)=>update(()=>{item.packageOptions = $helper.filterOptions(val,item.packages,item.packagingTypeId)})"
+                                                                option-label="label"
+                                                                :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
+                                                            />
                                                         </div>
                                                         <div class="col-3 col-md-4">
                                                             <q-input rounded  outlined dense :label="$tr('ui.label.description')" v-model="item.description"
@@ -322,7 +336,7 @@
                 originCities: [],
                 originProvincesOptions: [],
                 originCitiesOptions: [],
-                nProvinces: [],
+                destinationProvinces: [],
                 destinationCities: [],
                 destinationProvincesOptions: [],
                 destinationCitiesOptions: [],
@@ -337,6 +351,7 @@
                 userBusinessId: null,
                 destinationBusiness: null,
                 originBusiness: null,
+                packageTypes:[],
             }
         },
         computed:{
@@ -346,7 +361,7 @@
                         customerDni: null,
                         observations: null,
                         customerName: null,
-                        originBusinessId: null,
+                        originBusinessId: this.userData.business ? this.userData.business.id : this.userData.businesses ? this.userData.businesses[0].id : null,
                         destinationBusinessId: null,
                         orderStatusId: 1,
                         originCityId: null,
@@ -364,9 +379,11 @@
             },
             dataOrderItem(){
                 return {
-                    name: null,
+                    packagingTypeId: null,
                     description: null,
                     quantity: 1,
+                    packageOptions: this.packageTypes,
+                    packages: this.packageTypes,
                 }
             },
             userData(){
@@ -392,13 +409,9 @@
                 await this.getBusinessData()
                 await this.getBusiness()
                 await this.getProvinces()
+                await this.getOriginBusiness()
                 await this.getDestinations()
-                if(this.userBusinessId!==null) {
-                    this.locale.form.originBusinessId = this.userBusinessId
-                    this.locale.form.originAddress = this.userData.business.coords
-                    await this.getUsers()
-                }
-                this.success = true
+                await this.getPackageTypes()
                 this.loading = false
             },
 
@@ -406,12 +419,11 @@
                 let businessData = this.userData.business || null
                 if(businessData) {
                     this.business = this.$array.select([businessData], {label: 'name', id: 'id'})
-                    this.userBusinessId = this.$clone(businessData.id)
                 }else{
                     if(!this.$auth.hasAccess('ilogistics.orders.manageothers')) {
                         this.business = this.$array.select(this.userData.businesses, {label: 'name', id: 'id'})
                         if(this.userData.businesses.length>0)
-                            this.userBusinessId = this.$clone(this.userData.businesses[0].id)
+                            this.locale.form.originBusinessId = this.$clone(this.userData.businesses[0].id)
                     }
                 }
             },
@@ -447,76 +459,78 @@
                         this.business = []
                         this.businessOptions = []
                     }
-                    //this.locale.form.originBusinessId = this.$clone(this.userData.business.id)
                 }
             },
             //Search origin business
             async getOriginBusiness() {
-              let configName = 'apiRoutes.qlogistic.business'
-              let params = {
-                params: {
-                  filter: {
-                    allTranslations: true,
+              if(this.locale.form.originBusinessId!==null) {
+                let configName = 'apiRoutes.qlogistic.business'
+                let params = {
+                  refresh: true,
+                  params: {
+                    include: 'city',
+                    filter: {
+                      allTranslations: true,
+                    }
                   }
                 }
-              }
-              await this.$crud.show(configName,this.locale.form.originBusinessId,params).then(response => {
+                await this.$crud.show(configName, this.locale.form.originBusinessId, params).then(async response => {
                   this.originBusiness = this.$clone(response.data)
                   this.locale.form.originAddress = this.originBusiness.coords
-              }).catch(error => {
+                  this.locale.form.originProvinceId = this.originBusiness.city.provinceId
+                  await this.getOriginCities()
+                  this.locale.form.originCityId = this.originBusiness.cityId
+                }).catch(error => {
                   this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
-              })
-
+                })
+              }
             },
 
             //Search destination business
             async getDestinationBusiness() {
-              let configName = 'apiRoutes.qlogistic.business'
-              let params = {
-                params: {
-                  filter: {
-                    allTranslations: true,
+              if(this.locale.form.destinationBusinessId!==null) {
+                let configName = 'apiRoutes.qlogistic.business'
+                let params = {
+                  refresh: true,
+                  params: {
+                    include: 'city',
+                    filter: {
+                      allTranslations: true,
+                    }
                   }
                 }
+                await this.$crud.show(configName, this.locale.form.destinationBusinessId, params).then(async response => {
+                  this.destinationBusiness = this.$clone(response.data)
+                  this.locale.form.destinationAddress = this.destinationBusiness.coords
+                  this.locale.form.destinationProvinceId = this.destinationBusiness.city.provinceId
+                  await this.getDestinationCities()
+                  this.locale.form.destinationCityId = this.destinationBusiness.cityId
+                }).catch(error => {
+                  this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                })
               }
-              await this.$crud.show(configName,this.locale.form.destinationBusinessId,params).then(response => {
-                this.destinationBusiness = this.$clone(response.data)
-                this.locale.form.destinationAddress = this.destinationBusiness.coords
-              }).catch(error => {
-                this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
-              })
-
             },
 
             //Search provinces
             async getDestinations() {
-                if(this.locale.form.provinceId !== null || this.locale.form.cityId !== null) {
-                    let configName = 'apiRoutes.qlogistic.business'
-                    let params = {
-                        params: {
-                            filter: {
-                                allTranslations: true,
-                                type: 2,
-                            }
+                let configName = 'apiRoutes.qlogistic.business'
+                let params = {
+                    params: {
+                        filter: {
+                            allTranslations: true,
+                            type: 2,
                         }
                     }
-
-                    if (this.locale.form.destinationProvinceId !== null) {
-                        params.params.filter.province = this.locale.form.destinationProvinceId
-                    }
-                    if (this.locale.form.destinationCityId !== null) {
-                        params.params.filter.city = this.locale.form.destinationCityId
-                    }
-                    this.hospLoading = true
-                    await this.$crud.index(configName, params).then(response => {
-                        this.hosp = this.$array.select(response.data, {label: 'name', id: 'id'})
-                        this.hospOptions = this.$clone(this.hosp)
-                        this.hospLoading = false
-                    }).catch(error => {
-                        this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
-                        this.hospLoading = false
-                    })
                 }
+                this.hospLoading = true
+                await this.$crud.index(configName, params).then(response => {
+                    this.hosp = this.$array.select(response.data, {label: 'name', id: 'id'})
+                    this.hospOptions = this.$clone(this.hosp)
+                    this.hospLoading = false
+                }).catch(error => {
+                    this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                    this.hospLoading = false
+                })
             },
 
             //Search users
@@ -588,7 +602,8 @@
                     }
                 }
                 if(typeof this.locale.form.originProvinceId != 'undefined'){
-                    params.params.filter.province = this.locale.form.originProvinceId
+                    if(this.locale.form.originProvinceId !== null)
+                      params.params.filter.province = this.locale.form.originProvinceId
                 }
                 //Request
                 await this.$crud.index(configName,params).then(response => {
@@ -610,14 +625,30 @@
                 }
               }
               if(typeof this.locale.form.destinationProvinceId != 'undefined'){
-                params.params.filter.province = this.locale.form.provinceId
+                if(this.locale.form.destinationProvinceId !== null)
+                  params.params.filter.province = this.locale.form.destinationProvinceId
               }
               //Request
               await this.$crud.index(configName,params).then(response => {
                 this.destinationCities =  this.$array.select(response.data, { label: 'name', id: 'id' })
-                this.destinationCitiesOptions = this.$clone(this.cities)
+                this.destinationCitiesOptions = this.$clone(this.destinationCities)
                 this.destinationCityLoading = false
-                this.getDestinations()
+              }).catch(error => {
+                this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+              })
+            },
+
+            //Search cities
+            async getPackageTypes(){
+              let configName = 'apiRoutes.qlogistic.packagingTypes'
+              let params = {
+                params: {
+                  filter: {allTranslations: true}
+                }
+              }
+              //Request
+              await this.$crud.index(configName,params).then(response => {
+                this.packageTypes =  this.$array.select(response.data, { label: 'name', id: 'id' })
               }).catch(error => {
                 this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
               })

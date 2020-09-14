@@ -14,10 +14,11 @@ export default {
   addItem: 'Añadir Elemento al Embalaje',
   deleteItem: 'Quitar Elemento del Embalaje',
   historial: 'Historial',
-  generateQR: 'Generar QR',
+  generateQR: 'Generar Código QR',
   businessInfo: 'Información Empresa',
   newBusiness: 'Nueva Empresa',
   updateBusiness: 'Editar Empresa',
+  scanQR: 'Escanear Código QR',
   form:{
     origin: 'Origen',
     destination: 'Destino',
@@ -28,7 +29,7 @@ export default {
     webUrl: 'Sitio Web',
     patient: 'Paciente',
     patientDni: 'N° de Cédula',
-    destinationBusiness: 'Empresa de Destino',
+    destinationBusiness: 'Empresa Destinataria',
     observations: 'Observaciones de Entrega y/o Recolección',
     observations2: 'Observaciones',
     transportBusiness: 'Empresa Transportadora',
@@ -56,5 +57,6 @@ export default {
   },
   message:{
     businessNotFound: 'Lo sentimos. En este momento no tiene una empresa asignada a su perfil. Favor ingresa los datos de su empresa haciendo clic en',
+    qrCodeAlreadySelected: 'Lo sentimos, este Código QR ya fue seleccionado.',
   }
 }
