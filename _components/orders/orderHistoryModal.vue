@@ -21,7 +21,7 @@
                             <div><b>{{ $tr('qlogistic.layout.form.destinationCity') }}:</b> {{ history.order.destinationCity.name  }}</div>
                         </div>
                         <div class="q-pa-xs">
-                            <div>{{ $trd(history.createdAt, {type: 'long'}) }}</div>
+                            <div>{{ $trd(history.updatedAt, {type: 'long'}) }}</div>
                         </div>
                         <div class="q-pa-xs">
                             <div><b>{{ $tr('qlogistic.layout.form.editedBy') }}:</b> {{ history.user.fullName }}</div>
@@ -60,6 +60,11 @@
         props:{
             value: {default: false},
             itemId: {default: false},
+        },
+        computed:{
+          userData(){
+            return this.$store.state.quserAuth.userData
+          },
         },
         watch: {
             value(newValue) {

@@ -185,7 +185,7 @@
                       observations: null,
                       orderStatusId: 1,
                       orderId: this.itemId,
-                      userId: this.$store.state.quserAuth.userData.id,
+                      userId: this.userData.id,
                       shippingType: 0,
                       options:{
                         selectedQRS: []
@@ -193,7 +193,10 @@
                       mediasMulti: {},
                   }
               }
-          }
+          },
+          userData(){
+            return this.$store.state.quserAuth.userData
+          },
         },
         data(){
             return {
@@ -228,6 +231,7 @@
                 await this.getHistory()
                 this.success = true
                 this.loading = false
+                this.locale.form.userId = this.userData.id
             },
             async getOrder(){
               let params = {
