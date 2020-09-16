@@ -47,6 +47,22 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12">
+                      <gmap-map
+                          :center="center"
+                          :zoom="14"
+                          style="width: 100%; height: 300px"
+                      >
+                        <gmap-marker
+                            :key="index"
+                            v-for="(marker, index) in markers"
+                            :position="marker"
+                            :clickable="true"
+                            :draggable="false"
+                            @click="center=marker"
+                        ></gmap-marker>
+                      </gmap-map>
+                    </div>
                 </div>
             </q-card-section>
             <inner-loading :visible="loading" />
@@ -55,6 +71,7 @@
 </template>
 
 <script>
+    import { mapGeolocationActions, mapGeolocationGetters } from 'quasar-app-extension-geolocation/src/store'
     export default {
         name: "orderHistoryModal",
         props:{
@@ -65,6 +82,14 @@
           userData(){
             return this.$store.state.quserAuth.userData
           },
+          ...mapGeolocationGetters([
+            'isPermissionKnown',
+            'isPermissionGranted',
+            'isPermissionPrompt',
+            'isPermissionDenied',
+            'hasPosition',
+            'coords',
+          ])
         },
         watch: {
             value(newValue) {
@@ -77,21 +102,24 @@
         },
         data(){
             return {
-                show: false,
-                history: {},
-                success: false,
-                loading: false,
-                shippingTypes:[
-                    "",
-                    this.$tr('qlogistic.layout.form.typeTerrestrial'),
-                    this.$tr('qlogistic.layout.form.typeAir'),
-                ],
+              show: false,
+              history: {},
+              success: false,
+              loading: false,
+              markers: [],
+              center: {},
+              shippingTypes:[
+                  "",
+                  this.$tr('qlogistic.layout.form.typeTerrestrial'),
+                  this.$tr('qlogistic.layout.form.typeAir'),
+              ],
             }
         },
         methods:{
             async initForm(){
                 this.loading = true
                 this.success = false
+                this.getLocationPermisssions()
                 await this.getData()
                 this.loading = false
                 this.success = true
@@ -100,17 +128,44 @@
                 let configName = 'apiRoutes.qlogistic.orderStatusHistories'
                 let params = {
                     params:{
-                        include: 'order,order.originBusiness,order.destinationBusiness,orderStatus,order.originCity,order.destinationCity,user',
+                        include: 'order,order.originBusiness,order.destinationBusiness,orderStatus,order.originCity,order.destinationCity,user,locations',
                     },
                     refresh: true,
                 }
                 await this.$crud.show(configName, this.itemId, params).then(response => {
                     this.history = response.data
+                    this.center = {lat: this.coords.latitude, lng: this.coords.longitude}
+                    for(let x in this.history.locations){
+                      this.markers.push({lat: this.history.locations[x].coords.latitude, lng: this.history.locations[x].coords.longitude})
+                    }
                 }).catch(error => {
                     this.$alert.error({message: this.$tr('ui.message.recordNoUpdated'), pos: 'bottom'})
                 })
-            }
-        }
+            },
+            doQueryPermission () {
+              this.queryPermission()
+                  .then(() => {
+                    if (this.isPermissionDenied) {
+                      // poll permission as the user might allow them in a separate tab
+                      this.pollingTimer = setTimeout(() => this.doQueryPermission(), 2000)
+                    } else if (this.pollingTimer) {
+                      clearTimeout(this.pollingTimer)
+                    }
+                  })
+            },
+            getLocationPermisssions () {
+              this.samplePosition()
+                  .catch(() => { })
+                  .finally(() => {
+                    // update permissions (as the user might have enabled them)
+                    this.doQueryPermission()
+                  })
+            },
+            ...mapGeolocationActions([
+              'samplePosition',
+              'queryPermission'
+            ])
+          }
     }
 </script>
 

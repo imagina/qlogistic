@@ -88,7 +88,7 @@
                 this.loading = true
                 let params = {
                     params:{
-                        include: 'order,order.originBusiness,order.destinationBusiness,orderStatus,order.originCity,order.destinationCity',
+                        include: 'order,order.originBusiness,order.destinationBusiness,orderStatus,order.originCity,order.destinationCity,locations',
                         filter:{
                             orderId: this.id
                         },

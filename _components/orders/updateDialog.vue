@@ -153,6 +153,7 @@
 <script>
     import mediaForm from '@imagina/qmedia/_components/form'
     import qrScanDialog from '@imagina/qlogistic/_components/orders/qrScanDialog'
+    import { mapGeolocationActions, mapGeolocationGetters } from 'quasar-app-extension-geolocation/src/store'
     export default {
         name: "updateDialog",
         components:{
@@ -190,6 +191,8 @@
                       options:{
                         selectedQRS: []
                       },
+                      coords: this.coords,
+                      locations:[],
                       mediasMulti: {},
                   }
               }
@@ -197,6 +200,14 @@
           userData(){
             return this.$store.state.quserAuth.userData
           },
+          ...mapGeolocationGetters([
+            'isPermissionKnown',
+            'isPermissionGranted',
+            'isPermissionPrompt',
+            'isPermissionDenied',
+            'hasPosition',
+            'coords',
+          ])
         },
         data(){
             return {
@@ -216,6 +227,7 @@
                   selectedQRS: [],
                 },
                 selectedItems:[],
+                pollingTimer: null
             }
         },
         methods: {
@@ -223,6 +235,7 @@
                 this.show = this.value//Assign props value to show modal
                 this.success = false
                 this.loading = true
+                this.getLocationPermisssions()
                 await this.getOrder()
                 await this.getBusiness()
                 await this.getStatuses()
@@ -231,7 +244,7 @@
                 await this.getHistory()
                 this.success = true
                 this.loading = false
-                this.locale.form.userId = this.userData.id
+                setTimeout(()=>{this.locale.form.userId = this.userData.id},200)
             },
             async getOrder(){
               let params = {
@@ -251,6 +264,7 @@
               let params = {
                 refresh: true,
                 params:{
+                  include: 'locations'
                 }
               }
               if(this.orderHistoryId!=false){
@@ -258,6 +272,11 @@
                   let dataForm = this.$clone(response.data)
                   this.locale.form = this.$clone(dataForm)
                   this.options = dataForm.options
+                  for(let x in this.statuses){
+                    if(this.statuses[x].id == dataForm.orderStatusId){
+                      this.selectedStatus = this.statuses[x]
+                    }
+                  }
                 }).catch(error =>{
                   this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
                 })
@@ -299,11 +318,15 @@
                 })
             },
             async create(){
-                if (await this.$refs.localeComponent.validateForm()) {
+                if (this.$refs.localeComponent.validateForm()) {
                     this.loading = true
                     let configName = 'apiRoutes.qlogistic.orderStatusHistories'
                     let formData = this.$clone(this.getDataForm())
+                    if(this.isPermissionDenied){
+                      this.doQueryPermission()
+                    }
                     formData.options = this.options
+                    formData.coords= this.coords
                     if(this.orderHistoryId) {
                       this.$crud.update(configName, this.orderHistoryId, formData).then(response => {
                         this.$alert.success({message: `${this.$tr('ui.message.recordCreated')}`})
@@ -342,8 +365,31 @@
               let dataQ = this.$clone(data)
               this.options.selectedQRS[dataQ.id] = dataQ.checked
               this.locale.form.options.selectedQRS[dataQ.id] = dataQ.checked
-            }
-        }
+            },
+            doQueryPermission () {
+              this.queryPermission()
+                  .then(() => {
+                    if (this.isPermissionDenied) {
+                      // poll permission as the user might allow them in a separate tab
+                      this.pollingTimer = setTimeout(() => this.doQueryPermission(), 2000)
+                    } else if (this.pollingTimer) {
+                      clearTimeout(this.pollingTimer)
+                    }
+                  })
+            },
+            getLocationPermisssions () {
+              this.samplePosition()
+                  .catch(() => { })
+                  .finally(() => {
+                    // update permissions (as the user might have enabled them)
+                    this.doQueryPermission()
+                  })
+            },
+            ...mapGeolocationActions([
+              'samplePosition',
+              'queryPermission'
+            ])
+        },
     }
 </script>
 
