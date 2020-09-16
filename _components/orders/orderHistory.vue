@@ -17,7 +17,7 @@
                             <div class="q-pa-xs">
                                 <div><b>{{ $tr('qlogistic.layout.form.destination') }}:</b> {{ history.order.destinationBusiness.name }}</div>
                                 <div><b>{{ $tr('ui.label.address') }}:</b> {{ history.order.destinationAddress }}, {{ history.order.destinationCity.name }}</div>
-                                <div>{{ $trd(history.createdAt, {type: 'long'}) }}</div>
+                                <div>{{ $trd(history.updatedAt, {type: 'long'}) }}</div>
                             </div>
                             <div class="q-pa-xs">
                                 <b>{{ $tr('ui.form.status') }}:</b> {{ history.orderStatus.name }}
@@ -58,7 +58,9 @@
             }
         },
         computed:{
-
+          userData(){
+            return this.$store.state.quserAuth.userData
+          },
         },
         watch:{
           id(){
