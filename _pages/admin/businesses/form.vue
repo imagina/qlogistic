@@ -17,8 +17,34 @@
                                     </div>
                                     <div class="col-12 col-md-9">
                                         <div class="row">
-                                            <div class="col-12 q-py-md">
+                                            <!--<div class="col-12 q-py-md">
                                                 <q-radio v-model="locale.formTemplate.typeId" :val="type.id" :label="type.name" v-for="(type, i) in types" :key="i" />
+                                            </div>-->
+                                            <div class="col-12 q-py-md">
+                                              <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.form.type') }}</div>
+                                              <tree-select
+                                                  v-model="locale.formTemplate.types"
+                                                  :multiple="true"
+                                                  :append-to-body="true"
+                                                  :options="types"
+                                                  placeholder=""
+                                              />
+                                              <!--<q-select
+                                                  rounded
+                                                  outlined
+                                                  dense
+                                                  use-chips
+                                                  multiple
+                                                  :loading="typesLoading"
+                                                  v-model="locale.formTemplate.types"
+                                                  :options="typesOptions"
+                                                  :label="$tr('ui.form.type')"
+                                                  map-options
+                                                  emit-value
+                                                  use-input
+                                                  @filter="(val, update)=>update(()=>{typesOptions = $helper.filterOptions(val,types,locale.formTemplate.types)})"
+                                                  option-label="label"
+                                              />-->
                                             </div>
                                         </div>
                                         <div class="row q-col-gutter-md">
@@ -89,7 +115,7 @@
                                                 <q-input rounded  outlined dense :label="`${$tr('ui.form.description')}`"
                                                          type="textarea" v-model="locale.formTemplate.description"/>
                                             </div>
-                                            <div class="col-12 col-md-6" v-if="locale.form.typeId === 1">
+                                            <div class="col-12 col-md-6" v-if="locale.form.types.includes(1)">
                                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.label.user') }}</div>
                                                 <q-select
                                                         rounded
@@ -107,7 +133,7 @@
                                                         option-label="label"
                                                 />
                                             </div>
-                                            <div class="col-12 col-md-6" v-if="locale.form.typeId === 1">
+                                            <div class="col-12 col-md-6" v-if="locale.form.types.includes(1)">
                                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.user') }}</div>
                                                 <q-select
                                                         rounded
@@ -222,12 +248,10 @@
 </template>
 
 <script>
-    import recentOrders from "@imagina/qlogistic/_components/business/recentOrders";
     import mediaForm from '@imagina/qmedia/_components/form'
     export default {
-        name: "businessShow",
+        name: "businessForm",
         components:{
-            recentOrders,
             mediaForm,
         },
         data(){
@@ -248,6 +272,8 @@
                 provinceLoading: false,
                 cityLoading: false,
                 types:[],
+                typesOptions: [],
+                typesLoading: false,
             }
         },
         computed:{
@@ -269,6 +295,8 @@
                         coords: null,
                         mediasSingle: {},
                         typeId: 1,
+                        types: [],
+                        transportType: 0,
                     },
                     fieldsTranslatable: {
                         description: null,
@@ -282,7 +310,7 @@
         },
         watch:{
           '$route.params'(){
-              this.init()
+              this.init(true)
           }
         },
         mounted(){
@@ -292,7 +320,7 @@
             })
         },
         methods:{
-            async init(){
+            async init(refresh = false){
                 this.success = false
                 this.loading = true
                 this.itemId = this.$route.params.id || null
@@ -301,18 +329,19 @@
                 await this.getTypes()
                 await this.getUsers()
                 await this.getProvinces()
-                await this.getData()
+                await this.getData(refresh)
                 await this.getCities()
                 this.loading = false
                 this.success = true
             },
             //get business data
-            async getData() {
+            async getData(refresh = false) {
                 if (this.itemId) {
                     let configName = 'apiRoutes.qlogistic.business'
                     let params = {
+                        refresh: refresh,
                         params: {
-                            include: 'city,users,city.province',
+                            include: 'city,users,city.province,types',
                             filter: {
                                 allTranslations: true,
                             }
@@ -323,11 +352,17 @@
                         if (Object.keys(response.data).length > 0) {
                             let dataForm = this.$clone(response.data)
                             this.locale.form = this.$clone(dataForm)
-                            this.locale.form.provinceId = this.$clone(dataForm.city.provinceId)
+                            this.locale.form.provinceId = parseInt(this.$clone(dataForm.city.provinceId))
                             this.locale.form.users = []
+                            this.locale.form.types = []
+                            this.locale.form.cityId = parseInt(dataForm.cityId)
+                            this.locale.form.userId = dataForm.userId != null ? parseInt(dataForm.userId): null
                             this.itemId = dataForm.id
                             for (let user of dataForm.users) {
                                 this.locale.form.users.push(user.id)
+                            }
+                            for (let type of dataForm.types) {
+                              this.locale.form.types.push(type.id)
                             }
                         }
                     }).catch(error => {
@@ -411,6 +446,7 @@
                 }
             },
             getTypes(){
+              this.typesLoading = true
               let configName = 'apiRoutes.qlogistic.businessTypes'
               let params = {
                 params: {
@@ -420,9 +456,12 @@
                 }
               }
               this.$crud.index(configName,params).then(response => {
-                this.types =  response.data
+                this.types =  this.$array.tree(response.data, { label: 'name', id: 'id' })
+                this.typesOptions = this.$clone(this.types)
+                this.typesLoading = false
               }).catch(error => {
                 this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
+                this.typesLoading = false
               })
             },
             async save(){

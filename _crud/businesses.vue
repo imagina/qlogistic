@@ -26,18 +26,14 @@
                 format: val => val ? val.name + ' '+val.province.name : '-',
               },
               {
-                name: 'type', label: this.$tr('ui.form.type'), field: 'type', align: 'rigth',
-                format: val => val ? val.name : '-',
-              },
-              {
                 name: 'created_at', label: this.$tr('ui.form.createdAt'), field: 'createdAt', align: 'left',
                 format: val => val ? this.$trd(val) : '-',
               },
               {name: 'actions', label: this.$tr('ui.form.actions'), align: 'left'},
             ],
             filters:{
-              type:{
-                type: 'select',
+              types:{
+                type: 'multiSelect',
                 loadOptions: { //Async load options form request, only in types [select, multiSelect]
                   apiRoute: 'apiRoutes.qlogistic.businessTypes', //apiRoute to request
                   select: {label: 'name', id: 'id'}, //Define fields to config select
@@ -63,7 +59,7 @@
               }
             },
             requestParams: {
-              include: 'city,city.province,type',
+              include: 'city,city.province,types',
             }
           },
           update: {

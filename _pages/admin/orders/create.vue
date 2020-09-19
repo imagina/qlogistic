@@ -434,7 +434,7 @@
                     params: {
                         filter: {
                             allTranslations: true,
-                            type: 1
+                            types: [1]
                         }
                     }
                 }
@@ -518,7 +518,7 @@
                     params: {
                         filter: {
                             allTranslations: true,
-                            type: 2,
+                            types: [2],
                         }
                     }
                 }

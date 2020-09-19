@@ -199,12 +199,10 @@
 </template>
 
 <script>
-    import recentOrders from "@imagina/qlogistic/_components/business/recentOrders";
     import mediaForm from '@imagina/qmedia/_components/form'
     export default {
-        name: "businessShow",
+        name: "businessEdit",
         components:{
-            recentOrders,
             mediaForm,
         },
         data(){

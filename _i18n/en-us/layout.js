@@ -33,6 +33,7 @@ export default {
     observations: 'Delivery and/or Collection Observations',
     observations2: 'Observations',
     transportBusiness: 'Transport Business',
+    transportType: 'Transport Type',
     transportSelection: 'Select Business',
     deliveredTo: 'Delivered to',
     deliveredToName: 'Employee Name',

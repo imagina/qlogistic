@@ -33,6 +33,7 @@ export default {
     observations: 'Observaciones de Entrega y/o Recolección',
     observations2: 'Observaciones',
     transportBusiness: 'Empresa Transportadora',
+    transportType: 'Tipo de Transporte',
     transportSelection: 'Selección de Empresa',
     deliveredTo: 'Entregado A',
     deliveredToName: 'Nombre del Funcionario',

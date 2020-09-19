@@ -63,14 +63,12 @@
                         <q-separator class="q-my-md" />
                         <div class="row" v-if="locale.form.orderStatusId === 3">
                             <div class="col-12">
-                                <q-field borderless flat v-model="locale.formTemplate.shippingType" :rules="[val => !!val || $tr('ui.message.fieldRequired')]">
-                                    <q-radio :label="$tr('qlogistic.layout.form.typeTerrestrial')" color="primary" :val="1" v-model="locale.formTemplate.shippingType" />
-                                    <q-radio :label="$tr('qlogistic.layout.form.typeAir')" color="primary" :val="2" v-model="locale.formTemplate.shippingType" />
-                                </q-field>
+                                <q-option-group inline type="radio" v-model="locale.formTemplate.shippingType" :options="shippingTypes" />
                             </div>
                             <div class="col-12">
                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.transportBusiness') }}:</div>
                                 <q-select
+                                        :readonly="orderHistoryId!=false"
                                         outlined
                                         dense
                                         use-chips
@@ -129,11 +127,11 @@
                         <div class="row" v-if="locale.form.orderStatusId === 3 || locale.form.orderStatusId === 5">
                             <div class="text-subtitle2 text-bold text-primary q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.addPhotos') }}:</div>
                             <media-form
-                                    v-model="locale.formTemplate.mediasMulti"
-                                    entity="Modules\Ilogistics\Entities\OrderStatusHistory"
-                                    :entityId="itemId || null"
-                                    zone='gallery'
-                                    multiple
+                                  v-model="locale.formTemplate.mediasMulti"
+                                  entity="Modules\Ilogistics\Entities\OrderStatusHistory"
+                                  :entityId="itemId || null"
+                                  zone='gallery'
+                                  multiple
                             />
                         </div>
                         <div class="row q-py-md">
@@ -227,7 +225,11 @@
                   selectedQRS: [],
                 },
                 selectedItems:[],
-                pollingTimer: null
+                pollingTimer: null,
+                shippingTypes: [
+                  { label: this.$tr('qlogistic.layout.form.typeTerrestrial'), value: '1' },
+                  { label: this.$tr('qlogistic.layout.form.typeAir'), value: '2' },
+                ],
             }
         },
         methods: {
@@ -237,14 +239,16 @@
                 this.loading = true
                 this.getLocationPermisssions()
                 await this.getOrder()
-                await this.getBusiness()
                 await this.getStatuses()
                 this.locale = this.$clone(this.dataLocale)//Add fields
                 if (this.locale.success) this.$refs.localeComponent.vReset()//Reset locale
                 await this.getHistory()
                 this.success = true
                 this.loading = false
-                setTimeout(()=>{this.locale.form.userId = this.userData.id},200)
+                setTimeout(()=>{
+                  this.locale.form.userId = this.userData.id
+                  this.getBusiness()
+                },200)
             },
             async getOrder(){
               let params = {
@@ -306,7 +310,7 @@
                   params:{
                     filter:{
                       allTranslations: true,
-                      type: 3
+                      types: [3,4,5],
                     }
                   }
                 }

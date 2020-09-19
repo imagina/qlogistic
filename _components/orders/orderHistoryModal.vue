@@ -50,7 +50,7 @@
                     <div class="col-12">
                       <gmap-map
                           :center="center"
-                          :zoom="14"
+                          :zoom="12"
                           style="width: 100%; height: 300px"
                       >
                         <gmap-marker
@@ -128,7 +128,7 @@
                 let configName = 'apiRoutes.qlogistic.orderStatusHistories'
                 let params = {
                     params:{
-                        include: 'order,order.originBusiness,order.destinationBusiness,orderStatus,order.originCity,order.destinationCity,user,locations',
+                        include: 'order,order.originBusiness,order.destinationBusiness,orderStatus,order.originCity,order.destinationCity,user,locations,transportBusiness',
                     },
                     refresh: true,
                 }
