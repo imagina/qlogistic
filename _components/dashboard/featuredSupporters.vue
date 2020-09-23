@@ -14,7 +14,7 @@
                         {{ user.fullName }}
                     </q-item-label>
                     <q-item-label class="text-primary text-caption text-bold">
-                        Ordenes Procesadas: {{ user.logisticOrders.length || 0 }}
+                        Ordenes Procesadas: {{ user.addedOrders.length || 0 }}
                     </q-item-label>
                 </q-item-section>
             </q-item>
@@ -49,9 +49,10 @@
                 let configName = 'apiRoutes.quser.users'
                 let params = {
                     params: {
-                        include: 'logisticOrders',
+                        include: 'addedOrders',
                         filter: {
                             allTranslations: true,
+                            roleSlug: 'fastlog-colaborador'
                         }
                     }
                 }

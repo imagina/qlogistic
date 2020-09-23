@@ -40,7 +40,7 @@
                                                     <div class="col-12">
                                                         <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.originBusiness') }}</div>
                                                         <q-select
-                                                                :readonly="!$auth.hasAccess('ibusiness.businesses.manage')"
+                                                                :readonly="!$auth.hasAccess('ibusiness.businesses.index')"
                                                                 input-class="origin-business-id"
                                                                 @blur="()=>{getOriginBusiness();getUsers()}"
                                                                 rounded
@@ -59,30 +59,9 @@
                                                                 :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                                         />
                                                     </div>
-                                                    <div class="col-12" v-if="$auth.hasAccess('ilogistics.orders.manageothers')">
-                                                        <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.label.user') }}</div>
-                                                        <q-select
-                                                                input-class="users"
-                                                                rounded
-                                                                outlined
-                                                                dense
-                                                                use-chips
-                                                                multiple
-                                                                :loading="userLoading"
-                                                                v-model="locale.formTemplate.users"
-                                                                :options="usersOptions"
-                                                                :label="$tr('ui.label.user')"
-                                                                map-options
-                                                                emit-value
-                                                                use-input
-                                                                @filter="(val, update)=>update(()=>{usersOptions = $helper.filterOptions(val,users,locale.formTemplate.users)})"
-                                                                option-label="label"
-                                                                :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
-                                                        />
-                                                    </div>
-                                                    <div class="col-12" v-else-if="$auth.hasAccess('ibusiness.businesses.manage')">
+                                                    <div class="col-12" v-if="$auth.hasAccess('ibusiness.businesses.index')">
                                                       <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.label.user') }}</div>
-                                                      <q-select
+                                                        <q-select
                                                           input-class="user-id"
                                                           rounded
                                                           outlined
@@ -103,7 +82,7 @@
                                                     <div class="col-12 col-md-6">
                                                       <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.province') }}</div>
                                                       <q-select
-                                                          input-class="province-id"
+                                                          input-class="origin-province-id"
                                                           rounded
                                                           outlined
                                                           dense
@@ -124,7 +103,7 @@
                                                     <div class="col-12 col-md-6">
                                                       <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlocations.layout.form.city') }}</div>
                                                       <q-select
-                                                          input-class="city-id"
+                                                          input-class="origin-city-id"
                                                           rounded
                                                           outlined
                                                           dense
@@ -159,6 +138,7 @@
                                                   <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.destinationBusiness') }}:</div>
                                                   <q-select
                                                       @blur="getDestinationBusiness"
+                                                      input-class="destination-business-id"
                                                       rounded
                                                       outlined
                                                       dense
@@ -179,7 +159,7 @@
                                                     <div class="col-12 col-md-6">
                                                         <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.province') }}</div>
                                                         <q-select
-                                                                input-class="province-id"
+                                                                input-class="destination-province-id"
                                                                 rounded
                                                                 outlined
                                                                 dense
@@ -200,7 +180,7 @@
                                                     <div class="col-12 col-md-6">
                                                         <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlocations.layout.form.city') }}</div>
                                                         <q-select
-                                                                input-class="city-id"
+                                                                input-class="destination-city-id"
                                                                 rounded
                                                                 outlined
                                                                 dense
@@ -219,7 +199,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                       <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.form.address') }}</div>
-                                                      <q-input rounded  outlined dense :label="$tr('ui.form.address')" v-model="locale.formTemplate.destinationAddress"
+                                                      <q-input name="address" rounded  outlined dense :label="$tr('ui.form.address')" v-model="locale.formTemplate.destinationAddress"
                                                                :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
                                                     </div>
                                                 </div>
@@ -234,12 +214,12 @@
                                                 <div class="row q-col-gutter-md">
                                                     <div class="col-12 col-md-6">
                                                         <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.patient') }}:</div>
-                                                        <q-input rounded  outlined dense :label="$tr('qlogistic.layout.form.patient')"
+                                                        <q-input name="customerName" rounded  outlined dense :label="$tr('qlogistic.layout.form.patient')"
                                                                  :rules="[val => !!val || $tr('ui.message.fieldRequired')]" v-model="locale.formTemplate.customerName"/>
                                                     </div>
                                                     <div class="col-12 col-md-6">
                                                         <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.patientDni') }}:</div>
-                                                        <q-input rounded  outlined dense :label="$tr('qlogistic.layout.form.patientDni')"
+                                                        <q-input name="customerDni" rounded  outlined dense :label="$tr('qlogistic.layout.form.patientDni')"
                                                                  :rules="[val => !!val || $tr('ui.message.fieldRequired')]" v-model="locale.formTemplate.customerDni"/>
                                                     </div>
                                                 </div>
@@ -249,7 +229,7 @@
                                                             <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.package') }}:</div>
                                                         </div>
                                                         <div class="col-4 col-md-3 text-right">
-                                                            <q-btn dense color="positive" icon="fas fa-plus" @click="()=> locale.form.orderItems.push(dataOrderItem)">
+                                                            <q-btn class="item-add-btn" dense color="positive" icon="fas fa-plus" @click="()=> locale.form.orderItems.push(dataOrderItem)">
                                                                 <q-tooltip>
                                                                     {{ $tr('qlogistic.layout.addItem') }}
                                                                 </q-tooltip>
@@ -261,6 +241,7 @@
                                                             <!---<q-input rounded  outlined dense :label="$tr('ui.form.name')" v-model="item.name"
                                                                      :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>-->
                                                             <q-select
+                                                                :input-class="'package-type-'+i"
                                                                 rounded
                                                                 outlined
                                                                 dense
@@ -277,11 +258,11 @@
                                                             />
                                                         </div>
                                                         <div class="col-3 col-md-4">
-                                                            <q-input rounded  outlined dense :label="$tr('ui.label.description')" v-model="item.description"
+                                                            <q-input :name="'packageDescription'+i" rounded  outlined dense :label="$tr('ui.label.description')" v-model="item.description"
                                                                      :rules="[val => !!val || $tr('ui.message.fieldRequired')]" />
                                                         </div>
                                                         <div class="col-3">
-                                                            <q-input rounded  outlined dense :label="$tr('ui.form.quantity')" v-model="item.quantity"
+                                                            <q-input :name="'packageQuantity'+i" rounded  outlined dense :label="$tr('ui.form.quantity')" v-model="item.quantity"
                                                                      :rules="[val => !!val || $tr('ui.message.fieldRequired')]" type="number"/>
                                                         </div>
                                                         <div class="col-3 col-md-1">
@@ -297,7 +278,7 @@
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.observations') }}:</div>
-                                                    <q-input rounded  outlined dense :label="$tr('qlogistic.layout.form.observations')" type="textarea"
+                                                    <q-input name="observations" rounded  outlined dense :label="$tr('qlogistic.layout.form.observations')" type="textarea"
                                                              :rules="[val => !!val || $tr('ui.message.fieldRequired')]" v-model="locale.formTemplate.observations"/>
                                                 </div>
                                                 <div class="col-12 q-mt-md text-right">
@@ -361,7 +342,7 @@
                         customerDni: null,
                         observations: null,
                         customerName: null,
-                        originBusinessId: this.userData.business ? this.userData.business.id : this.userData.businesses ? this.userData.businesses[0].id : null,
+                        originBusinessId: this.userData.business ? this.userData.business.id : this.userData.businesses.length > 0 ? this.userData.businesses[0].id : null,
                         destinationBusinessId: null,
                         orderStatusId: 1,
                         originCityId: null,
@@ -371,7 +352,8 @@
                         destinationProvinceId: null,
                         destinationAddress: null,
                         orderItems:[],
-                        userId: this.$auth.hasAccess('ilogistics.orders.manageothers') ? null : this.$store.state.quserAuth.userData.id,
+                        userId: this.$auth.hasAccess('ilogistics.orders.manageothers') ? null : this.userData.id,
+                        addedById: this.userData.id,
                     },
                     fieldsTranslatable:{
                     }
@@ -439,7 +421,7 @@
                     }
                 }
                 //Request
-                if(this.$auth.hasAccess('ibusiness.businesses.manage')){
+                if(this.$auth.hasAccess('ibusiness.businesses.index')){
                     this.businessLoading = true
                     await this.$crud.index(configName,params).then(response => {
                         this.business = this.$array.select(response.data, { label: 'name', id: 'id' })
@@ -477,9 +459,9 @@
                 await this.$crud.show(configName, this.locale.form.originBusinessId, params).then(async response => {
                   this.originBusiness = this.$clone(response.data)
                   this.locale.form.originAddress = this.originBusiness.coords
-                  this.locale.form.originProvinceId = this.originBusiness.city.provinceId
+                  this.locale.form.originProvinceId = parseInt(this.originBusiness.city.provinceId)
                   await this.getOriginCities()
-                  this.locale.form.originCityId = this.originBusiness.cityId
+                  this.locale.form.originCityId = parseInt(this.originBusiness.cityId)
                 }).catch(error => {
                   this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
                 })
@@ -502,9 +484,9 @@
                 await this.$crud.show(configName, this.locale.form.destinationBusinessId, params).then(async response => {
                   this.destinationBusiness = this.$clone(response.data)
                   this.locale.form.destinationAddress = this.destinationBusiness.coords
-                  this.locale.form.destinationProvinceId = this.destinationBusiness.city.provinceId
+                  this.locale.form.destinationProvinceId = parseInt(this.destinationBusiness.city.provinceId)
                   await this.getDestinationCities()
-                  this.locale.form.destinationCityId = this.destinationBusiness.cityId
+                  this.locale.form.destinationCityId = parseInt(this.destinationBusiness.cityId)
                 }).catch(error => {
                   this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
                 })

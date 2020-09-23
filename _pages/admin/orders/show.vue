@@ -6,29 +6,17 @@
                     <q-card-section v-if="success">
                         <div class="row">
                             <div class="col-12">
-                                <q-list>
-                                    <q-item>
-                                        <q-item-section avatar style="width: 30px" class="items-baseline">
-                                            <div class="col-12 q-py-sm">
-                                                <q-icon name="fas fa-clipboard-list" size="xs" color="primary" class="q-mt-sm" />
-                                            </div>
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <div class="row q-py-sm">
-                                                <div class="col-12">
-                                                    <div class="text-h6 text-primary">Orden #{{ itemId.padStart(5,'0') }}</div>
-                                                </div>
-                                            </div>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <div class="row q-py-sm">
-                                                <div class="col-12">
-                                                    <div class="text-h6 text-secondary">{{ $tr('ui.form.status') }}: {{ order.orderStatus.name }}</div>
-                                                </div>
-                                            </div>
-                                        </q-item-section>
-                                    </q-item>
-                                </q-list>
+                                <div class="row">
+                                  <div class="col-1">
+                                    <q-icon name="fas fa-clipboard-list" size="xs" color="primary" class="q-mt-sm" />
+                                  </div>
+                                  <div class="col-11 col-sm-6">
+                                    <div class="text-h6 text-primary">Orden #{{ itemId.padStart(5,'0') }}</div>
+                                  </div>
+                                  <div :class="'col-12 col-sm-5 '+($q.screen.width > 599?'text-right':'')">
+                                    <div class="text-h6 text-secondary">{{ $tr('ui.form.status') }}: {{ order.orderStatus.name }}</div>
+                                  </div>
+                                </div>
                             </div>
                         </div>
                     </q-card-section>
@@ -50,7 +38,7 @@
                                         <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.form.origin')  }}</div>
                                         <q-separator class="q-my-md" />
                                         <div class="text-subtitle1 text-bold text-uppercase q-pl-sm">{{ $tr('qlogistic.layout.form.destination')  }}:</div>
-                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ order.destinationCity.name }}, {{ order.destinationCity.province.name }}</div>
+                                        <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ order.destinationAddress }} , {{ order.destinationCity.name }}, {{ order.destinationCity.province.name }}</div>
                                         <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.form.destination')  }}</div>
                                         <q-separator class="q-my-md" />
                                         <div class="text-subtitle1"><q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ order.destinationBusiness.name }}</div>
@@ -125,7 +113,7 @@
                 </q-card>
             </div>
             <div class="col-12 col-md-6">
-                <div class="row q-px-lg">
+                <div class="row q-px-lg-md">
                     <div class="col-12">
                         <div class="text-h6 text-primary text-bold q-mt-xl q-mx-md">{{ $tr('qlogistic.layout.historial') }}</div>
                         <orderHistory :id="itemId" @input="init" />

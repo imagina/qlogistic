@@ -24,7 +24,7 @@
                                         <q-item tag="label" v-ripple clickable v-for="(status,index) in statuses" :key="index" v-close-popup>
                                             <q-item-section>
                                                 <q-item-label>
-                                                    <q-radio :label="status.name" :val="status.id" v-model="locale.formTemplate.orderStatusId" @click.native="()=> selectedStatus = status" />
+                                                    <q-radio v-close-popup :label="status.name" :val="status.id" v-model="locale.formTemplate.orderStatusId" @click.native="()=> selectedStatus = status" />
                                                 </q-item-label>
                                             </q-item-section>
                                         </q-item>
@@ -63,7 +63,7 @@
                         <q-separator class="q-my-md" />
                         <div class="row" v-if="locale.form.orderStatusId === 3">
                             <div class="col-12">
-                                <q-option-group inline type="radio" v-model="locale.formTemplate.shippingType" :options="shippingTypes" />
+                                <q-option-group inline type="radio" v-model="locale.formTemplate.shippingType" :options="shippingTypes" @input="getBusiness" />
                             </div>
                             <div class="col-12">
                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.transportBusiness') }}:</div>
@@ -227,8 +227,8 @@
                 selectedItems:[],
                 pollingTimer: null,
                 shippingTypes: [
-                  { label: this.$tr('qlogistic.layout.form.typeTerrestrial'), value: '1' },
-                  { label: this.$tr('qlogistic.layout.form.typeAir'), value: '2' },
+                  { label: this.$tr('qlogistic.layout.form.typeTerrestrial'), value: '5' },
+                  { label: this.$tr('qlogistic.layout.form.typeAir'), value: '4' },
                 ],
             }
         },
@@ -275,6 +275,7 @@
                 await this.$crud.show('apiRoutes.qlogistic.orderStatusHistories', this.orderHistoryId, params).then(response =>{
                   let dataForm = this.$clone(response.data)
                   this.locale.form = this.$clone(dataForm)
+                  this.locale.form.transportBusinessId = parseInt(dataForm.transportBusinessId)
                   this.options = dataForm.options
                   for(let x in this.statuses){
                     if(this.statuses[x].id == dataForm.orderStatusId){
@@ -310,7 +311,7 @@
                   params:{
                     filter:{
                       allTranslations: true,
-                      types: [3,4,5],
+                      types: [3,this.locale.form.shippingType],
                     }
                   }
                 }

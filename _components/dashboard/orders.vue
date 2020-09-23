@@ -61,8 +61,11 @@
                         }
                     }
                 }
-              if(this.userData.business!==null || this.userData.businesses.length > 0){
+                if(this.userData.business !== null || this.userData.businesses.length > 0){
                   params.params.filter.user = this.userData.id
+                }
+                if(!this.$auth.hasAccess('profile.user.create')){
+                  params.params.filter.addedBy = this.userData.id
                 }
                 await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{
                     this.orders = response.data

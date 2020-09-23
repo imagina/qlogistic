@@ -13,11 +13,6 @@
     components: {
       highCharts: Chart
     },
-    mounted(){
-      this.$nextTick(()=>{
-        this.init()
-      })
-    },
     computed:{
       userData(){
         return this.$store.state.quserAuth.userData
@@ -80,7 +75,7 @@
             include: 'orders',
             filter: {
               allTranslations: true,
-              user: this.userData.id
+              types:[1]
             }
           }
         }

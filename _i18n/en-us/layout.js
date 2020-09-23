@@ -27,7 +27,7 @@ export default {
     businessName: 'Business Name',
     businessId: 'NIT',
     webUrl: 'Web Site',
-    patient: 'Patiene',
+    patient: 'Name of Receiver',
     patientDni: 'ID',
     destinationBusiness: 'Destination Business',
     observations: 'Delivery and/or Collection Observations',
