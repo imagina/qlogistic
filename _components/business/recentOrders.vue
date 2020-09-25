@@ -85,7 +85,6 @@
                     this.orders = response.data
                     this.loading = false
                 }).catch(error => {
-                    console.error(error)
                     this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
                     this.loading = false
                 })

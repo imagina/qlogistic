@@ -91,7 +91,6 @@
           }
           this.chartOptions.series = [businessSeries]
         }).catch(error => {
-          console.error(error)
           this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
         })
       },

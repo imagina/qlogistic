@@ -143,7 +143,6 @@ export default {
       this.$emit('select',items)
     },
     scanQR(data){
-        console.warn(data);
         let decData = data.split(' | ')
         let decDataObj = {
           orderId: decData[0],

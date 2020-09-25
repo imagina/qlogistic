@@ -45,12 +45,12 @@
                                 </div>
                                 <div class="col-3">
                                   <div class="text-subtitle1">
-                                    <q-icon name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ options.selectedQRS ? options.selectedQRS[item.id].length : 0 }} / {{ item.quantity }}
+                                    <q-icon v-if="options != null" name="fas fa-circle" color="black" size="3px" class="q-mr-sm" />{{ options.selectedQRS ? options.selectedQRS[item.id].length : 0 }} / {{ item.quantity }}
                                   </div>
                                   <div class="text-caption text-primary text-bold q-pl-sm">{{ $tr('qlogistic.layout.form.pieces') }}</div>
                                 </div>
                                 <div class="col-3">
-                                  <q-btn class="q-mr-sm" v-if="item.qrs" icon="fas fa-qrcode" rounded color="primary" @click="()=>{orderItemId = item.id;selectedItems = options.selectedQRS ? options.selectedQRS[item.id] : [];showQRDialog = true}">
+                                  <q-btn class="q-mr-sm" v-if="item.qrs && options != null" icon="fas fa-qrcode" rounded color="primary" @click="()=>{orderItemId = item.id;selectedItems = options.selectedQRS ? options.selectedQRS[item.id] : [];showQRDialog = true}">
                                     <q-tooltip>
                                       {{ $tr('qlogistic.layout.scanQR') }}
                                     </q-tooltip>
@@ -246,7 +246,8 @@
                 this.success = true
                 this.loading = false
                 setTimeout(()=>{
-                  this.locale.form.userId = this.userData.id
+                  if(this.locale.form)
+                    this.locale.form.userId = this.userData.id
                   this.getBusiness()
                 },200)
             },
@@ -311,7 +312,7 @@
                   params:{
                     filter:{
                       allTranslations: true,
-                      types: [3,this.locale.form.shippingType],
+                      types: [3, this.locale.form ? this.locale.form.shippingType : 4],
                     }
                   }
                 }

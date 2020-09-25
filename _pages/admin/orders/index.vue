@@ -115,6 +115,8 @@
                         bdata.push(business[x].id)
                     }
                     params.params.filter.originBusiness = bdata.join(',')
+                }else if(!this.$auth.hasAccess('ibusiness.businesses.create')){
+                    params.params.filter.addedBy = this.userData.id
                 }
                 await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{
                     this.orders = response.data

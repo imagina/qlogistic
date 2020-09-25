@@ -103,7 +103,6 @@
                     }
                     params.params.filter.originBusiness = bdata.join(',')
                 }*/
-                console.error(params)
                 await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{
                     this.orders = response.data
                 }).catch(error => {

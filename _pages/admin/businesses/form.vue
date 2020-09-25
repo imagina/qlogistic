@@ -476,7 +476,6 @@
                             this.$router.push({name: 'qlogistic.businesses.index'})
                         }).catch(error => {
                             this.loading = false
-                            console.error(error)
                             this.$alert.error({message: this.$tr('ui.message.recordNoUpdated'), pos: 'bottom'})
                         })
                     } else {
@@ -485,7 +484,6 @@
                             this.loading = false
                         }).catch(error => {
                             this.loading = false
-                            console.error(error)
                             this.$alert.error({message: this.$tr('ui.message.recordNoUpdated'), pos: 'bottom'})
                         })
                     }

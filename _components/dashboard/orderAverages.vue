@@ -100,8 +100,6 @@
             this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
           })
         }
-        console.log(monthSeries)
-        console.log(monthNames)
         this.chartOptions.xAxis.categories = monthNames
         this.chartOptions.series = monthSeries
       }
