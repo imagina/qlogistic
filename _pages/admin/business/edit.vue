@@ -290,7 +290,8 @@
                         if (Object.keys(response.data).length > 0) {
                             let dataForm = this.$clone(response.data)
                             this.locale.form = this.$clone(dataForm)
-                            this.locale.form.provinceId = this.$clone(dataForm.city.provinceId)
+                            this.locale.form.provinceId = parseInt(this.$clone(dataForm.city.provinceId))
+                            this.locale.form.cityId = parseInt(this.$clone(dataForm.cityId))
                             this.locale.form.users = []
                             this.itemId = dataForm.id
                             for (let user of dataForm.users) {

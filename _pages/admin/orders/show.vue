@@ -6,7 +6,24 @@
                     <q-card-section v-if="success">
                         <div class="row">
                             <div class="col-12">
-                                <div class="row">
+                                <div class="row" v-if="$q.screen.width > 1024">
+                                  <div class="col-7">
+                                    <q-list>
+                                      <q-item>
+                                        <q-item-section avatar>
+                                          <q-icon name="fas fa-clipboard-list" size="xs" color="primary" />
+                                        </q-item-section>
+                                        <q-item-section>
+                                          <div class="text-h6 text-primary">Orden #{{ itemId.padStart(5,'0') }}</div>
+                                        </q-item-section>
+                                      </q-item>
+                                    </q-list>
+                                  </div>
+                                  <div :class="'col-5 '+($q.screen.width > 599?'text-right':'')">
+                                    <div class="text-h6 text-secondary">{{ $tr('ui.form.status') }}: {{ order.orderStatus.name }}</div>
+                                  </div>
+                                </div>
+                                <div class="row" v-else>
                                   <div class="col-1">
                                     <q-icon name="fas fa-clipboard-list" size="xs" color="primary" class="q-mt-sm" />
                                   </div>
@@ -113,7 +130,7 @@
                 </q-card>
             </div>
             <div class="col-12 col-md-6">
-                <div class="row q-px-lg-md">
+                <div :class="'row '+($q.screen.width > 1024 ? 'q-px-xl': 'q-px-sm')">
                     <div class="col-12">
                         <div class="text-h6 text-primary text-bold q-mt-xl q-mx-md">{{ $tr('qlogistic.layout.historial') }}</div>
                         <orderHistory :id="itemId" @input="init" />

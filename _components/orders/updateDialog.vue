@@ -63,7 +63,7 @@
                         <q-separator class="q-my-md" />
                         <div class="row" v-if="locale.form.orderStatusId === 3">
                             <div class="col-12">
-                                <q-option-group inline type="radio" v-model="locale.formTemplate.shippingType" :options="shippingTypes" @input="getBusiness" />
+                                <q-option-group inline type="radio" v-model="locale.formTemplate.shippingType" :options="shippingTypes" />
                             </div>
                             <div class="col-12">
                                 <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.transportBusiness') }}:</div>
@@ -118,10 +118,12 @@
                         <div class="row" v-if="locale.form.orderStatusId === 5">
                           <q-separator class="q-my-md" />
                           <div class="col-12">
-                            <div class="text-subtitle2 text-bold text-primary q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.signature') }}:</div>
-                            <q-input  outlined dense label="" type="textarea"
-                                    v-model="locale.formTemplate.signature"
-                                    :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>
+                            <div class="col-12">
+                              <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.signature') }}:</div>
+                              <q-field borderless v-model="locale.formTemplate.signature" :rules="[val => !!val || $tr('ui.message.fieldRequired')]" >
+                                <signature v-model="locale.formTemplate.signature" />
+                              </q-field>
+                            </div>
                           </div>
                         </div>
                         <div class="row" v-if="locale.form.orderStatusId === 3 || locale.form.orderStatusId === 5">
@@ -152,11 +154,13 @@
     import mediaForm from '@imagina/qmedia/_components/form'
     import qrScanDialog from '@imagina/qlogistic/_components/orders/qrScanDialog'
     import { mapGeolocationActions, mapGeolocationGetters } from 'quasar-app-extension-geolocation/src/store'
+    import signature from '@imagina/qlogistic/_components/signature/signature'
     export default {
         name: "updateDialog",
         components:{
             mediaForm,
-          qrScanDialog
+            qrScanDialog,
+            signature
         },
         props:{
             value: {default: false},
@@ -171,6 +175,9 @@
                 this.$emit('input', this.show)
                 this.initForm()
             },
+            'locale.form.shippingType'(){
+              this.getBusiness()
+            }
         },
         computed:{
           dataLocale(){
@@ -189,7 +196,6 @@
                       options:{
                         selectedQRS: []
                       },
-                      coords: this.coords,
                       locations:[],
                       mediasMulti: {},
                   }
@@ -227,8 +233,8 @@
                 selectedItems:[],
                 pollingTimer: null,
                 shippingTypes: [
-                  { label: this.$tr('qlogistic.layout.form.typeTerrestrial'), value: '5' },
-                  { label: this.$tr('qlogistic.layout.form.typeAir'), value: '4' },
+                  { label: this.$tr('qlogistic.layout.form.typeTerrestrial'), value: '4' },
+                  { label: this.$tr('qlogistic.layout.form.typeAir'), value: '5' },
                 ],
             }
         },
@@ -269,7 +275,7 @@
               let params = {
                 refresh: true,
                 params:{
-                  include: 'locations'
+                  include: 'locations,signatures'
                 }
               }
               if(this.orderHistoryId!=false){
@@ -277,7 +283,20 @@
                   let dataForm = this.$clone(response.data)
                   this.locale.form = this.$clone(dataForm)
                   this.locale.form.transportBusinessId = parseInt(dataForm.transportBusinessId)
+                  this.locale.form.signature = dataForm.signatures.length > 0  ? dataForm.signatures[0].signature: null
                   this.options = dataForm.options
+                  if(this.options.length === 0){
+                    this.options = {
+                      selectedQRS: []
+                    }
+                    this.locale.form.options = {
+                      selectedQRS: []
+                    }
+                    for(let x in this.order.items){
+                      this.options.selectedQRS[this.order.items[x].id] = []
+                      this.locale.form.options.selectedQRS[this.order.items[x].id] = []
+                    }
+                  }
                   for(let x in this.statuses){
                     if(this.statuses[x].id == dataForm.orderStatusId){
                       this.selectedStatus = this.statuses[x]
@@ -328,11 +347,12 @@
                     this.loading = true
                     let configName = 'apiRoutes.qlogistic.orderStatusHistories'
                     let formData = this.$clone(this.getDataForm())
+                    formData.locations = []
+                    formData.options = this.options
+                    formData.locations.push({coords: this.coords})
                     if(this.isPermissionDenied){
                       this.doQueryPermission()
                     }
-                    formData.options = this.options
-                    formData.coords= this.coords
                     if(this.orderHistoryId) {
                       this.$crud.update(configName, this.orderHistoryId, formData).then(response => {
                         this.$alert.success({message: `${this.$tr('ui.message.recordCreated')}`})
@@ -358,6 +378,7 @@
             },
             getDataForm() {
                 let response = this.locale.form
+                let locations = response.locations
                 for (var item in response) {
                     let valueItem = response[item]
                     if (valueItem == null || valueItem == undefined)

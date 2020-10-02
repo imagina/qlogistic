@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-center relative-position">
-    <div class="row justify-end full-width q-py-sm">
+    <!-- TODO -->
+    <div class="row justify-end full-width q-py-sm" v-if="$auth.hasAccess('ibusiness.businesses.me') || $auth.hasAccess('profile.user.create')">
       <div class="col-4 col-lg-3 q-px-sm">
           <orders label="Total de Ordenes" />
       </div>
@@ -11,7 +12,7 @@
         <orders label="Ordenes Completadas" status="5" color="orange" />
       </div>
     </div>
-    <div class="row q-col-gutter-y-md full-width q-py-md">
+    <div class="row q-col-gutter-y-md full-width q-py-md" v-if="$auth.hasAccess('ibusiness.businesses.me') || $auth.hasAccess('profile.user.create')">
       <div class="col-12 col-md-6 q-px-sm">
         <div class="row q-col-gutter-y-md">
           <div class="col-12">

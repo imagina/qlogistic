@@ -27,12 +27,12 @@
                 </q-item-section>
                 <q-item-section avatar class="items-baseline">
                     <div class="col-12 q-py-lg">
-                        <q-btn flat dense color="positive" icon="far fa-eye" @click="()=> {itemSelected = history.id;showHistoryModal = true}">
+                        <q-btn :class="'order-status-history-btn-view-'+history.id" flat dense color="positive" icon="far fa-eye" @click="()=> {itemSelected = history.id;showHistoryModal = true}">
                             <q-tooltip>
                                 Ver
                             </q-tooltip>
                         </q-btn>
-                        <q-btn v-if="$auth.hasAccess('ilogistics.orderstatushistories.edit')" flat dense color="positive" icon="far fa-edit" @click="()=> {itemSelected = history.id;showUpdateDialog = true}">
+                        <q-btn :class="'order-status-history-btn-edit-'+history.id" v-if="$auth.hasAccess('ilogistics.orderstatushistories.edit')" flat dense color="positive" icon="far fa-edit" @click="()=> {itemSelected = history.id;showUpdateDialog = true}">
                           <q-tooltip>
                             {{ $tr('ui.label.edit') }}
                           </q-tooltip>

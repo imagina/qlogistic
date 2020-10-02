@@ -13,11 +13,11 @@
                             <div class="text-caption q-px-md">
                                 <div class="q-pa-xs">
                                     <div><b>Origen:</b> {{ order.originBusiness.name }}</div>
-                                    <div>{{ order.originBusiness.coords }}, {{ order.originBusiness.city.name }}</div>
+                                    <div>{{ order.originAddress}}, {{ order.originCity.name }}</div>
                                 </div>
                                 <div class="q-pa-xs">
                                     <div><b>Destino:</b> {{ order.destinationBusiness.name }}</div>
-                                    <div>{{ order.destinationBusiness.coords }}, {{ order.destinationBusiness.city.name }}</div>
+                                    <div>{{ order.destinationAddress }}, {{ order.destinationCity.name }}</div>
                                 </div>
                                 <div class="q-pa-xs">
                                     <b>Estado:</b> {{ order.orderStatus.name }}
@@ -74,12 +74,19 @@
                 this.loading = true
                 let params = {
                     params:{
-                        include: 'items,orderStatus,originBusiness,originBusiness.city,destinationBusiness,destinationBusiness.city,city,city.province',
+                        include: 'items,orderStatus,originBusiness,originCity,destinationBusiness,destinationCity',
                         filter: {}
                     }
                 }
-                if(this.userData.business){
-                    params.params.filter.originBusiness = this.userData.business.id
+                if(this.userData.business !== null){
+                  params.params.filter.originBusiness = this.userData.business.id
+                }else if(this.userData.businesses.length > 0){
+                  let business = this.userData.businesses
+                  let bdata = []
+                  for (let x in business){
+                    bdata.push(business[x].id)
+                  }
+                  params.params.filter.originBusiness = bdata.join(',')
                 }
                 await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{
                     this.orders = response.data

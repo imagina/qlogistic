@@ -56,6 +56,12 @@ export default {
     user: 'Usuarios Miembros',
     business: 'Empresa',
   },
+  label:{
+    undo: 'Deshacer',
+    clear: 'Limpiar',
+    filterOrders: 'Filtrar Órdenes',
+    orderFilter: 'Filtro de Órdenes',
+  },
   message:{
     businessNotFound: 'Lo sentimos. En este momento no tiene una empresa asignada a su perfil. Favor ingresa los datos de su empresa haciendo clic en',
     qrCodeAlreadySelected: 'Lo sentimos, este Código QR ya fue seleccionado.',

@@ -28,6 +28,27 @@
                         </div>
                     </div>
                     <q-separator class="q-my-md" />
+                    <div class="col-12" v-if="history.orderStatusId==='5'">
+                        <div class="q-pa-xs text-primary text-bold">
+                          {{ $tr('qlogistic.layout.form.deliveredTo') }}
+                        </div>
+                        <div class="q-pa-xs text-justify">
+                          {{ history.deliveredTo }}
+                        </div>
+                        <div class="q-pa-xs text-primary text-bold">
+                          {{ $tr('ui.form.phone') }}
+                        </div>
+                        <div class="q-pa-xs text-justify">
+                          {{ history.phone }}
+                        </div>
+                        <div class="q-pa-xs text-primary text-bold">
+                          {{ $tr('qlogistic.layout.form.businessPosition') }}
+                        </div>
+                        <div class="q-pa-xs text-justify">
+                          {{ history.businessPosition }}
+                        </div>
+                    </div>
+                    <q-separator class="q-my-md" />
                     <div class="col-12">
                         <div class="q-pa-xs text-primary text-bold">
                             {{ $tr('qlogistic.layout.form.observations2') }}
@@ -62,6 +83,16 @@
                             @click="center=marker"
                         ></gmap-marker>
                       </gmap-map>
+                    </div>
+                    <div class="col-12" v-if="history.signatures.length > 0">
+                      <div class="q-pa-xs text-primary text-bold">
+                        {{ $tr('qlogistic.layout.form.signature') }}
+                      </div>
+                      <div class=" row q-pa-xs q-col-gutter-sm">
+                        <div class="col-4" v-for="(image,i) in history.signatures" :key="i">
+                          <q-img :src="image.signature" />
+                        </div>
+                      </div>
                     </div>
                 </div>
             </q-card-section>
@@ -128,13 +159,14 @@
                 let configName = 'apiRoutes.qlogistic.orderStatusHistories'
                 let params = {
                     params:{
-                        include: 'order,order.originBusiness,order.destinationBusiness,orderStatus,order.originCity,order.destinationCity,user,locations,transportBusiness',
+                        include: 'signatures,order,order.originBusiness,order.destinationBusiness,orderStatus,order.originCity,order.destinationCity,user,locations,transportBusiness',
                     },
                     refresh: true,
                 }
                 await this.$crud.show(configName, this.itemId, params).then(response => {
                     this.history = response.data
                     this.center = {lat: this.coords.latitude, lng: this.coords.longitude}
+                    this.markers = []
                     for(let x in this.history.locations){
                       this.markers.push({lat: this.history.locations[x].coords.latitude, lng: this.history.locations[x].coords.longitude})
                     }

@@ -40,7 +40,7 @@
                                                     <div class="col-12">
                                                         <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.originBusiness') }}</div>
                                                         <q-select
-                                                                :readonly="!$auth.hasAccess('ibusiness.businesses.index')"
+                                                                :readonly="!$auth.hasAccess('ilogistics.orders.manageothers')"
                                                                 input-class="origin-business-id"
                                                                 @blur="()=>{getOriginBusiness();getUsers()}"
                                                                 rounded
@@ -59,7 +59,7 @@
                                                                 :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                                         />
                                                     </div>
-                                                    <div class="col-12" v-if="$auth.hasAccess('ibusiness.businesses.index')">
+                                                    <div class="col-12" v-if="$auth.hasAccess('ilogistics.orders.manageothers')">
                                                       <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('ui.label.user') }}</div>
                                                         <q-select
                                                           input-class="user-id"
@@ -236,8 +236,10 @@
                                                             </q-btn>
                                                         </div>
                                                     </div>
-                                                    <div class="row q-col-gutter-sm q-py-sm" v-for="(item,i) in locale.formTemplate.orderItems" :key="i">
-                                                        <div class="col-3 col-md-4">
+                                                    <q-field borderless v-model="locale.formTemplate.orderItems" :rules="[val => val.length > 0 || $tr('ui.message.fieldRequired')]" >
+                                                      <div class="col-12">
+                                                        <div class="row q-col-gutter-sm q-py-sm" v-for="(item,i) in locale.formTemplate.orderItems" :key="i">
+                                                          <div class="col-3 col-md-4">
                                                             <!---<q-input rounded  outlined dense :label="$tr('ui.form.name')" v-model="item.name"
                                                                      :rules="[val => !!val || $tr('ui.message.fieldRequired')]"/>-->
                                                             <q-select
@@ -256,25 +258,27 @@
                                                                 option-label="label"
                                                                 :rules="[val => !!val || $tr('ui.message.fieldRequired')]"
                                                             />
-                                                        </div>
-                                                        <div class="col-3 col-md-4">
+                                                          </div>
+                                                          <div class="col-3 col-md-4">
                                                             <q-input :name="'packageDescription'+i" rounded  outlined dense :label="$tr('ui.label.description')" v-model="item.description"
                                                                      :rules="[val => !!val || $tr('ui.message.fieldRequired')]" />
-                                                        </div>
-                                                        <div class="col-3">
+                                                          </div>
+                                                          <div class="col-3">
                                                             <q-input :name="'packageQuantity'+i" rounded  outlined dense :label="$tr('ui.form.quantity')" v-model="item.quantity"
                                                                      :rules="[val => !!val || $tr('ui.message.fieldRequired')]" type="number"/>
-                                                        </div>
-                                                        <div class="col-3 col-md-1">
+                                                          </div>
+                                                          <div class="col-3 col-md-1">
                                                             <div class="col-12 text-right">
-                                                                <q-btn dense color="negative" icon="fas fa-trash" @click="deleteItem(i)">
-                                                                    <q-tooltip>
-                                                                        {{ $tr('qlogistic.layout.deleteItem') }}
-                                                                    </q-tooltip>
-                                                                </q-btn>
+                                                              <q-btn dense color="negative" icon="fas fa-trash" @click="deleteItem(i)">
+                                                                <q-tooltip>
+                                                                  {{ $tr('qlogistic.layout.deleteItem') }}
+                                                                </q-tooltip>
+                                                              </q-btn>
                                                             </div>
+                                                          </div>
                                                         </div>
-                                                    </div>
+                                                      </div>
+                                                    </q-field>
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="text-primary text-caption text-bold q-px-md q-py-sm">{{ $tr('qlogistic.layout.form.observations') }}:</div>
@@ -640,7 +644,8 @@
                 if (await this.$refs.localeComponent.validateForm()) {
                     this.loading = true
                     let configName = 'apiRoutes.qlogistic.orders'
-                    await this.$crud.create(configName, this.getDataForm()).then(response => {
+                    let form = this.getDataForm()
+                    await this.$crud.create(configName, form).then(response => {
                         this.$alert.success({message: `${this.$tr('ui.message.recordCreated')}`})
                         this.$router.push({name: 'qlogistic.orders.index'})
                         this.loading = false

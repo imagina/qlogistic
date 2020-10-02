@@ -62,7 +62,11 @@
                 </div>
                 <div class="col-3 col-lg-2 q-px-sm">
                   <div class="filter-btn full-height flex flex-center">
-                    <q-btn flat icon="fas fa-filter" color="primary" />
+                    <q-btn @click="drawer.filter = !drawer.filter" flat icon="fas fa-filter" color="primary">
+                      <q-tooltip>
+                        {{ $tr('ui.label.filter') }}
+                      </q-tooltip>
+                    </q-btn>
                   </div>
                 </div>
               </div>
@@ -85,7 +89,11 @@
               </q-input>
             </div>
             <div class="col-2 text-right">
-              <q-btn icon="fas fa-filter" color="primary" class="no-border-radius no-shadow" size="16px" />
+              <q-btn @click="drawer.filter = !drawer.filter" icon="fas fa-filter" color="primary" class="no-border-radius no-shadow" size="16px">
+                <q-tooltip>
+                  {{ $tr('ui.label.filter') }}
+                </q-tooltip>
+              </q-btn>
             </div>
           </div>
         </q-toolbar-title>
@@ -103,6 +111,87 @@
       <!--= MENU =-->
       <menu-list :menu="menu"/>
     </q-drawer>
+
+    <q-drawer bordered id="menuFilter" v-model="drawer.filter" side="right">
+        <div class="q-pa-sm full-width">
+            <div class="row">
+              <div class="col-12 q-py-sm">
+                <div class="text-primary text-h5">
+                  {{ $tr('qlogistic.layout.label.orderFilter') }}
+                </div>
+              </div>
+              <div class="col-12 q-py-sm">
+                <dynamic-field v-model="filter.originBusiness" :field="{
+                    type: 'select',
+                    props:{
+                      label: $tr('qlogistic.layout.form.originBusiness'),
+                      clearable: true,
+                    },
+                    loadOptions: { //Async load options form request, only in types [select, multiSelect]
+                        apiRoute: 'apiRoutes.qlogistic.business', //apiRoute to request
+                        requestParams:{
+                          filter:{
+                            types:[1]
+                          }
+                        },
+                        select: {label: 'name', id: 'id'}, //Define fields to config select
+                    },
+                }" />
+              </div>
+              <div class="col-12 q-py-sm">
+                <dynamic-field type="select" v-model="filter.destinationBusiness" :field="{
+                    type: 'select',
+                    props:{
+                      label: $tr('qlogistic.layout.form.destinationBusiness'),
+                      clearable: true,
+                    },
+                    loadOptions: { //Async load options form request, only in types [select, multiSelect]
+                        apiRoute: 'apiRoutes.qlogistic.business', //apiRoute to request
+                        requestParams:{
+                          filter:{
+                            types:[2]
+                          }
+                        },
+                        select: {label: 'name', id: 'id'}, //Define fields to config select
+                    },
+                }" />
+              </div>
+              <div class="col-12 q-py-sm">
+                <dynamic-field type="select" v-model="filter.status" :field="{
+                    type: 'select',
+                    props:{
+                      label: $tr('ui.form.status'),
+                      clearable: true,
+                    },
+                    loadOptions: { //Async load options form request, only in types [select, multiSelect]
+                        apiRoute: 'apiRoutes.qlogistic.orderStatuses', //apiRoute to request
+                        select: {label: 'name', id: 'id'}, //Define fields to config select
+                    },
+                }" />
+              </div>
+              <div class="col-12 q-py-sm" v-if="$auth.hasAccess('profile.user.manage')">
+                <dynamic-field type="select" v-model="filter.addedBy" :field="{
+                    type: 'select',
+                    props:{
+                      label: $tr('ui.label.user'),
+                      clearable: true,
+                    },
+                    loadOptions: { //Async load options form request, only in types [select, multiSelect]
+                        apiRoute: 'apiRoutes.quser.users', //apiRoute to request
+                        select: {label: 'fullName', id: 'id'}, //Define fields to config select
+                    },
+                }" />
+              </div>
+              <div class="col-12 q-py-sm text-center">
+                  <q-btn @click="()=>{$root.$emit('filter',filter);drawer.filter = false}" icon="fas fa-filter" color="primary">
+                    <q-tooltip>
+                      {{ $tr('qlogistic.layout.label.filterOrders') }}
+                    </q-tooltip>
+                  </q-btn>
+              </div>
+            </div>
+        </div>
+    </q-drawer>
   </div>
 </template>
 <script>
@@ -118,6 +207,7 @@
     watch: {
       $route (to, from){
         this.attribs = {}
+        this.drawer.filter = false
       }
     },
     mounted() {
@@ -132,7 +222,14 @@
         drawer: {
           menu: false,
           config: false,
-          notification: false
+          notification: false,
+          filter: false,
+        },
+        filter:{
+          originBusiness: null,
+          destinationBusiness: null,
+          status: null,
+          addedBy: null,
         },
         menu: config('sidebar'),
         logo: this.$store.getters['qsiteSettings/getSettingMediaByName']('isite::logo1').path,

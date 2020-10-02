@@ -56,6 +56,12 @@ export default {
     user: 'Member Users',
     business: 'Business',
   },
+  label:{
+    undo: 'Undo',
+    clear: 'Clear',
+    filterOrders: 'Filter Orders',
+    orderFilter: 'Orders Filter',
+  },
   message:{
     businessNotFound: 'Sorry, you don\'t have any assigned business into your profile. Please register your business information in',
     qrCodeAlreadySelected: 'Sorry, this QR Code has already been selected.',

@@ -1,6 +1,15 @@
 <template>
     <div class="flex flex-center relative-position">
         <div class="row full-width q-px-sm" v-if="orders.length > 0">
+            <div class="col-12 q-pa-sm">
+              <div class="flex flex-center">
+                <q-pagination
+                    v-model="currentPage"
+                    :max="page.lastPage"
+                    :input="true"
+                />
+              </div>
+            </div>
             <div class="col-12 q-py-sm" v-for="(order,index) in orders" :key="index">
                 <q-card class="q-px-lg q-pt-lg" style="border-radius: 10px">
                     <div class="row">
@@ -34,7 +43,13 @@
                                     </div>
                                 </div>
                                 <div class="col-4 lt-md flex content-end">
-                                    <q-btn color="positive" :label="$tr('qlogistic.layout.viewOrder')" :to="{name: 'qlogistic.orders.show',params:{id: order.id}}" />
+                                    <q-btn :class="'order-btn-view-'+order.id" color="positive" :label="$tr('qlogistic.layout.viewOrder')" :to="{name: 'qlogistic.orders.show',params:{id: order.id}}" />
+                                    &nbsp;
+                                    <q-btn class="q-ml-sm" v-if="$auth.hasAccess('ilogistics.orders.destroy')" :class="'order-btn-delete-'+order.id" color="negative" icon="fas fa-trash" @click="deleteOrder(order.id)">
+                                      <q-tooltip>
+                                        {{ $tr('ui.label.delete') }}
+                                      </q-tooltip>
+                                    </q-btn>
                                 </div>
                             </div>
                         </div>
@@ -43,18 +58,25 @@
                                 <q-chip :label="order.orderStatus.name"/>
                             </div>
                             <div class="q-pt-sm">
-                                <q-btn color="positive" label="Ver Orden" :to="{name: 'qlogistic.orders.show',params:{id: order.id}}" />
+                                <q-btn :class="'order-btn-view-'+order.id" color="positive" label="Ver Orden" :to="{name: 'qlogistic.orders.show',params:{id: order.id}}" />
+                                <q-btn class="q-ml-sm" v-if="$auth.hasAccess('ilogistics.orders.destroy')" :class="'order-btn-delete-'+order.id" color="negative" icon="fas fa-trash" @click="deleteOrder(order.id)">
+                                  <q-tooltip>
+                                    {{ $tr('ui.label.delete') }}
+                                  </q-tooltip>
+                                </q-btn>
                             </div>
                         </div>
                     </div>
                 </q-card>
-                <q-page-sticky position="bottom-right" :offset="[18, 50]">
-                    <q-btn no-caps rounded dense icon="fas fa-plus" class="q-pa-sm mobile-only" size="sm" color="primary" :to="{name: 'qlogistic.orders.create'}">
-                        <q-tooltip>
-                            {{ $tr('qlogistic.layout.ordersCreate') }}
-                        </q-tooltip>
-                    </q-btn>
-                </q-page-sticky>
+            </div>
+            <div class="col-12 q-pa-sm">
+              <div class="flex flex-center">
+                <q-pagination
+                    v-model="currentPage"
+                    :max="page.lastPage"
+                    :input="true"
+                />
+              </div>
             </div>
         </div>
         <div class="row" v-else>
@@ -63,6 +85,13 @@
             </div>
         </div>
         <inner-loading :visible="loading" />
+        <q-page-sticky position="bottom-right" :offset="[18, 50]">
+          <q-btn no-caps rounded dense icon="fas fa-plus" class="q-pa-sm mobile-only" size="sm" color="primary" :to="{name: 'qlogistic.orders.create'}">
+            <q-tooltip>
+              {{ $tr('qlogistic.layout.ordersCreate') }}
+            </q-tooltip>
+          </q-btn>
+        </q-page-sticky>
     </div>
 </template>
 
@@ -78,22 +107,38 @@
                 return this.$store.state.quserAuth.userData
             }
         },
+        watch:{
+          'currentPage'(){
+            this.init()
+          }
+        },
         data(){
             return {
                 orders:[
                 ],
+                filter: {},
                 loading: false,
+                currentPage: 1,
+                takePage: 10,
+                page: {
+                  currentPage: 1,
+                  perPage: 3,
+                  lastPage: 1,
+                  total: 10
+                },
             }
         },
         mounted(){
             this.$nextTick(()=>{
                 this.$root.$emit('dataToHeader',this.$attrs)
+                this.$root.$on('filter',this.init)
                 this.init()
             })
         },
         methods:{
-            async init(){
+            async init(filter = {}){
                 this.loading = true
+                this.filter = filter
                 await this.getData()
                 this.loading = false
             },
@@ -101,12 +146,12 @@
                 let params = {
                     params:{
                         include: 'originBusiness,destinationBusiness,orderStatus,originCity,destinationCity',
-                        filter:{
-                        }
+                        filter: this.filter,
+                        page: this.currentPage,
+                        take: this.takePage,
                     }
                 }
                 if(this.userData.business !== null){
-                    params.params.filter.user = this.userData.id
                     params.params.filter.originBusiness = this.userData.business.id
                 }else if(this.userData.businesses.length > 0){
                     let business = this.userData.businesses
@@ -115,14 +160,37 @@
                         bdata.push(business[x].id)
                     }
                     params.params.filter.originBusiness = bdata.join(',')
-                }else if(!this.$auth.hasAccess('ibusiness.businesses.create')){
-                    params.params.filter.addedBy = this.userData.id
                 }
                 await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{
                     this.orders = response.data
+                    this.page = response.meta.page
                 }).catch(error => {
+                    console.error(error)
                     this.$alert.error({message: this.$tr('ui.message.errorRequest'), pos: 'bottom'})
                 })
+            },
+            deleteOrder(id){
+              this.$q.dialog({
+                title: this.$tr('ui.label.delete')+' '+this.$tr('qlogistic.sidebar.adminOrderShow'),
+                preventClose: true,
+                message: this.$tr('ui.message.deleteRecord'),
+                color: 'negative',
+                ok: this.$tr('ui.label.delete'),
+                cancel: this.$tr('ui.label.cancel'),
+              }).onOk(response => {//If comfirn delete action
+                this.loading = true
+                let configName = 'apiRoutes.qlogistic.orders'
+                //Request
+                this.$crud.delete(configName, id, {params: {}}).then(async response => {
+                  this.$alert.success({message: this.$tr('ui.message.recordDeleted'), pos: 'bottom'})
+                  await this.getData()//Get data
+                  this.loading = false
+                }).catch((error) => {
+                  this.$alert.error({message: this.$tr('ui.message.recordNoDeleted'), pos: 'bottom'})
+                  this.loading = false
+                })
+              }).onCancel(response => {
+              })
             }
         },
     }

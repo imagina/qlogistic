@@ -86,23 +86,21 @@
                 let params = {
                     params:{
                         include: 'orderStatus,originBusiness,originCity,destinationBusiness,destinationCity',
-                        filter:{},
+                        filter:{
+                          status: '1,2,3,4'
+                        },
                     }
                 }
-                if(this.userData.business || this.userData.businesses.length > 0){
-                  params.params.filter.user = this.userData.id
+                if(this.userData.business !== null){
+                  params.params.filter.originBusiness = this.userData.business.id
+                }else if(this.userData.businesses.length > 0){
+                  let business = this.userData.businesses
+                  let bdata = []
+                  for (let x in business){
+                    bdata.push(business[x].id)
+                  }
+                  params.params.filter.originBusiness = bdata.join(',')
                 }
-                /*if(this.userData.business){
-                    params.params.filter.originBusiness = this.userData.business.id
-                }
-                if(this.userData.businesses.length > 0){
-                    let business = this.userData.businesses
-                    let bdata = []
-                    for (let x in business){
-                        bdata.push(business[x].id)
-                    }
-                    params.params.filter.originBusiness = bdata.join(',')
-                }*/
                 await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{
                     this.orders = response.data
                 }).catch(error => {
