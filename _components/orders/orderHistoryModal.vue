@@ -17,13 +17,13 @@
                         <div class="q-pa-xs">
                             <div v-if="history.shippingType > 0"><b>{{ $tr('qlogistic.layout.form.shipping') }}:</b> {{ shippingTypes[history.shippingType] }}</div>
                             <div><b>{{ $tr('qlogistic.layout.form.originCity') }}:</b> {{ history.order.originCity.name }}</div>
-                            <div v-if="history.transportBusiness"><b>{{ $tr('qlogistic.layout.form.shippingBusiness') }}:</b> {{ history.transportBusiness.name  }}</div>
+                            <div v-if="$auth.hasAccess('ilogistics.orderstatushistories.edit') && history.transportBusiness"><b>{{ $tr('qlogistic.layout.form.shippingBusiness') }}:</b> {{ history.transportBusiness.name  }}</div>
                             <div><b>{{ $tr('qlogistic.layout.form.destinationCity') }}:</b> {{ history.order.destinationCity.name  }}</div>
                         </div>
                         <div class="q-pa-xs">
                             <div>{{ $trd(history.updatedAt, {type: 'long'}) }}</div>
                         </div>
-                        <div class="q-pa-xs">
+                        <div class="q-pa-xs" v-if="$auth.hasAccess('ilogistics.orderstatushistories.edit')">
                             <div><b>{{ $tr('qlogistic.layout.form.editedBy') }}:</b> {{ history.user.fullName }}</div>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                         </div>
                     </div>
                     <q-separator class="q-my-md" />
-                    <div class="col-12" v-if="history.gallery.length > 0">
+                    <div class="col-12" v-if="history.gallery.length > 0 && $auth.hasAccess('ilogistics.orderstatushistories.edit')">
                         <div class="q-pa-xs text-primary text-bold">
                             {{ $tr('qlogistic.layout.form.photoSupport') }}
                         </div>
@@ -139,11 +139,10 @@
               loading: false,
               markers: [],
               center: {},
-              shippingTypes:[
-                  "",
-                  this.$tr('qlogistic.layout.form.typeTerrestrial'),
-                  this.$tr('qlogistic.layout.form.typeAir'),
-              ],
+              shippingTypes: {
+                4: this.$tr('qlogistic.layout.form.typeTerrestrial'),
+                5: this.$tr('qlogistic.layout.form.typeAir'),
+              },
             }
         },
         methods:{
@@ -159,7 +158,7 @@
                 let configName = 'apiRoutes.qlogistic.orderStatusHistories'
                 let params = {
                     params:{
-                        include: 'signatures,order,order.originBusiness,order.destinationBusiness,orderStatus,order.originCity,order.destinationCity,user,locations,transportBusiness',
+                        include: 'signatures,locations,order,order.originBusiness,order.destinationBusiness,orderStatus,order.originCity,order.destinationCity,user,locations,transportBusiness',
                     },
                     refresh: true,
                 }
@@ -168,7 +167,8 @@
                     this.center = {lat: this.coords.latitude, lng: this.coords.longitude}
                     this.markers = []
                     for(let x in this.history.locations){
-                      this.markers.push({lat: this.history.locations[x].coords.latitude, lng: this.history.locations[x].coords.longitude})
+                      if(this.history.locations.coords)
+                        this.markers.push({lat: this.history.locations[x].coords.latitude, lng: this.history.locations[x].coords.longitude})
                     }
                 }).catch(error => {
                     this.$alert.error({message: this.$tr('ui.message.recordNoUpdated'), pos: 'bottom'})

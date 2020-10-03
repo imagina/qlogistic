@@ -1,6 +1,13 @@
 <template>
     <div class="flex flex-center relative-position">
         <div class="row full-width q-px-sm" v-if="orders.length > 0">
+            <div class="col-12 q-pa-sm text-right">
+              <q-btn icon="fas fa-download" color="primary" @click="downloadReport">
+                  <q-tooltip>
+                    {{ $tr('qlogistic.layout.label.download') }}
+                  </q-tooltip>
+              </q-btn>
+            </div>
             <div class="col-12 q-pa-sm">
               <div class="flex flex-center">
                 <q-pagination
@@ -126,6 +133,7 @@
                   lastPage: 1,
                   total: 10
                 },
+                requestParams: {}
             }
         },
         mounted(){
@@ -161,6 +169,7 @@
                     }
                     params.params.filter.originBusiness = bdata.join(',')
                 }
+                this.requestParams = params
                 await this.$crud.index('apiRoutes.qlogistic.orders',params).then(response =>{
                     this.orders = response.data
                     this.page = response.meta.page
@@ -191,6 +200,18 @@
                 })
               }).onCancel(response => {
               })
+            },
+            downloadReport(){
+              let requestParams = []
+              for(let x in this.requestParams.params){
+                if(x !== 'page' && x !== 'take'){
+                  let obj = typeof this.requestParams.params[x] == 'object' ? JSON.stringify(this.requestParams.params[x]) : this.requestParams.params[x]
+                  requestParams.push(x+'='+obj)
+                }
+              }
+              let stringParams = requestParams.join('&')
+              let downloadRoute = config('apiRoutes.qlogistic.orders')+'/download?'+stringParams
+              window.open(downloadRoute,'_blank')
             }
         },
     }

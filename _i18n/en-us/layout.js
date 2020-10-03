@@ -61,6 +61,7 @@ export default {
     clear: 'Clear',
     filterOrders: 'Filter Orders',
     orderFilter: 'Orders Filter',
+    download: 'Download',
   },
   message:{
     businessNotFound: 'Sorry, you don\'t have any assigned business into your profile. Please register your business information in',

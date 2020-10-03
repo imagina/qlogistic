@@ -61,6 +61,7 @@ export default {
     clear: 'Limpiar',
     filterOrders: 'Filtrar Órdenes',
     orderFilter: 'Filtro de Órdenes',
+    download: 'Descargar',
   },
   message:{
     businessNotFound: 'Lo sentimos. En este momento no tiene una empresa asignada a su perfil. Favor ingresa los datos de su empresa haciendo clic en',
