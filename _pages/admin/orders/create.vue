@@ -392,12 +392,12 @@
                 this.locale = this.$clone(this.dataLocale)//Add fields
                 if (this.locale.success) this.$refs.localeComponent.vReset()//Reset locale
                 this.success = true
-                await this.getBusinessData()
                 await this.getBusiness()
                 await this.getProvinces()
                 await this.getOriginBusiness()
                 await this.getDestinations()
                 await this.getPackageTypes()
+                await this.getBusinessData()
                 this.loading = false
             },
 

@@ -356,7 +356,7 @@
                             this.locale.form.users = []
                             this.locale.form.types = []
                             this.locale.form.cityId = parseInt(dataForm.cityId)
-                            this.locale.form.userId = dataForm.userId != null ? parseInt(dataForm.userId): null
+                            this.locale.form.userId = dataForm.userId != null ? parseInt(this.$clone(dataForm.userId)): null
                             this.itemId = dataForm.id
                             for (let user of dataForm.users) {
                                 this.locale.form.users.push(user.id)
@@ -468,8 +468,10 @@
                 if (await this.$refs.localeComponent.validateForm()) {
                     this.loading = true
                     let configName = 'apiRoutes.qlogistic.business'
+                    let dataForm = this.getDataForm()
+                    dataForm.userId = this.$clone(this.locale.form.userId)
                     if (this.itemId === null) {
-                        this.$crud.create(configName, this.getDataForm()).then(response => {
+                        this.$crud.create(configName, dataForm).then(response => {
                             this.$alert.success({message: `${this.$tr('ui.message.recordCreated')}`})
                             this.itemId = response.data.id
                             this.loading = false
@@ -479,7 +481,7 @@
                             this.$alert.error({message: this.$tr('ui.message.recordNoUpdated'), pos: 'bottom'})
                         })
                     } else {
-                        this.$crud.update(configName, this.itemId, this.getDataForm()).then(response => {
+                        this.$crud.update(configName, this.itemId, dataForm).then(response => {
                             this.$alert.success({message: `${this.$tr('ui.message.recordUpdated')}`})
                             this.loading = false
                         }).catch(error => {
@@ -493,7 +495,7 @@
                 let response = this.locale.form
                 for (var item in response) {
                     let valueItem = response[item]
-                    if (valueItem == null || valueItem == undefined)
+                    if (valueItem == undefined)
                         delete response[item]
                 }
                 //response.selectable = JSON.stringify(response.selectable)

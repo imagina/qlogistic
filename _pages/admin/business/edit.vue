@@ -408,7 +408,7 @@
                 let response = this.locale.form
                 for (var item in response) {
                     let valueItem = response[item]
-                    if (valueItem == null || valueItem == undefined)
+                    if (valueItem == undefined)
                         delete response[item]
                 }
                 //response.selectable = JSON.stringify(response.selectable)

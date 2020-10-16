@@ -22,7 +22,7 @@
         <div v-else>
             <notResults />
         </div>
-        <q-inner-loading :visible="loading" />
+        <inner-loading :visible="loading" />
     </q-card>
 </template>
 
@@ -46,6 +46,7 @@
         },
         methods:{
             init(){
+                this.loading = true
                 let configName = 'apiRoutes.quser.users'
                 let params = {
                     params: {

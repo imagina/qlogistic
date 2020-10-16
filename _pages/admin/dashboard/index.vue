@@ -34,6 +34,10 @@
           </div>
       </div>
     </div>
+    <div class="flex flex-center full-height" v-else>
+      <img style="max-width: 40vw"
+           :src="$store.getters['qsiteSettings/getSettingMediaByName']('isite::logo2').path">
+    </div>
   </div>
 </template>
 
